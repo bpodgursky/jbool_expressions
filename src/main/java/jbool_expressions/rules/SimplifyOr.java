@@ -1,5 +1,7 @@
 package jbool_expressions.rules;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import jbool_expressions.*;
 
 import java.util.*;
@@ -13,10 +15,10 @@ public class SimplifyOr<K> extends SimplifyNExpression<K> {
 
   @Override
   protected Expression<K> simplifyInternal(Expression<K>[] retain) {
-    Set<Expression> internal = new HashSet<Expression>();
+    Set<Expression> internal = Sets.newHashSet();
     Collections.addAll(internal, retain);
 
-    List<Expression<K>> copy = new ArrayList<Expression<K>>();
+    List<Expression<K>> copy = Lists.newArrayList();
     for (Expression<K> expr : retain) {
       if (expr instanceof Literal) {
         Literal l = (Literal) expr;

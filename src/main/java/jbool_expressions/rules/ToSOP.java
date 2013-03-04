@@ -1,5 +1,6 @@
 package jbool_expressions.rules;
 
+import com.google.common.collect.Lists;
 import jbool_expressions.And;
 import jbool_expressions.ExprUtil;
 import jbool_expressions.Expression;
@@ -18,11 +19,11 @@ public class ToSOP<K> extends Rule<And<K>, K> {
         Or<K> or = (Or<K>) e;
 
         Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, or);
-        List<Expression<K>> newChildren = new ArrayList<Expression<K>>();
+        List<Expression<K>> newChildren = Lists.newArrayList();
         //  for each child of the or,  we want it AND all other children of the and
 
         for (Expression<K> orChild : or.expressions) {
-          List<Expression<K>> andOthers = new ArrayList<Expression<K>>();
+          List<Expression<K>> andOthers = Lists.newArrayList();
           ExprUtil.addAll(andOthers, childrenNew);
           andOthers.add(orChild);
 

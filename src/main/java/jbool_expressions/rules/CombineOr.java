@@ -1,5 +1,6 @@
 package jbool_expressions.rules;
 
+import com.google.common.collect.Lists;
 import jbool_expressions.ExprUtil;
 import jbool_expressions.Expression;
 import jbool_expressions.Or;
@@ -17,7 +18,7 @@ public class CombineOr<K> extends Rule<Or<K>, K> {
       if (expr instanceof Or) {
         Or<K> childAnd = (Or<K>) expr;
 
-        List<Expression<K>> newChildren = new ArrayList<Expression<K>>();
+        List<Expression<K>> newChildren = Lists.newArrayList();
         ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(or.expressions, childAnd));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 

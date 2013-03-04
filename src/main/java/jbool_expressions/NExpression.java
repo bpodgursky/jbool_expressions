@@ -1,5 +1,6 @@
 package jbool_expressions;
 
+import com.google.common.collect.Lists;
 import jbool_expressions.rules.Rule;
 import jbool_expressions.rules.RuleSet;
 
@@ -22,7 +23,7 @@ public abstract class NExpression<K> extends Expression<K>{
 
   @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
-    List<Expression<K>> childCopy = new ArrayList<Expression<K>>();
+    List<Expression<K>> childCopy = Lists.newArrayList();
     for(Expression<K> expr: expressions){
       childCopy.add(RuleSet.applyAll(expr, rules));
     }

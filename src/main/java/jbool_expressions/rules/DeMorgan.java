@@ -1,5 +1,6 @@
 package jbool_expressions.rules;
 
+import com.google.common.collect.Lists;
 import jbool_expressions.And;
 import jbool_expressions.Expression;
 import jbool_expressions.Not;
@@ -16,7 +17,7 @@ public class DeMorgan<K> extends Rule<Not<K>, K> {
 
       if(e instanceof And){
         And<K> internal = (And<K>) e;
-        List<Expression<K>> morganed = new ArrayList<Expression<K>>();
+        List<Expression<K>> morganed = Lists.newArrayList();
         for(Expression<K> expr: internal.expressions){
           morganed.add(Not.of(expr));
         }
@@ -25,7 +26,7 @@ public class DeMorgan<K> extends Rule<Not<K>, K> {
 
       if(e instanceof Or){
         Or<K> internal = (Or<K>) e;
-        List<Expression<K>> morganed = new ArrayList<Expression<K>>();
+        List<Expression<K>> morganed = Lists.newArrayList();
         for(Expression<K> expr: internal.expressions){
           morganed.add(Not.of(expr));
         }
