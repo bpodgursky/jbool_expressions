@@ -100,7 +100,7 @@ output:
 Building
 ====
 
-To build from source,
+jbool_expressions is built with Maven.  To build from source,
 
 ```bash
 >mvn package
