@@ -1,5 +1,6 @@
 package jbool_expressions.rules;
 
+import com.google.common.collect.Lists;
 import jbool_expressions.Expression;
 
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 public class RuleSet {
 
   public static <K> List<Rule<?, K>> simplifyRules(){
-    List<Rule<?, K>> rules = new ArrayList<Rule<?, K>>();
+    List<Rule<?, K>> rules = Lists.newArrayList();
     rules.add(new SimplifyAnd<K>());
     rules.add(new SimplifyOr<K>());
     rules.add(new SimplifyNot<K>());
@@ -18,7 +19,7 @@ public class RuleSet {
   }
 
   public static <K> List<Rule<?, K>> toSopRules(){
-    List<Rule<?, K>> rules = new ArrayList<Rule<?, K>>(RuleSet.<K>simplifyRules());
+    List<Rule<?, K>> rules = Lists.newArrayList(RuleSet.<K>simplifyRules());
     rules.add(new ToSOP<K>());
     rules.add(new DeMorgan<K>());
 
@@ -55,7 +56,7 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values){
-    List<Rule<?, K>> rules = new ArrayList<Rule<?, K>>(RuleSet.<K>simplifyRules());
+    List<Rule<?, K>> rules = Lists.newArrayList(RuleSet.<K>simplifyRules());
     rules.add(new Assign<K>(values));
     return applySet(root, rules);
   }
@@ -63,6 +64,4 @@ public class RuleSet {
   public static <K> Expression<K> applySet(Expression<K> root, List<Rule<?, K>> allRules){
     return applyAll(root, allRules);
   }
-
-//  public static Set<Variable>
 }
