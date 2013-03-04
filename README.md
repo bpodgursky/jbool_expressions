@@ -36,9 +36,7 @@ We can assign a value to one of the variables, and see that the expression is si
 
 ```java
     Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
-
     System.out.println(halfAssigned);
-
 ```
 outputs:
 
@@ -50,7 +48,6 @@ We can assign the last variable, and see that the expression resolves to a liter
 
 ```java
     Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
-
     System.out.println(resolved);
 
 ```
@@ -74,7 +71,7 @@ Alternatively, we could have provided our expression as a String in prefix notat
 
 ```java
     Expression<String> parsedExpression = PrefixParser.parse("(* (+ (! C) C) A B)");
-
+    System.out.println(parsedExpression);
     System.out.println(parsedExpression.equals(expr));
 ```
 output:
@@ -83,6 +80,22 @@ output:
 true
 ```
 
+We can also convert expressions to sum-of-products form instead of just simplifying them.  For example:
+
+```java
+    Expression<String> nonStandard = PrefixParser.parse("(* (+ A B) (+ C D))");
+    System.out.println(nonStandard);
+
+    Expression<String> sopForm = RuleSet.toSop(nonStandard);
+    System.out.println(sopForm);
+```
+
+output:
+
+```bash
+(* (+ A B) (+ C D))
+(+ (* A C) (* A D) (* B C) (* B D))
+```
 
 Building
 ====

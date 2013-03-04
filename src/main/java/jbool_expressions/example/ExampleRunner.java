@@ -21,12 +21,10 @@ public class ExampleRunner {
     //  (* A B)
 
     Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
-
     System.out.println(halfAssigned);
     //  B
 
     Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
-
     System.out.println(resolved);
     //  true
 
@@ -34,8 +32,16 @@ public class ExampleRunner {
     //  (* (+ (! C) C) A B)
 
     Expression<String> parsedExpression = PrefixParser.parse("(* (+ (! C) C) A B)");
-
     System.out.println(parsedExpression);
     System.out.println(parsedExpression.equals(expr));
+
+    //  (* (+ (! C) C) A B)
+    //  true
+
+    Expression<String> nonStandard = PrefixParser.parse("(* (+ A B) (+ C D))");
+    System.out.println(nonStandard);
+
+    Expression<String> sopForm = RuleSet.toSop(nonStandard);
+    System.out.println(sopForm);
   }
 }
