@@ -105,7 +105,7 @@ Building
 jbool_expressions is built with Maven.  To build from source,
 
 ```bash
->mvn package
+> mvn package
 ```
 
 generates a snapshot jar target/jbool_expressions-1.0-SNAPSHOT.jar.
@@ -113,7 +113,7 @@ generates a snapshot jar target/jbool_expressions-1.0-SNAPSHOT.jar.
 To run the test suite locally,
 
 ```bash
->mvn test
+> mvn test
 ```
 
 Development
