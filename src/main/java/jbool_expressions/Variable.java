@@ -8,7 +8,7 @@ public class Variable<K> extends Expression<K> {
 
   private final K value;
 
-  public Variable(K value){
+  private Variable(K value){
     this.value = value;
   }
 
