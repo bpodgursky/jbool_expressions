@@ -114,6 +114,11 @@ To run the test suite locally,
 >mvn test
 ```
 
+Development
+====
+
+jbool_expressions is very much in-development, and is in no way shape or form guaranteed to be stable or bug-free.  Bugs, suggestions, or pull requests are all very welcome.
+
 License
 ====
 Copyright 2013 Ben Podgursky
