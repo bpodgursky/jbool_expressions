@@ -29,7 +29,7 @@ public class DeMorgan<K> extends Rule<Not<K>, K> {
         for(Expression<K> expr: internal.expressions){
           morganed.add(Not.of(expr));
         }
-        return new And<K>(morganed);
+        return And.of(morganed);
       }
     return not;
   }

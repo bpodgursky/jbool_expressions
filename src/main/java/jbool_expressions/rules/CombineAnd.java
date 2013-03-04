@@ -20,7 +20,7 @@ public class CombineAnd<K> extends Rule<And<K>, K> {
         ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(and.expressions, childAnd));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 
-        return new And<K>(newChildren);
+        return And.of(newChildren);
       }
     }
     return and;
