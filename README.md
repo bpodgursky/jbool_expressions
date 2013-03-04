@@ -106,6 +106,8 @@ To build from source,
 >mvn package
 ```
 
+generates a snapshot jar target/jbool_expressions-1.0-SNAPSHOT.jar.
+
 To run the test suite locally,
 
 ```bash
