@@ -30,7 +30,7 @@ Of course, this expression contains a useless term (either C or (! C) is always 
 We can see that the extra term is simplified out:
 
 ```bash
->(* A B)
+(* A B)
 ```
 
 We can assign a value to one of the variables::
@@ -45,7 +45,7 @@ We can assign a value to one of the variables::
 We see the expression is simplified after assigning "A" a value:
 
 ```bash
->B
+B
 ```
 
 We can assign the last variable:
@@ -60,7 +60,7 @@ We can assign the last variable:
 And we see that the expression has resolved to a literal "true":
 
 ```bash
->true
+true
 ```
 
 All expressions are immutable (we got a new expression back each time we performed an operation), so we can see that the original expression is unmodified:
@@ -70,7 +70,7 @@ All expressions are immutable (we got a new expression back each time we perform
 ```
 
 ```bash
->(* (+ (! C) C) A B)
+(* (+ (! C) C) A B)
 ```
 
 
