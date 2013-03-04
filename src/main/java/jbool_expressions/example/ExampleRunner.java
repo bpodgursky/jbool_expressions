@@ -32,5 +32,10 @@ public class ExampleRunner {
 
     System.out.println(expr);
     //  (* (+ (! C) C) A B)
+
+    Expression<String> parsedExpression = PrefixParser.parse("(* (+ (! C) C) A B)");
+
+    System.out.println(parsedExpression);
+    System.out.println(parsedExpression.equals(expr));
   }
 }

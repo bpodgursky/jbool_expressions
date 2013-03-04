@@ -14,26 +14,25 @@ A basic propositional expression is built out of the types "And", "Or", "Not", "
         Or.of(Variable.of("C"), Not.of(Variable.of("C"))));
     System.out.println(expr);
 ```
-We see the expression is what we expect.  The toString is in prefix notation, where '+' represents 'Or' , '*' reprsents 'And' and '!' represents 'Not'.
+We see the expression is what we expect.  The toString is in prefix notation, where '+' represents 'Or' , '*' reprsents 'And' and '!' represents 'Not':
 
 ```bash
->(* (+ (! C) C) A B)
+(* (+ (! C) C) A B)
 ```
 
-Of course, this expression contains a useless term (either C or (! C) is always true.)  We can simplify the expression:
+Of course, this expression contains a useless term (either C or (! C) is always true.)  We can simplify the expression, and see that the extra term is simplified out:
 
 ```java
     Expression<String> simplified = RuleSet.simplify(expr);
     System.out.println(expr);
 ```
-
-We can see that the extra term is simplified out:
+outputs:
 
 ```bash
 (* A B)
 ```
 
-We can assign a value to one of the variables::
+We can assign a value to one of the variables, and see that the expression is simplified after assigning "A" a value:
 
 ```java
     Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
@@ -41,14 +40,13 @@ We can assign a value to one of the variables::
     System.out.println(halfAssigned);
 
 ```
-
-We see the expression is simplified after assigning "A" a value:
+outputs:
 
 ```bash
 B
 ```
 
-We can assign the last variable:
+We can assign the last variable, and see that the expression resolves to a literal "true".
 
 ```java
     Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
@@ -56,8 +54,7 @@ We can assign the last variable:
     System.out.println(resolved);
 
 ```
-
-And we see that the expression has resolved to a literal "true":
+outputs:
 
 ```bash
 true
@@ -68,9 +65,22 @@ All expressions are immutable (we got a new expression back each time we perform
 ```java
     System.out.println(expr);
 ```
-
+outputs:
 ```bash
 (* (+ (! C) C) A B)
+```
+
+Alternatively, we could have provided our expression as a String in prefix notation and parsed it.  We can verify that this expression is identical to the one we built manually:
+
+```java
+    Expression<String> parsedExpression = PrefixParser.parse("(* (+ (! C) C) A B)");
+
+    System.out.println(parsedExpression.equals(expr));
+```
+output:
+```bash
+(* (+ (! C) C) A B)
+true
 ```
 
 
