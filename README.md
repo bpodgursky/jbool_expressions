@@ -49,7 +49,6 @@ We can assign the last variable, and see that the expression resolves to a liter
 ```java
     Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
     System.out.println(resolved);
-
 ```
 outputs:
 
