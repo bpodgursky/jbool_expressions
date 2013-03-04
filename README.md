@@ -22,7 +22,7 @@ We see the expression is what we expect.  The toString is in prefix notation, wh
 ```
 
 Simplify Expression
-==
+======
 
 Of course, this expression contains a useless term (either C or (! C) is always true.)  We can simplify the expression, and see that the extra term is simplified out:
 
