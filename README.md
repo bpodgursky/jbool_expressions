@@ -21,8 +21,7 @@ We see the expression is what we expect.  The toString is in prefix notation, wh
 (* (+ (! C) C) A B)
 ```
 
-Simplify Expression
-======
+### Simplify Expression ###
 
 Of course, this expression contains a useless term (either C or (! C) is always true.)  We can simplify the expression, and see that the extra term is simplified out:
 
@@ -35,6 +34,8 @@ outputs:
 ```bash
 (* A B)
 ```
+
+### Variable Assignment ###
 
 We can assign a value to one of the variables, and see that the expression is simplified after assigning "A" a value:
 
@@ -70,6 +71,8 @@ outputs:
 (* (+ (! C) C) A B)
 ```
 
+### Input String Parsing ###
+
 Alternatively, we could have provided our expression as a String in prefix notation and parsed it.  We can verify that this expression is identical to the one we built manually:
 
 ```java
@@ -82,6 +85,8 @@ output:
 (* (+ (! C) C) A B)
 true
 ```
+
+### Sum-of-products form ###
 
 We can also convert expressions to sum-of-products form instead of just simplifying them.  For example:
 
