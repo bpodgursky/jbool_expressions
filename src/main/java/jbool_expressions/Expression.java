@@ -14,7 +14,7 @@ public abstract class Expression<K> implements Comparable<Expression> {
 
   @Override
   public boolean equals(Object o){
-    return o instanceof Expression && o.toString().equals(toString());
+    return o instanceof Expression && equals((Expression) o);
   }
 
   @Override
@@ -23,4 +23,6 @@ public abstract class Expression<K> implements Comparable<Expression> {
   }
 
   public abstract Expression<K> apply(List<Rule<?, K>> rules);
+
+  public abstract boolean equals(Expression expr);
 }

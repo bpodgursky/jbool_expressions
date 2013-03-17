@@ -30,6 +30,11 @@ public class Variable<K> extends Expression<K> {
     return this;
   }
 
+  @Override
+  public boolean equals(Expression expr) {
+    return expr instanceof Variable && ((Variable)expr).getValue().equals(getValue());
+  }
+
   public static <K> Variable<K> of(K value){
     return new Variable<K>(value);
   }

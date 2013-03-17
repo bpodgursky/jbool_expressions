@@ -28,6 +28,26 @@ public class Or<K> extends NExpression<K> {
     return value;
   }
 
+  @Override
+  public boolean equals(Expression expr) {
+    if(!(expr instanceof Or)){
+      return false;
+    }
+    Or other = (Or) expr;
+
+    if(other.expressions.length != expressions.length){
+      return false;
+    }
+
+    for(int i = 0; i < expressions.length; i++){
+      if(!expressions[i].equals(other.expressions[i])){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   public static <K> Or<K> of(Expression<K> child1, Expression<K> child2, Expression<K> child3, Expression<K> child4){
     return of(ExprUtil.<K>list(child1, child2, child3, child4));
   }

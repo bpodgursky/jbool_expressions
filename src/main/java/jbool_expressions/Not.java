@@ -31,6 +31,11 @@ public class Not<K> extends Expression<K> {
     return new Not<K>(RuleSet.applyAll(e, rules));
   }
 
+  @Override
+  public boolean equals(Expression expr) {
+    return expr instanceof Not && ((Not)expr).getE().equals(getE());
+  }
+
   public static <K> Not<K> of(Expression<K> e){
     return new Not<K>(e);
   }

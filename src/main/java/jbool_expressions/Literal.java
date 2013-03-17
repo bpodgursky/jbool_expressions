@@ -50,4 +50,9 @@ public class Literal<K> extends Expression<K>{
   public Expression<K> apply(List<Rule<?, K>> rules) {
     return this;
   }
+
+  @Override
+  public boolean equals(Expression expr) {
+    return expr instanceof Literal && ((Literal)expr).getValue() == getValue();
+  }
 }
