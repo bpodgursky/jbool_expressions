@@ -105,7 +105,7 @@ output:
 (+ (* A C) (* A D) (* B C) (* B D))
 ```
 
-All of these examples can also be found in [ExampleRunner](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/jbool_expressions/example/ExampleRunner.java)
+All of these examples can also be found in [ExampleRunner](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/com/bpodgursky/jbool_expressions/example/ExampleRunner.java)
 
 Building
 ====
