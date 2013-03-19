@@ -14,7 +14,9 @@
   <packaging>jar</packaging>
 
   <name>jbool_expressions</name>
-  <description>jbool_expressions is a simple open-source library for creating and manipulating boolean expressions in java</description>
+  <description>jbool_expressions is a simple open-source library for creating and manipulating boolean expressions in
+    java
+  </description>
   <url>https://github.com/bpodgursky/jbool_expressions</url>
 
   <licenses>
@@ -67,6 +69,11 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <executions>
           <execution>
@@ -84,7 +91,9 @@
           <execution>
             <id>attach-sources</id>
             <phase>deploy</phase>
-            <goals><goal>jar-no-fork</goal></goals>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -94,7 +103,9 @@
           <execution>
             <id>attach-javadocs</id>
             <phase>deploy</phase>
-            <goals><goal>jar</goal></goals>
+            <goals>
+              <goal>jar</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -105,7 +116,9 @@
           <execution>
             <id>deploy</id>
             <phase>deploy</phase>
-            <goals><goal>deploy</goal></goals>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
