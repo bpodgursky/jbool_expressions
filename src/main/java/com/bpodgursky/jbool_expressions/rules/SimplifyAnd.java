@@ -6,36 +6,48 @@ import com.bpodgursky.jbool_expressions.*;
 
 import java.util.*;
 
-public class SimplifyAnd<K> extends SimplifyNExpression<K> {
+public class SimplifyAnd<K> extends Rule<And<K>, K> {
 
   @Override
-  protected boolean isMatch(Expression e) {
-    return e instanceof And;
-  }
+  public Expression<K> applyInternal(And<K> input) {
 
-  @Override
-  protected Expression<K> simplifyInternal(Expression<K>[] retain) {
-    Set<Expression> internal = Sets.newHashSet();
-    Collections.addAll(internal, retain);
-
-    List<Expression<K>> copy = Lists.newArrayList();
-    for (Expression<K> expr : retain) {
+    for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {
         Literal l = (Literal) expr;
 
-        //  ignore anything that is "true"
+        //  ignore anything that is "false"
         if (l.getValue()) {
-          continue;
+          return copyWithoutTrue(input);
         } else {
           return Literal.getFalse();
         }
       }
 
-      //  fail immediately if require something and its opposite
-      if (internal.contains(Not.of(expr))) {
-        return Literal.getFalse();
+      //  succeed immediately if require something or its opposite
+      if( expr instanceof Not){
+        Expression<K> notChild = ((Not<K>)expr).getE();
+        for(Expression<K> child: input.expressions){
+          if(child.equals(notChild)){
+            return Literal.getFalse();
+          }
+        }
       }
+    }
 
+    return input;
+  }
+
+  private Expression<K> copyWithoutTrue(And<K> input){
+    List<Expression<K>> copy = Lists.newArrayList();
+    for (Expression<K> expr : input.expressions) {
+      if (expr instanceof Literal) {
+        Literal l = (Literal) expr;
+
+        //  ignore anything that is "false"
+        if (l.getValue()) {
+          continue;
+        }
+      }
       copy.add(expr);
     }
 
@@ -43,7 +55,7 @@ public class SimplifyAnd<K> extends SimplifyNExpression<K> {
       return Literal.getTrue();
     }
 
-    return And.of(copy);
+    return Or.of(copy);
   }
 
   @Override

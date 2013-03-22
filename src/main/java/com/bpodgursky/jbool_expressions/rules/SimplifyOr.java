@@ -6,36 +6,48 @@ import com.bpodgursky.jbool_expressions.*;
 
 import java.util.*;
 
-public class SimplifyOr<K> extends SimplifyNExpression<K> {
+public class SimplifyOr<K> extends Rule<Or<K>, K> {
 
   @Override
-  protected boolean isMatch(Expression e) {
-    return e instanceof Or;
-  }
+  public Expression<K> applyInternal(Or<K> input) {
 
-  @Override
-  protected Expression<K> simplifyInternal(Expression<K>[] retain) {
-    Set<Expression> internal = Sets.newHashSet();
-    Collections.addAll(internal, retain);
-
-    List<Expression<K>> copy = Lists.newArrayList();
-    for (Expression<K> expr : retain) {
+    for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {
         Literal l = (Literal) expr;
 
         //  ignore anything that is "false"
         if (!l.getValue()) {
-          continue;
+          return copyWithoutFalse(input);
         } else {
           return Literal.of(true);
         }
       }
 
       //  succeed immediately if require something or its opposite
-      if (internal.contains(Not.of(expr))) {
-        return Literal.of(true);
+      if( expr instanceof Not){
+        Expression<K> notChild = ((Not<K>)expr).getE();
+        for(Expression<K> child: input.expressions){
+          if(child.equals(notChild)){
+            return Literal.getTrue();
+          }
+        }
       }
+    }
 
+    return input;
+  }
+
+  private Expression<K> copyWithoutFalse(Or<K> input){
+    List<Expression<K>> copy = Lists.newArrayList();
+    for (Expression<K> expr : input.expressions) {
+      if (expr instanceof Literal) {
+        Literal l = (Literal) expr;
+
+        //  ignore anything that is "false"
+        if (!l.getValue()) {
+          continue;
+        }
+      }
       copy.add(expr);
     }
 

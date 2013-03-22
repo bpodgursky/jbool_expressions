@@ -14,6 +14,7 @@ public class RuleSet {
     rules.add(new SimplifyNot<K>());
     rules.add(new CombineAnd<K>());
     rules.add(new CombineOr<K>());
+    rules.add(new SimplifyNExpression<K>());
 
     return rules;
   }
