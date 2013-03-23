@@ -13,12 +13,12 @@ public class ExampleRunner {
         Or.of(Variable.of("C"), Not.of(Variable.of("C"))));
 
     System.out.println(expr);
-    //  (* (+ (! C) C) A B)
+    //  ((!C | C) & A & B)
 
     Expression<String> simplified = RuleSet.simplify(expr);
 
     System.out.println(simplified);
-    //  (* A B)
+    //  (A & B)
 
     Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
     System.out.println(halfAssigned);
@@ -29,19 +29,23 @@ public class ExampleRunner {
     //  true
 
     System.out.println(expr);
-    //  (* (+ (! C) C) A B)
+    //  ((!C | C) & A & B)
 
-    Expression<String> parsedExpression = ExprParser.parse("( ( (! C) | C) & A & B)");
+    Expression<String> parsedExpression = RuleSet.simplify(ExprParser.parse("( ( (! C) | C) & A & B)"));
     System.out.println(parsedExpression);
-    System.out.println(parsedExpression.equals(expr));
+    System.out.println(parsedExpression.equals(simplified));
 
-    //  (* (+ (! C) C) A B)
+    //  (A & B)
     //  true
 
     Expression<String> nonStandard = ExprParser.parse("( ( A | B) & ( C | D))");
     System.out.println(nonStandard);
 
+    //  ((A | B) & (C | D))
+
     Expression<String> sopForm = RuleSet.toSop(nonStandard);
     System.out.println(sopForm);
+
+    //  ((A & C) | (A & D) | (B & C) | (B & D))
   }
 }

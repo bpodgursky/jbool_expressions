@@ -18,7 +18,7 @@ A basic propositional expression is built out of the types `And`, `Or`, `Not`, `
 We see the expression is what we expect.  The toString is in prefix notation, where '+' represents `Or` , '*' reprsents `And` and '!' represents `Not`:
 
 ```bash
-(* (+ (! C) C) A B)
+((!C | C) & A & B)
 ```
 
 ### Simplification ###
@@ -32,7 +32,7 @@ Of course, this expression contains a useless term (either C or (! C) is always 
 outputs:
 
 ```bash
-(* A B)
+(A & B)
 ```
 
 ### Variable Assignment ###
@@ -68,7 +68,7 @@ All expressions are immutable (we got a new expression back each time we perform
 ```
 outputs:
 ```bash
-(* (+ (! C) C) A B)
+((!C | C) & A & B)
 ```
 
 ### Input String Parsing ###
@@ -76,13 +76,13 @@ outputs:
 Alternatively, we could have provided our expression as a String in prefix notation and parsed it.  We can verify that this expression is identical to the one we built manually:
 
 ```java
-    Expression<String> parsedExpression = PrefixParser.parse("(* (+ (! C) C) A B)");
+    Expression<String> parsedExpression = RuleSet.simplify(ExprParser.parse("( ( (! C) | C) & A & B)"));
     System.out.println(parsedExpression);
-    System.out.println(parsedExpression.equals(expr));
+    System.out.println(parsedExpression.equals(simplified));
 ```
 output:
 ```bash
-(* (+ (! C) C) A B)
+(A & B)
 true
 ```
 
@@ -101,8 +101,8 @@ We can also convert expressions to sum-of-products form instead of just simplify
 output:
 
 ```bash
-(* (+ A B) (+ C D))
-(+ (* A C) (* A D) (* B C) (* B D))
+((A | B) & (C | D))
+((A & C) | (A & D) | (B & C) | (B & D))
 ```
 
 All of these examples can also be found in [ExampleRunner](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/com/bpodgursky/jbool_expressions/example/ExampleRunner.java)
