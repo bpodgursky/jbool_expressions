@@ -30,7 +30,7 @@
   <scm>
     <connection>scm:git:git@github.com:bpodgursky/jbool_expressions.git</connection>
     <developerConnection>scm:git:git@github.com:bpodgursky/jbool_expressions.git</developerConnection>
-    <url>git@github.com:bpodgursky/jbool_expressions.git</url>
+    <url>https://github.com/bpodgursky/jbool_expressions</url>
     <tag>HEAD</tag>
   </scm>
 
