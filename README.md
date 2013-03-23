@@ -107,6 +107,20 @@ output:
 
 All of these examples can also be found in [ExampleRunner](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/com/bpodgursky/jbool_expressions/example/ExampleRunner.java)
 
+Downloading
+====
+
+jbool_expressions is available via maven central:
+
+```xml
+<dependency>
+    <groupId>com.bpodgursky</groupId>
+    <artifactId>jbool_expressions</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+
 Building
 ====
 
