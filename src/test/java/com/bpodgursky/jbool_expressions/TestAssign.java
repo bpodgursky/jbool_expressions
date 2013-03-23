@@ -16,10 +16,10 @@ public class TestAssign extends TestCase {
     );
 
     Expression<String> expr = RuleSet.assign(expr3, Collections.singletonMap("A", false));
-    assertEquals("(* (+ C D) B)", expr.toString());
+    assertEquals("((C | D) & B)", expr.toString());
 
     expr = RuleSet.assign(expr, Collections.singletonMap("B", true));
-    assertEquals("(+ C D)", expr.toString());
+    assertEquals("(C | D)", expr.toString());
 
     expr = RuleSet.assign(expr, Collections.singletonMap("C", true));
     assertEquals(Literal.<String>getTrue(), expr);

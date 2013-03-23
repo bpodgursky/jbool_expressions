@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 public abstract class JBoolTestCase extends TestCase {
   public static Expression<String> expr(String expr){
-    return PrefixParser.parse(expr);
+    return ExprParser.parse(expr);
   }
 
   public static String simplifyToString(String expr){

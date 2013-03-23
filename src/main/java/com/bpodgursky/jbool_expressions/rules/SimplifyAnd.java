@@ -15,7 +15,6 @@ public class SimplifyAnd<K> extends Rule<And<K>, K> {
       if (expr instanceof Literal) {
         Literal l = (Literal) expr;
 
-        //  ignore anything that is "false"
         if (l.getValue()) {
           return copyWithoutTrue(input);
         } else {
@@ -43,7 +42,6 @@ public class SimplifyAnd<K> extends Rule<And<K>, K> {
       if (expr instanceof Literal) {
         Literal l = (Literal) expr;
 
-        //  ignore anything that is "false"
         if (l.getValue()) {
           continue;
         }
@@ -55,7 +53,7 @@ public class SimplifyAnd<K> extends Rule<And<K>, K> {
       return Literal.getTrue();
     }
 
-    return Or.of(copy);
+    return And.of(copy);
   }
 
   @Override

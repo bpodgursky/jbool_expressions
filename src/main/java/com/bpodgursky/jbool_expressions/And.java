@@ -16,7 +16,7 @@ public class And<K> extends NExpression<K> {
   }
 
   public String toString(){
-    return "(* "+ StringUtils.join(expressions, " ")+")";
+    return "("+ StringUtils.join(expressions, " & ")+")";
   }
 
   @Override

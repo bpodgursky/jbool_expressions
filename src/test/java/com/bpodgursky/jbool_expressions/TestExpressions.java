@@ -16,7 +16,7 @@ public class TestExpressions extends TestCase {
         Variable.of("F")
     );
 
-    assertEquals("(* (! (+ A true)) (+ C D false) F)", expr.toString());
+    assertEquals("(!(A | true) & (C | D | false) & F)", expr.toString());
 
     Set<String> allVars = new HashSet<String>(Arrays.asList("A", "C", "D", "F"));
     assertEquals(allVars, ExprUtil.getVariables(expr));
@@ -83,6 +83,6 @@ public class TestExpressions extends TestCase {
   public void testEnum(){
 
     Expression<TestEnum> expr = And.of(Not.of(Variable.of(TestEnum.A)));
-    assertEquals("(! A)", RuleSet.simplify(expr).toString());
+    assertEquals("!A", RuleSet.simplify(expr).toString());
   }
 }

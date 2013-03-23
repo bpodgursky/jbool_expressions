@@ -18,7 +18,7 @@ public class Not<K> extends Expression<K> {
   }
 
   public String toString(){
-    return "(! "+e+")";
+    return "!"+e;
   }
 
   @Override
