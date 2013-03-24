@@ -1,7 +1,6 @@
 Project jbool_expressions
 ========
-
-jbool_expressions is a simple open-source library for creating and manipulating boolean expressions in java.
+jbool_expressions is a simple open-source library for creating and manipulating  booleanexpressions in java.
 
 Example / Usage
 ====
@@ -116,10 +115,27 @@ jbool_expressions is available via maven central:
 <dependency>
     <groupId>com.bpodgursky</groupId>
     <artifactId>jbool_expressions</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
+Snapshots are available via sonatype:
 
+```xml
+<repository>
+    <id>sonatype-oss-public</id>
+    <url>https://oss.sonatype.org/content/groups/public/</url>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+</repository>
+
+<dependency>
+    <groupId>com.bpodgursky</groupId>
+    <artifactId>jbool_expressions</artifactId>
+    <version>1.2</version>
+</dependency>
+
+```
 
 Building
 ====
