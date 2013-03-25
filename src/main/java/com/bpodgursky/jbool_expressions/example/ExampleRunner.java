@@ -1,6 +1,7 @@
 package com.bpodgursky.jbool_expressions.example;
 
 import com.bpodgursky.jbool_expressions.*;
+import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 
 import java.util.Collections;
