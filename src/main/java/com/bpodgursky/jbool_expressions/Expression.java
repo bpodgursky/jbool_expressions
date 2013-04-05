@@ -5,7 +5,6 @@ import com.bpodgursky.jbool_expressions.rules.Rule;
 import java.util.List;
 
 public abstract class Expression<K> implements Comparable<Expression> {
-  public abstract boolean evaluate(EvaluationContext<K> context);
 
   @Override
   public int compareTo(Expression o) {
@@ -25,4 +24,6 @@ public abstract class Expression<K> implements Comparable<Expression> {
   public abstract Expression<K> apply(List<Rule<?, K>> rules);
 
   public abstract boolean equals(Expression expr);
+
+  public abstract String getExprType();
 }

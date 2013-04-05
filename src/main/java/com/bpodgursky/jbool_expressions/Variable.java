@@ -5,6 +5,7 @@ import com.bpodgursky.jbool_expressions.rules.Rule;
 import java.util.List;
 
 public class Variable<K> extends Expression<K> {
+  public static final String EXPR_TYPE = "variable";
 
   private final K value;
 
@@ -21,11 +22,6 @@ public class Variable<K> extends Expression<K> {
   }
 
   @Override
-  public boolean evaluate(EvaluationContext<K> context) {
-    return context.get(this);
-  }
-
-  @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
     return this;
   }
@@ -37,5 +33,10 @@ public class Variable<K> extends Expression<K> {
 
   public static <K> Variable<K> of(K value){
     return new Variable<K>(value);
+  }
+
+  @Override
+  public String getExprType() {
+    return EXPR_TYPE;
   }
 }

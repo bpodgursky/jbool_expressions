@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.List;
 
 public class Or<K> extends NExpression<K> {
+  public static final String EXPR_TYPE = "or";
 
   private Or(List<Expression<K>> children) {
     super(children);
@@ -17,15 +18,6 @@ public class Or<K> extends NExpression<K> {
 
   public String toString(){
     return "("+ StringUtils.join(expressions, " | ")+")";
-  }
-
-  @Override
-  public boolean evaluate(EvaluationContext<K> context) {
-    boolean value = false;
-    for(Expression<K> e: expressions){
-      value |= e.evaluate(context);
-    }
-    return value;
   }
 
   @Override
@@ -62,5 +54,10 @@ public class Or<K> extends NExpression<K> {
 
   public static <K> Or<K> of(List<Expression<K>> children){
     return new Or<K>(children);
+  }
+
+  @Override
+  public String getExprType() {
+    return EXPR_TYPE;
   }
 }

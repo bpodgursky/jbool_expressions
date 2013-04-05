@@ -5,6 +5,7 @@ import com.bpodgursky.jbool_expressions.rules.Rule;
 import java.util.List;
 
 public class Literal<K> extends Expression<K>{
+  public static final String EXPR_TYPE = "literal";
 
   private final boolean value;
 
@@ -42,11 +43,6 @@ public class Literal<K> extends Expression<K>{
   }
 
   @Override
-  public boolean evaluate(EvaluationContext context) {
-    return value;
-  }
-
-  @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
     return this;
   }
@@ -54,5 +50,10 @@ public class Literal<K> extends Expression<K>{
   @Override
   public boolean equals(Expression expr) {
     return expr instanceof Literal && ((Literal)expr).getValue() == getValue();
+  }
+
+  @Override
+  public String getExprType() {
+    return EXPR_TYPE;
   }
 }

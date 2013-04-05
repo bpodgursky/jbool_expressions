@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.List;
 
 public class And<K> extends NExpression<K> {
+  public static final String  EXPR_TYPE = "and";
 
   private And(List<Expression<K>> children) {
     super(children);
@@ -17,15 +18,6 @@ public class And<K> extends NExpression<K> {
 
   public String toString(){
     return "("+ StringUtils.join(expressions, " & ")+")";
-  }
-
-  @Override
-  public boolean evaluate(EvaluationContext<K> context) {
-    boolean value = true;
-    for(Expression<K> e: expressions){
-      value &= e.evaluate(context);
-    }
-    return value;
   }
 
   public static <K> And<K> of(Expression<K> child1, Expression<K> child2, Expression<K> child3){
@@ -61,5 +53,10 @@ public class And<K> extends NExpression<K> {
       }
     }
     return true;
+  }
+
+  @Override
+  public String getExprType() {
+    return EXPR_TYPE;
   }
 }

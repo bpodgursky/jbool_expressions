@@ -6,6 +6,7 @@ import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import java.util.List;
 
 public class Not<K> extends Expression<K> {
+  public static final String EXPR_TYPE = "not";
 
   private final Expression<K> e;
 
@@ -22,11 +23,6 @@ public class Not<K> extends Expression<K> {
   }
 
   @Override
-  public boolean evaluate(EvaluationContext<K> context) {
-    return !e.evaluate(context);
-  }
-
-  @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
     return new Not<K>(RuleSet.applyAll(e, rules));
   }
@@ -38,5 +34,10 @@ public class Not<K> extends Expression<K> {
 
   public static <K> Not<K> of(Expression<K> e){
     return new Not<K>(e);
+  }
+
+  @Override
+  public String getExprType() {
+    return EXPR_TYPE;
   }
 }
