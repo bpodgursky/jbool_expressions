@@ -22,11 +22,11 @@ public class TestExprParser extends JBoolTestCase {
     Assert.assertEquals(Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C"), And.of(Variable.of("D"), Variable.of("E"))),
         RuleSet.simplify(ExprParser.parse("A | (B | C )| D&E")));
 
-    Assert.assertEquals(Literal.getFalse(), ExprParser.parse("false"));
-    Assert.assertEquals(Literal.getTrue(), ExprParser.parse("true"));
-    Assert.assertEquals(Literal.getTrue(), ExprParser.parse("(true)"));
+    Assert.assertEquals(Literal.<String>getFalse(), ExprParser.parse("false"));
+    Assert.assertEquals(Literal.<String>getTrue(), ExprParser.parse("true"));
+    Assert.assertEquals(Literal.<String>getTrue(), ExprParser.parse("(true)"));
 
-    Assert.assertEquals(Not.of(Literal.getTrue()), ExprParser.parse("!(true)"));
+    Assert.assertEquals(Not.of(Literal.<String>getTrue()), ExprParser.parse("!(true)"));
 
     Assert.assertEquals(And.of(Not.of(Variable.of("\" A:aa+)(*&^%$#@!_123\"")), Variable.of("A")), ExprParser.parse("!\" A:aa+)(*&^%$#@!_123\" & A"));
   }
