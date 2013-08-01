@@ -24,7 +24,7 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
 
         // if child2 is true whenever child1 is true, return without child1
         if(i != j){
-          if(checkExprSubset(child1, child2)){
+          if(checkExprSubset(child1, child2, input)){
             return removeChild(input, i);
           }
         }
@@ -61,23 +61,29 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
     return j == toCheck.expressions.length;
   }
 
+  //  return true if we know that expr is always true when exprCheckSubset is true
   //  TODO this is really naive so far... probably a smarter way to check here
-  private boolean checkExprSubset(Expression<K> expr, Expression<K> exprCheckSubset){
+  private boolean checkExprSubset(Expression<K> expr, Expression<K> exprCheckSubset, Expression<K> parent){
 
-    //  (a & b) & (a & b & c)
-    if(expr instanceof Or && exprCheckSubset instanceof Or){
-      return checkContainsAllChildren((Or) expr, (Or) exprCheckSubset);
+    if(expr.equals(exprCheckSubset)){
+      return true;
     }
 
     //  (a | b) & (a | b | c)
-    else if(expr instanceof And && exprCheckSubset instanceof And){
+    if(expr instanceof Or && exprCheckSubset instanceof Or && parent instanceof And){
+      return checkContainsAllChildren((Or) expr, (Or) exprCheckSubset);
+
+    }
+
+    //  (a & b) | (a & b & c)
+    else if(expr instanceof And && exprCheckSubset instanceof And && parent instanceof Or){
       return checkContainsAllChildren((And) expr, (And) exprCheckSubset);
     }
 
     //  a | (a & b & c)
     //  a & (a | b | c)
     //  !a & (!a | b | c)
-    else if(expr instanceof NExpression){
+    else if(expr instanceof And && parent instanceof Or || expr instanceof Or && parent instanceof And){
       return checkContains((NExpression) expr, exprCheckSubset);
     }
 
