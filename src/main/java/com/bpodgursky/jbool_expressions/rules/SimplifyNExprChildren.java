@@ -72,7 +72,6 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
     //  (a | b) & (a | b | c)
     if(expr instanceof Or && exprCheckSubset instanceof Or && parent instanceof And){
       return checkContainsAllChildren((Or) expr, (Or) exprCheckSubset);
-
     }
 
     //  (a & b) | (a & b & c)
