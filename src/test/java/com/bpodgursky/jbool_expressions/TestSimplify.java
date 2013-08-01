@@ -18,5 +18,7 @@ public class TestSimplify extends JBoolTestCase {
     assertSimplify("(A | C)", "(A | C) & (A | C | B | D)");
     assertSimplify("!A", "(!A) & ((!A) | B | D)");
 
+    //  make sure it doesn't catch the opposite and/or case for whatever reason
+    assertSimplify("(((A | C) & B & D) | (A & C))", "((A | C) & B & D) | (A & C)");
   }
 }
