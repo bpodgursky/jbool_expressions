@@ -14,7 +14,7 @@ A basic propositional expression is built out of the types `And`, `Or`, `Not`, `
         Or.of(Variable.of("C"), Not.of(Variable.of("C"))));
     System.out.println(expr);
 ```
-We see the expression is what we expect.  The toString is in prefix notation, where '+' represents `Or` , '*' reprsents `And` and '!' represents `Not`:
+We see the expression is what we expect:
 
 ```bash
 ((!C | C) & A & B)
@@ -115,7 +115,7 @@ jbool_expressions is available via maven central:
 <dependency>
     <groupId>com.bpodgursky</groupId>
     <artifactId>jbool_expressions</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 Snapshots are available via sonatype:
