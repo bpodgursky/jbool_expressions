@@ -1,11 +1,11 @@
 package com.bpodgursky.jbool_expressions;
 
-import com.google.common.collect.Lists;
-import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSet;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.google.common.collect.Lists;
 
 public abstract class NExpression<K> extends Expression<K>{
 
@@ -27,6 +27,10 @@ public abstract class NExpression<K> extends Expression<K>{
       childCopy.add(RuleSet.applyAll(expr, rules));
     }
     return createInternal(childCopy);
+  }
+
+  public List<Expression<K>> getChildren(){
+    return ExprUtil.list(expressions);
   }
 
   protected abstract Expression<K> createInternal(List<Expression<K>> children);
