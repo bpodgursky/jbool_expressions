@@ -1,5 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
+import com.bpodgursky.jbool_expressions.parsers.ExprParser;
+
 public class TestAnd extends JBoolTestCase {
 
   public void testSimplify(){
@@ -22,4 +24,14 @@ public class TestAnd extends JBoolTestCase {
     assertToSop("((A & C) | (A & D))", "( A & ( C | D))");
     assertToSop("((A & C) | (A & D) | (B & C) | (B & D))", "( ( A|  B) & ( C|  D))");
   }
+
+  public void testToPos(){
+    assertToPos("((A | C) & B & D)", "(A & B & D) | (B & C & D)");
+    assertToPos("(!C | !D | A)", "((A & !B) | (A & D) | (!C & D) | !D)");
+    assertEvaluateSame(
+        ExprParser.parse("((A & !B) | (A & D) | (!C & D) | !D)"),
+        ExprParser.parse("(!C | !D | A)")
+    );
+  }
+
 }
