@@ -19,11 +19,11 @@ RPAREN : ')' ;
 AND : '&';
 OR : '|';
 NOT : '!';
-NAME : ('A'..'Z')+;
-QUOTED_NAME : '"'~('\r' | '\n' | '"')+ '"';
-WS : ( ' ' | '\t' | '\r' | '\n' )+ { $channel = HIDDEN; };
 TRUE : 'true';
 FALSE : 'false';
+NAME : ('A'..'Z' | 'a'..'z' | '_' | '0'..'9')+;
+QUOTED_NAME : '\''~('\r' | '\n' | '\'')+ '\'';
+WS : ( ' ' | '\t' | '\r' | '\n' )+ { $channel = HIDDEN; };
 
 expression : orexpression;
 orexpression : andexpression (OR^ andexpression)*;

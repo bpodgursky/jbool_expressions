@@ -1,13 +1,15 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.bpodgursky.jbool_expressions.eval.EvalEngine;
-import com.google.common.collect.Maps;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import junit.framework.TestCase;
+import com.google.common.collect.Maps;
 
-import java.util.*;
-
-public class TestExpressions extends TestCase {
+public class TestExpressions extends JBoolTestCase {
 
   public void testToStr(){
 
@@ -85,5 +87,10 @@ public class TestExpressions extends TestCase {
 
     Expression<TestEnum> expr = And.of(Not.of(Variable.of(TestEnum.A)));
     assertEquals("!A", RuleSet.simplify(expr).toString());
+  }
+
+  public void testParse() throws Exception {
+    assertSimplify("aBC_D9", "aBC_D9 & (aBC_D9 | BCD)");
+    assertSimplify("'not even valid'", "'not even valid' & ('not even valid' | BCD)");
   }
 }

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public abstract class QuotedMapper<T> implements TokenMapper<T> {
 
-  private static final Pattern QUOTED = Pattern.compile("\"([^\"])+\"");
+  private static final Pattern QUOTED = Pattern.compile("'([^\"])+'");
 
   @Override
   public T getVariable(String name) {

@@ -1,10 +1,10 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.ArrayList;
+
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.SimplifyNExprChildren;
 import com.google.common.collect.Lists;
-
-import java.util.ArrayList;
 
 public class TestSimplify extends JBoolTestCase {
 
