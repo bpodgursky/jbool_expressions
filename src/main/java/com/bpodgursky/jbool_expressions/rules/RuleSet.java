@@ -61,6 +61,20 @@ public class RuleSet {
     return applySet(root, RuleSet.<K>simplifyRules());
   }
 
+  /**
+   * More formal name for sum-of-products
+   */
+  public static <K> Expression<K> toDNF(Expression<K> root){
+    return toSop(root);
+  }
+
+  /**
+   * More formal name for product-of-sums
+   */
+  public static <K> Expression<K> toCNF(Expression<K> root){
+    return toPos(root);
+  }
+
   public static <K> Expression<K> toSop(Expression<K> root){
     return applySet(root, RuleSet.<K>toSopRules());
   }

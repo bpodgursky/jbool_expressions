@@ -14,6 +14,7 @@ A basic propositional expression is built out of the types `And`, `Or`, `Not`, `
         Or.of(Variable.of("C"), Not.of(Variable.of("C"))));
     System.out.println(expr);
 ```
+
 We see the expression is what we expect:
 
 ```bash
@@ -28,6 +29,7 @@ Of course, this expression contains a useless term (either C or (! C) is always 
     Expression<String> simplified = RuleSet.simplify(expr);
     System.out.println(expr);
 ```
+
 outputs:
 
 ```bash
@@ -42,6 +44,7 @@ We can assign a value to one of the variables, and see that the expression is si
     Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
     System.out.println(halfAssigned);
 ```
+
 outputs:
 
 ```bash
@@ -65,7 +68,9 @@ All expressions are immutable (we got a new expression back each time we perform
 ```java
     System.out.println(expr);
 ```
+
 outputs:
+
 ```bash
 ((!C | C) & A & B)
 ```
@@ -79,7 +84,9 @@ Alternatively, we could have provided our expression as a String in prefix notat
     System.out.println(parsedExpression);
     System.out.println(parsedExpression.equals(simplified));
 ```
+
 output:
+
 ```bash
 (A & B)
 true
@@ -105,6 +112,58 @@ output:
 ```
 
 All of these examples can also be found in [ExampleRunner](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/com/bpodgursky/jbool_expressions/example/ExampleRunner.java)
+
+Rules
+====
+
+The current simplification rules define fairly simple and fast optimizations, and is defined in [RuleSet](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/com/bpodgursky/jbool_expressions/rules/RuleSet.java).
+I'm happy to add more sophisticated rules (let me know about them via a PR or issue).  The current rules include:
+
+Literal removal:
+
+```bash
+(false & A) => false
+(true & A) => A
+
+(false | A) => A
+(true | A) => true
+```
+
+Negation simplification:
+
+```bash
+(!!A ) => A
+(A & !A) => false
+(A | !A) => true
+```
+
+And / Or de-duplication and flattening:
+
+```bash
+(A & A & (B & C)) => (A & B & C)
+(A | A | (B | C)) => (A | B | C)
+```
+
+Child expression simplification:
+
+```bash
+(A | B) & (A | B | C) => (A | B)
+((A & B) | (A & B & C)) => (A & B)
+```
+
+Additional rules for converting to sum-of-products form:
+
+Propagating &:
+
+```bash
+( A & ( C | D)) => ((A & C) | (A & D))
+```
+
+De Morgan's law:
+
+```bash
+(! ( A | B)) => ( (! A) & (! B))
+```
 
 Downloading
 ====

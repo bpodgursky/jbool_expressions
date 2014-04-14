@@ -4,7 +4,7 @@ import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 
 public class TestAnd extends JBoolTestCase {
 
-  public void testSimplify(){
+  public void testSimplify() {
     assertSimplify("A", "( A & A)");
     assertSimplify("A", "( A & A & A)");
     assertSimplify("false", "( A& A & (! A))");
@@ -12,26 +12,31 @@ public class TestAnd extends JBoolTestCase {
     assertSimplify("false", "( A&  A & false)");
   }
 
-  public void testAndTrue(){
+  public void testAndTrue() {
     assertSimplify("true", "( true & (! (! true)))");
   }
 
-  public void testCombineAnd(){
-    assertSimplify("(A & B)","( A & B & A)");
+  public void testCombineAnd() {
+    assertSimplify("(A & B)", "( A & B & A)");
   }
 
-  public void testToSopOnce(){
+  public void testToSopOnce() {
     assertToSop("((A & C) | (A & D))", "( A & ( C | D))");
     assertToSop("((A & C) | (A & D) | (B & C) | (B & D))", "( ( A|  B) & ( C|  D))");
   }
 
-  public void testToPos(){
+  public void testToPos() {
     assertToPos("((A | C) & B & D)", "(A & B & D) | (B & C & D)");
     assertToPos("(!C | !D | A)", "((A & !B) | (A & D) | (!C & D) | !D)");
     assertEvaluateSame(
         ExprParser.parse("((A & !B) | (A & D) | (!C & D) | !D)"),
         ExprParser.parse("(!C | !D | A)")
     );
+  }
+
+  public void testSimplifyChildren() {
+    assertSimplify("(A | B)", "(A | B) & (A | B | C)");
+    assertSimplify("(A & B)", "((A & B) | (A & B & C))");
   }
 
 }
