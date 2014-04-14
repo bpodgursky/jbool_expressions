@@ -174,7 +174,7 @@ jbool_expressions is available via maven central:
 <dependency>
     <groupId>com.bpodgursky</groupId>
     <artifactId>jbool_expressions</artifactId>
-    <version>1.3</version>
+    <version>1.5</version>
 </dependency>
 ```
 Snapshots are available via sonatype:
