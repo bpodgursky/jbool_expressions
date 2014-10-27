@@ -1,10 +1,14 @@
 package com.bpodgursky.jbool_expressions.example;
 
-import com.bpodgursky.jbool_expressions.*;
+import java.util.Collections;
+
+import com.bpodgursky.jbool_expressions.And;
+import com.bpodgursky.jbool_expressions.Expression;
+import com.bpodgursky.jbool_expressions.Not;
+import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.Variable;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-
-import java.util.Collections;
 
 public class ExampleRunner {
   public static void main(String[] args) {
@@ -48,5 +52,15 @@ public class ExampleRunner {
     System.out.println(sopForm);
 
     //  ((A & C) | (A & D) | (B & C) | (B & D))
+
+    Expression<String> nonStandard2 = ExprParser.parse("((A & B) | (C & D))");
+    System.out.println(nonStandard2);
+
+    //  ((A & B) | (C & D))
+
+    Expression<String> posForm = RuleSet.toCNF(nonStandard2);
+    System.out.println(posForm);
+
+    //  ((A | C) & (A | D) & (B | C) & (B | D))
   }
 }
