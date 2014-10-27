@@ -29,9 +29,7 @@ Of course, this expression contains a useless term (either C or (! C) is always 
     Expression<String> simplified = RuleSet.simplify(expr);
     System.out.println(expr);
 ```
-
 outputs:
-
 ```bash
 (A & B)
 ```
@@ -44,9 +42,7 @@ We can assign a value to one of the variables, and see that the expression is si
     Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
     System.out.println(halfAssigned);
 ```
-
 outputs:
-
 ```bash
 B
 ```
@@ -58,7 +54,6 @@ We can assign the last variable, and see that the expression resolves to a liter
     System.out.println(resolved);
 ```
 outputs:
-
 ```bash
 true
 ```
@@ -68,9 +63,7 @@ All expressions are immutable (we got a new expression back each time we perform
 ```java
     System.out.println(expr);
 ```
-
 outputs:
-
 ```bash
 ((!C | C) & A & B)
 ```
@@ -84,32 +77,47 @@ Alternatively, we could have provided our expression as a String in prefix notat
     System.out.println(parsedExpression);
     System.out.println(parsedExpression.equals(simplified));
 ```
-
 output:
-
 ```bash
 (A & B)
 true
 ```
 
-### Sum-of-products form ###
+### Converting to Disjunctive Normal (Sum-of-Products) Form ###
 
 We can also convert expressions to sum-of-products form instead of just simplifying them.  For example:
 
 ```java
-    Expression<String> nonStandard = PrefixParser.parse("(* (+ A B) (+ C D))");
+    Expression<String> nonStandard = ExprParser.parse("((A | B) & (C | D))");
     System.out.println(nonStandard);
 
-    Expression<String> sopForm = RuleSet.toSop(nonStandard);
+    Expression<String> sopForm = RuleSet.toDNF(nonStandard);
     System.out.println(sopForm);
 ```
-
 output:
-
 ```bash
 ((A | B) & (C | D))
 ((A & C) | (A & D) | (B & C) | (B & D))
 ```
+
+### Converting to Conjunctive Normal (Product-of-Sums) form ###
+
+Likewise, we can convert an expression to product-of-sums form.  For example:
+
+```java
+    Expression<String> nonStandard = ExprParser.parse("((A & B) | (C & D))");
+    System.out.println(nonStandard);
+
+    Expression<String> posForm = RuleSet.toCNF(nonStandard);
+    System.out.println(posForm);
+
+```
+output:
+```bash
+((A & B) | (C & D))
+((A | C) & (A | D) & (B | C) & (B | D))
+```
+
 
 All of these examples can also be found in [ExampleRunner](https://github.com/bpodgursky/jbool_expressions/blob/master/src/main/java/com/bpodgursky/jbool_expressions/example/ExampleRunner.java)
 
