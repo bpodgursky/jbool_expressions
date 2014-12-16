@@ -9,7 +9,7 @@
 
   <groupId>com.bpodgursky</groupId>
   <artifactId>jbool_expressions</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <packaging>jar</packaging>
 
   <name>jbool_expressions</name>
@@ -31,7 +31,7 @@
     <connection>scm:git:git@github.com:bpodgursky/jbool_expressions.git</connection>
     <developerConnection>scm:git:git@github.com:bpodgursky/jbool_expressions.git</developerConnection>
     <url>https://github.com/bpodgursky/jbool_expressions</url>
-    <tag>HEAD</tag>
+    <tag>jbool_expressions-1.6</tag>
   </scm>
 
   <developers>
