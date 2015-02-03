@@ -1,9 +1,7 @@
 package com.bpodgursky.jbool_expressions.parsers;
 
-import com.bpodgursky.jbool_expressions.*;
-import com.bpodgursky.jbool_expressions.parsers.BooleanExprLexer;
-import com.bpodgursky.jbool_expressions.parsers.BooleanExprParser;
-import com.google.common.collect.Lists;
+import java.util.List;
+
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -11,11 +9,18 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 
-import java.util.List;
+import com.bpodgursky.jbool_expressions.And;
+import com.bpodgursky.jbool_expressions.Expression;
+import com.bpodgursky.jbool_expressions.Literal;
+import com.bpodgursky.jbool_expressions.Not;
+import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.Variable;
+import com.google.common.collect.Lists;
 
 public class ExprParser {
 
   public static Expression<String> parse(String expression){
+      System.out.println(expression);
     return parse(expression, new IdentityMap());
   }
 
