@@ -12,17 +12,18 @@ public class Not<K> extends Expression<K> {
 
   private final Expression<K> e;
 
-  private Not(Expression<K> e){
+  private Not(Expression<K> e) {
     this.e = e;
   }
 
-  public Expression<K> getE(){
+  public Expression<K> getE() {
     return e;
   }
 
-  public String toString(){
-      if (!cachedStringRepresentation.isPresent())
-          cachedStringRepresentation = Optional.of("!" + e);
+  public String toString() {
+    if (!cachedStringRepresentation.isPresent()) {
+      cachedStringRepresentation = Optional.of("!" + e);
+    }
     return cachedStringRepresentation.get();
   }
 
@@ -36,7 +37,7 @@ public class Not<K> extends Expression<K> {
     return expr instanceof Not && ((Not)expr).getE().equals(getE());
   }
 
-  public static <K> Not<K> of(Expression<K> e){
+  public static <K> Not<K> of(Expression<K> e) {
     return new Not<K>(e);
   }
 

@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 public class ExprParser {
 
   public static Expression<String> parse(String expression){
-      System.out.println(expression);
     return parse(expression, new IdentityMap());
   }
 
