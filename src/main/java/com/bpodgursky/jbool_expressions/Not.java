@@ -1,12 +1,14 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.List;
+
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-
-import java.util.List;
+import com.google.common.base.Optional;
 
 public class Not<K> extends Expression<K> {
   public static final String EXPR_TYPE = "not";
+  private Optional<String> cachedStringRepresentation = Optional.absent();
 
   private final Expression<K> e;
 
@@ -19,7 +21,9 @@ public class Not<K> extends Expression<K> {
   }
 
   public String toString(){
-    return "!"+e;
+      if (!cachedStringRepresentation.isPresent())
+          cachedStringRepresentation = Optional.of("!" + e);
+    return cachedStringRepresentation.get();
   }
 
   @Override
