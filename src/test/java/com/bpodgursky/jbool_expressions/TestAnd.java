@@ -32,6 +32,13 @@ public class TestAnd extends JBoolTestCase {
         ExprParser.parse("((A & !B) | (A & D) | (!C & D) | !D)"),
         ExprParser.parse("(!C | !D | A)")
     );
+
+    assertToPos("((A | C) & B & D)", "(A & B & D) | (B & C & D)");
+  }
+
+
+  public void testToSopPerformance() throws Exception {
+    assertToPos("((A | B) & (C | D | E | F) & (K | L | M) & N)", "((A | B) & (C | D | E | F) & (K | L | M) & N)");
   }
 
   public void testSimplifyChildren() {

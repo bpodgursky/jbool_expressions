@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 public class RuleSet {
 
-  public static <K> List<Rule<?, K>> simplifyRules(){
+  private static <K> List<Rule<?, K>> simplifyRules(){
     List<Rule<?, K>> rules = Lists.newArrayList();
     rules.add(new SimplifyAnd<K>());
     rules.add(new SimplifyOr<K>());
@@ -22,15 +22,14 @@ public class RuleSet {
     return rules;
   }
 
-  public static <K> List<Rule<?, K>> toSopRules(){
+  private static <K> List<Rule<?, K>> toSopRules(){
     List<Rule<?, K>> rules = Lists.newArrayList(RuleSet.<K>simplifyRules());
     rules.add(new ToSOP<K>());
-    rules.add(new DeMorgan<K>());
 
     return rules;
   }
 
-  public static <K> List<Rule<?, K>> demorganRules(){
+  private static <K> List<Rule<?, K>> demorganRules(){
     List<Rule<?, K>> rules = Lists.newArrayList(RuleSet.<K>simplifyRules());
     rules.add(new DeMorgan<K>());
 
@@ -76,6 +75,7 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> toSop(Expression<K> root){
+    root = applySet(root, Lists.<Rule<?, K>>newArrayList(new DeMorgan<K>()));
     return applySet(root, RuleSet.<K>toSopRules());
   }
 
