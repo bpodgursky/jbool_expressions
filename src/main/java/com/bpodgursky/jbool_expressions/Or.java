@@ -63,6 +63,10 @@ public class Or<K> extends NExpression<K> {
     return new Or<K>(children);
   }
 
+  public static <K> Or<K> of(Expression<K> child1) {
+    return of(ExprUtil.<K>list(child1));
+  }
+
   @Override
   public String getExprType() {
     return EXPR_TYPE;
