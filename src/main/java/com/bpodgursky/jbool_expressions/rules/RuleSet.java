@@ -18,6 +18,7 @@ public class RuleSet {
     rules.add(new CombineOr<K>());
     rules.add(new SimplifyNExpression<K>());
     rules.add(new SimplifyNExprChildren<K>());
+    rules.add(new CollapseNegation<K>());
 
     return rules;
   }

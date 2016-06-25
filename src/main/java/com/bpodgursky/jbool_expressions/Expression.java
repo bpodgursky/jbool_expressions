@@ -1,12 +1,11 @@
 package com.bpodgursky.jbool_expressions;
 
-import com.bpodgursky.jbool_expressions.rules.Rule;
-
 import java.util.List;
+
+import com.bpodgursky.jbool_expressions.rules.Rule;
 
 public abstract class Expression<K> implements Comparable<Expression> {
 
-  @Override
   public int compareTo(Expression o) {
     return toString().compareTo(o.toString());
   }

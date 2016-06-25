@@ -36,5 +36,12 @@ public class TestSimplify extends JBoolTestCase {
     assertApply("(A)", "A | (A & B)", rules);
     assertApply("((A | B) | A)", "(A | B) | A", rules);
 
+    // test CollapseNegation rules
+    assertSimplify("(A | C | D)", "A | (!A & C) | D");
+    assertSimplify("((A & E) | C | D)", "(A & E) | (!(A & E) & C) | D");
+
+
+    System.out.println(simplifyToString("!((!A & !B & !C) | A)"));
+
   }
 }

@@ -1,8 +1,48 @@
 package com.bpodgursky.jbool_expressions;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.Lists;
 
 public class ExprUtil {
+
+  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr) {
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
+    List<Expression<K>> newChildren = Lists.newArrayList();
+    //  for each child of the or,  we want it AND all other children of the and
+
+    for (Expression<K> orChild : internalOr.expressions) {
+      List<Expression<K>> andOthers = Lists.newArrayList();
+      ExprUtil.addAll(andOthers, childrenNew);
+      andOthers.add(orChild);
+
+      newChildren.add(And.of(andOthers));
+    }
+
+    return Or.of(newChildren);
+  }
+
+  public static <K> Expression<K> collapseToPOS(Or<K> or, And<K> internalAnd){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
+    List<Expression<K>> newChildren = Lists.newArrayList();
+
+    for (Expression<K> andChild : internalAnd.expressions) {
+      List<Expression<K>> orOthers = Lists.newArrayList();
+      ExprUtil.addAll(orOthers, childrenNew);
+      orOthers.add(andChild);
+
+      newChildren.add(Or.of(orOthers));
+
+    }
+
+    return And.of(newChildren);
+  }
+
 
   public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit){
     Set<Expression<K>> andTerms = new HashSet<Expression<K>>();

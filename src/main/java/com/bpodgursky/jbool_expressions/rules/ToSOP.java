@@ -1,12 +1,10 @@
 package com.bpodgursky.jbool_expressions.rules;
 
-import com.google.common.collect.Lists;
 import com.bpodgursky.jbool_expressions.And;
-import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Or;
 
-import java.util.List;
+import static com.bpodgursky.jbool_expressions.ExprUtil.collapseToSOP;
 
 public class ToSOP<K> extends Rule<And<K>, K> {
 
@@ -17,19 +15,7 @@ public class ToSOP<K> extends Rule<And<K>, K> {
       if (e instanceof Or) {
         Or<K> or = (Or<K>) e;
 
-        Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, or);
-        List<Expression<K>> newChildren = Lists.newArrayList();
-        //  for each child of the or,  we want it AND all other children of the and
-
-        for (Expression<K> orChild : or.expressions) {
-          List<Expression<K>> andOthers = Lists.newArrayList();
-          ExprUtil.addAll(andOthers, childrenNew);
-          andOthers.add(orChild);
-
-          newChildren.add(And.of(andOthers));
-        }
-
-        return Or.of(newChildren);
+        return collapseToSOP(and, or);
       }
     }
     return and;
