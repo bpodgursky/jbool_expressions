@@ -40,8 +40,16 @@ public class TestSimplify extends JBoolTestCase {
     assertSimplify("(A | C | D)", "A | (!A & C) | D");
     assertSimplify("((A & E) | C | D)", "(A & E) | (!(A & E) & C) | D");
 
+    //  test ExtractCommon rules
+    assertSimplify("((B & C) | A)", "(A | B) & (A | C)");
+    assertSimplify("((((B | D) & (C | E)) | A) & F)", "(A | B | D) & (A | C | E) & F");
 
+    assertSimplify("((B | C) & A)", "(A & B) | (A & C)");
+    assertSimplify("((((B & D) | (C & E)) & A) | F)", "(A & B & D) | (A & C & E) | F");
+
+    System.out.println(simplifyToString("(A | B | D) & (A | C | E) & F"));
     System.out.println(simplifyToString("!((!A & !B & !C) | A)"));
+
 
   }
 }

@@ -10,12 +10,12 @@ public class Or<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "or";
   private Optional<String> cachedStringRepresentation = Optional.absent();
 
-  private Or(List<Expression<K>> children) {
+  private Or(List<? extends Expression<K>> children) {
     super(children);
   }
 
   @Override
-  protected Expression<K> createInternal(List<Expression<K>> children) {
+  public NExpression<K> create(List<? extends Expression<K>> children) {
     return new Or<K>(children);
   }
 
@@ -59,7 +59,7 @@ public class Or<K> extends NExpression<K> {
     return of(ExprUtil.<K>list(child1, child2));
   }
 
-  public static <K> Or<K> of(List<Expression<K>> children) {
+  public static <K> Or<K> of(List<? extends Expression<K>> children) {
     return new Or<K>(children);
   }
 

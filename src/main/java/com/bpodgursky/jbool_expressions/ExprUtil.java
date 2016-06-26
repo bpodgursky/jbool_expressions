@@ -43,8 +43,23 @@ public class ExprUtil {
     return And.of(newChildren);
   }
 
+  public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit){
+    Set<Expression<K>> andTerms = new HashSet<Expression<K>>();
+    for(Expression<K> eachExpr: exprs){
+      if(!omit.contains(eachExpr)){
+        andTerms.add(eachExpr);
+      }
+    }
 
-  public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit){
+    return toArray(andTerms);
+  }
+
+  public static <K> Expression<K>[] allExceptMatch(List<Expression<K>> exprs, Expression<K> omit) {
+    //noinspection unchecked
+    return allExceptMatch(exprs.toArray(new Expression[0]), omit);
+  }
+
+    public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit){
     Set<Expression<K>> andTerms = new HashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!eachExpr.equals(omit)){
@@ -52,6 +67,10 @@ public class ExprUtil {
       }
     }
 
+    return toArray(andTerms);
+  }
+
+  private static <K> Expression<K>[] toArray(Set<Expression<K>> andTerms) {
     int i = 0;
     Expression<K>[] result = expr(andTerms.size());
     for(Expression<K> expr: andTerms){

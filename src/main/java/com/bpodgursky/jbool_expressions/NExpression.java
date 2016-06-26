@@ -11,7 +11,7 @@ public abstract class NExpression<K> extends Expression<K>{
 
   public final Expression<K>[] expressions;
 
-  protected NExpression(List<Expression<K>> expressions){
+  protected NExpression(List<? extends Expression<K>> expressions){
     if(expressions.isEmpty()){
       throw new IllegalArgumentException("Arguments length 0!");
     }
@@ -26,12 +26,12 @@ public abstract class NExpression<K> extends Expression<K>{
     for(Expression<K> expr: expressions){
       childCopy.add(RuleSet.applyAll(expr, rules));
     }
-    return createInternal(childCopy);
+    return create(childCopy);
   }
 
   public List<Expression<K>> getChildren(){
     return ExprUtil.list(expressions);
   }
 
-  protected abstract Expression<K> createInternal(List<Expression<K>> children);
+  public abstract NExpression<K> create(List<? extends Expression<K>> children);
 }

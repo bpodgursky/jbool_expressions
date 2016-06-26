@@ -11,12 +11,12 @@ public class And<K> extends NExpression<K> {
   private Optional<String> cachedStringRepresentation = Optional.absent();
 
 
-  private And(List<Expression<K>> children) {
+  private And(List<? extends Expression<K>> children) {
     super(children);
   }
 
   @Override
-  protected Expression<K> createInternal(List<Expression<K>> children) {
+  public NExpression<K> create(List<? extends Expression<K>> children) {
     return new And<K>(children);
   }
 
@@ -39,7 +39,7 @@ public class And<K> extends NExpression<K> {
     return of(ExprUtil.<K>list(child1));
   }
 
-  public static <K> And<K> of(List<Expression<K>> children) {
+  public static <K> And<K> of(List<? extends Expression<K>> children) {
     return new And<K>(children);
   }
 
