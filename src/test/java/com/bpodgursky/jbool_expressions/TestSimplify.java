@@ -8,7 +8,7 @@ import com.google.common.collect.Lists;
 
 public class TestSimplify extends JBoolTestCase {
 
-  public void testSimplify(){
+  public void testSimplify() {
 
     //  A | (A & B)  = A
     assertSimplify("A", "A | (A & B)");
@@ -29,7 +29,7 @@ public class TestSimplify extends JBoolTestCase {
 
 
     // test in isolation to catch a few potential errors
-    ArrayList<Rule<?,String>> rules = Lists.<Rule<?, String>>newArrayList(new SimplifyNExprChildren<String>());
+    ArrayList<Rule<?, String>> rules = Lists.<Rule<?, String>>newArrayList(new SimplifyNExprChildren<String>());
 
     assertApply("((A & B) & A)", "(A & B) & A", rules);
     assertApply("(A)", "A & (A | B)", rules);
@@ -40,16 +40,6 @@ public class TestSimplify extends JBoolTestCase {
     assertSimplify("(A | C | D)", "A | (!A & C) | D");
     assertSimplify("((A & E) | C | D)", "(A & E) | (!(A & E) & C) | D");
 
-    //  test ExtractCommon rules
-    assertSimplify("((B & C) | A)", "(A | B) & (A | C)");
-    assertSimplify("((((B | D) & (C | E)) | A) & F)", "(A | B | D) & (A | C | E) & F");
-
-    assertSimplify("((B | C) & A)", "(A & B) | (A & C)");
-    assertSimplify("((((B & D) | (C & E)) & A) | F)", "(A & B & D) | (A & C & E) | F");
-
-    System.out.println(simplifyToString("(A | B | D) & (A | C | E) & F"));
-    System.out.println(simplifyToString("!((!A & !B & !C) | A)"));
-
-
   }
+
 }

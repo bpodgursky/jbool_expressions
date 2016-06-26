@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 
 //  (A & B) | (A & C) => A & (B | C)
 //  (A | B | D) & (A | C | E) & F=> (A | ((B|D) & (C|E))) & F
+//  TODO works, but throws simplifcation into infinte loop, can't add in yet : /
 public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
 
   private boolean oppositeNExpr(NExpression<K> first, Expression<K> second) {

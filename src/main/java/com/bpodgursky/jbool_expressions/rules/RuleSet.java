@@ -19,7 +19,6 @@ public class RuleSet {
     rules.add(new SimplifyNExpression<K>());
     rules.add(new SimplifyNExprChildren<K>());
     rules.add(new CollapseNegation<K>());
-    rules.add(new ExtractCommon<K>());
 
     return rules;
   }
