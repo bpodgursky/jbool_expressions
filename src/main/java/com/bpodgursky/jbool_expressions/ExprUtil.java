@@ -11,32 +11,36 @@ import com.google.common.collect.Lists;
 
 public class ExprUtil {
 
-  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr) {
+  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr, Expression<K> omitFromOr) {
     Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
     List<Expression<K>> newChildren = Lists.newArrayList();
     //  for each child of the or,  we want it AND all other children of the and
 
     for (Expression<K> orChild : internalOr.expressions) {
-      List<Expression<K>> andOthers = Lists.newArrayList();
-      ExprUtil.addAll(andOthers, childrenNew);
-      andOthers.add(orChild);
+      if(!orChild.equals(omitFromOr)) {
+        List<Expression<K>> andOthers = Lists.newArrayList();
+        ExprUtil.addAll(andOthers, childrenNew);
+        andOthers.add(orChild);
 
-      newChildren.add(And.of(andOthers));
+        newChildren.add(And.of(andOthers));
+      }
     }
 
     return Or.of(newChildren);
   }
 
-  public static <K> Expression<K> collapseToPOS(Or<K> or, And<K> internalAnd){
+  public static <K> Expression<K> collapseToPOS(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd){
     Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
     List<Expression<K>> newChildren = Lists.newArrayList();
 
     for (Expression<K> andChild : internalAnd.expressions) {
-      List<Expression<K>> orOthers = Lists.newArrayList();
-      ExprUtil.addAll(orOthers, childrenNew);
-      orOthers.add(andChild);
+      if(!andChild.equals(omitFromAnd)) {
+        List<Expression<K>> orOthers = Lists.newArrayList();
+        ExprUtil.addAll(orOthers, childrenNew);
+        orOthers.add(andChild);
 
-      newChildren.add(Or.of(orOthers));
+        newChildren.add(Or.of(orOthers));
+      }
 
     }
 
