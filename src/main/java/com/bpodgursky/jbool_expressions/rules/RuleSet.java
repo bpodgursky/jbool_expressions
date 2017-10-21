@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 public class RuleSet {
 
-  private static <K> List<Rule<?, K>> simplifyRules(){
+  private static <K> List<Rule<?, K>> simplifyRules() {
     List<Rule<?, K>> rules = Lists.newArrayList();
     rules.add(new SimplifyAnd<K>());
     rules.add(new SimplifyOr<K>());
@@ -30,14 +30,14 @@ public class RuleSet {
     return rules;
   }
 
-  private static <K> List<Rule<?, K>> demorganRules(){
+  private static <K> List<Rule<?, K>> demorganRules() {
     List<Rule<?, K>> rules = Lists.newArrayList(RuleSet.<K>simplifyRules());
     rules.add(new DeMorgan<K>());
 
     return rules;
   }
 
-  public static <K> Expression<K> applyAll(Expression<K> e, List<Rule<?, K>> rules){
+  public static <K> Expression<K> applyAll(Expression<K> e, List<Rule<?, K>> rules) {
     Expression<K> orig = e;
     Expression<K> simplified = applyAllSingle(orig, rules);
 
@@ -49,7 +49,7 @@ public class RuleSet {
     return simplified;
   }
 
-  private static <K> Expression<K> applyAllSingle(Expression<K> e, List<Rule<?, K>> rules){
+  private static <K> Expression<K> applyAllSingle(Expression<K> e, List<Rule<?, K>> rules) {
     Expression<K> tmp = e.apply(rules);
     for(Rule<?, K> r: rules){
       tmp = r.apply(tmp);
@@ -57,21 +57,21 @@ public class RuleSet {
     return tmp;
   }
 
-  public static <K> Expression<K> simplify(Expression<K> root){
+  public static <K> Expression<K> simplify(Expression<K> root) {
     return applySet(root, RuleSet.<K>simplifyRules());
   }
 
   /**
    * More formal name for sum-of-products
    */
-  public static <K> Expression<K> toDNF(Expression<K> root){
+  public static <K> Expression<K> toDNF(Expression<K> root) {
     return toSop(root);
   }
 
   /**
    * More formal name for product-of-sums
    */
-  public static <K> Expression<K> toCNF(Expression<K> root){
+  public static <K> Expression<K> toCNF(Expression<K> root) {
     return toPos(root);
   }
 
@@ -80,7 +80,7 @@ public class RuleSet {
     return applySet(root, RuleSet.<K>toSopRules());
   }
 
-  public static <K> Expression<K> toPos(Expression<K> root){
+  public static <K> Expression<K> toPos(Expression<K> root) {
 
     //   not + simplify
     Not<K> inverse = Not.of(root);
@@ -93,13 +93,13 @@ public class RuleSet {
   }
 
 
-  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values){
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values) {
     List<Rule<?, K>> rules = Lists.newArrayList(RuleSet.<K>simplifyRules());
     rules.add(new Assign<K>(values));
     return applySet(root, rules);
   }
 
-  public static <K> Expression<K> applySet(Expression<K> root, List<Rule<?, K>> allRules){
+  public static <K> Expression<K> applySet(Expression<K> root, List<Rule<?, K>> allRules) {
     return applyAll(root, allRules);
   }
 }

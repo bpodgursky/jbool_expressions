@@ -29,22 +29,40 @@ public class ExprUtil {
     return Or.of(newChildren);
   }
 
-  public static <K> Expression<K> collapseToPOS(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd){
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
-    List<Expression<K>> newChildren = Lists.newArrayList();
+  public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
+    List<Expression<K>> newChildren = Lists.newArrayList(childrenNew);
 
-    for (Expression<K> andChild : internalAnd.expressions) {
-      if(!andChild.equals(omitFromAnd)) {
-        List<Expression<K>> orOthers = Lists.newArrayList();
-        ExprUtil.addAll(orOthers, childrenNew);
-        orOthers.add(andChild);
+    List<Expression<K>> orOthers = Lists.newArrayList();
+    for (Expression<K> orChild : internalOr.expressions) {
 
-        newChildren.add(Or.of(orOthers));
+      if(!orChild.equals(omitFromOr)) {
+        orOthers.add(orChild);
       }
 
     }
 
+    newChildren.add(Or.of(orOthers));
+
     return And.of(newChildren);
+  }
+
+  public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
+    List<Expression<K>> newChildren = Lists.newArrayList(childrenNew);
+
+    List<Expression<K>> andOthers = Lists.newArrayList();
+    for (Expression<K> andChild : internalAnd.expressions) {
+
+      if(!andChild.equals(omitFromAnd)) {
+        andOthers.add(andChild);
+      }
+
+    }
+
+    newChildren.add(And.of(andOthers));
+
+    return Or.of(newChildren);
   }
 
   public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit){

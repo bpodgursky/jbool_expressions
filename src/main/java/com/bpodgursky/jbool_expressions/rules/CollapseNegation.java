@@ -33,7 +33,7 @@ public class CollapseNegation<K> extends Rule<NExpression<K>, K> {
                 //  if otherChild == !subChild
                 //  A and !A
                 if (areNegation(subChild, otherChild)) {
-                  return ExprUtil.collapseToPOS(inOr, child, subChild);
+                  return ExprUtil.stripNegation(inOr, child, subChild);
                 }
               }
             }
@@ -49,7 +49,7 @@ public class CollapseNegation<K> extends Rule<NExpression<K>, K> {
           for (Expression<K> otherChild : input.getChildren()) {
             for (Expression<K> subChild : child.getChildren()) {
               if (areNegation(subChild, otherChild)) {
-                return ExprUtil.collapseToSOP(andIn, child, subChild);
+                return ExprUtil.stripNegation(andIn, child, subChild);
               }
             }
           }
