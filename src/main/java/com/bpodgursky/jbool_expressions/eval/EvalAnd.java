@@ -10,10 +10,13 @@ public class EvalAnd<K> extends EvalRule<K> {
   public boolean evaluate(Expression<K> expression, Map<String, EvalRule<K>> rules) {
     And<K> and = (And<K>) expression;
 
-    boolean value = true;
     for(Expression<K> e: and.expressions){
-      value &= evaluateInternal(e, rules);
+
+      if(!evaluateInternal(e, rules)){
+        return false;
+      }
+
     }
-    return value;
+    return true;
   }
 }

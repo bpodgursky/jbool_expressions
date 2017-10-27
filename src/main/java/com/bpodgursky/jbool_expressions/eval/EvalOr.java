@@ -10,10 +10,12 @@ public class EvalOr<K> extends EvalRule<K> {
   public boolean evaluate(Expression<K> expression, Map<String, EvalRule<K>> rules) {
     Or<K> or = (Or<K>) expression;
 
-    boolean value = false;
     for(Expression<K> e: or.expressions){
-      value |= evaluateInternal(e, rules);
+      if(evaluateInternal(e, rules)){
+        return true;
+      }
     }
-    return value;
+
+    return false;
   }
 }
