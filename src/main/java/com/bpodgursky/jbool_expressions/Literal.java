@@ -46,14 +46,18 @@ public class Literal<K> extends Expression<K>{
   public Expression<K> apply(List<Rule<?, K>> rules) {
     return this;
   }
-
-  @Override
-  public boolean equals(Expression expr) {
-    return expr instanceof Literal && ((Literal)expr).getValue() == getValue();
-  }
-
   @Override
   public String getExprType() {
     return EXPR_TYPE;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return this == o;
+  }
+
+  @Override
+  public int hashCode() {
+    return Boolean.hashCode(value);
   }
 }
