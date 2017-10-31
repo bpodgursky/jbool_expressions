@@ -12,7 +12,7 @@ public class And<K> extends NExpression<K> {
 
 
   private And(List<? extends Expression<K>> children) {
-    super(children);
+    super(children, 2312);
   }
 
   @Override
@@ -41,25 +41,6 @@ public class And<K> extends NExpression<K> {
 
   public static <K> And<K> of(List<? extends Expression<K>> children) {
     return new And<K>(children);
-  }
-
-  @Override
-  public boolean equals(Expression expr) {
-    if (!(expr instanceof And)) {
-      return false;
-    }
-    And other = (And)expr;
-
-    if (other.expressions.length != expressions.length) {
-      return false;
-    }
-
-    for (int i = 0; i < expressions.length; i++) {
-      if (!expressions[i].equals(other.expressions[i])) {
-        return false;
-      }
-    }
-    return true;
   }
 
   @Override

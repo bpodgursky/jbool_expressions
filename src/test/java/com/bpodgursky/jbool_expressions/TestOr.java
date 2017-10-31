@@ -1,5 +1,8 @@
 package com.bpodgursky.jbool_expressions;
 
+
+import static org.junit.Assert.assertNotEquals;
+
 public class TestOr extends JBoolTestCase {
 
   public void testSimplify(){
@@ -23,4 +26,15 @@ public class TestOr extends JBoolTestCase {
   public void testNExpr(){
     assertSimplify("true", "( A | B | A | ( true & (! (! true))))");
   }
+
+
+  public void testEqualsHashCode() {
+    assertEquals(Or.of(Variable.of("A"), Variable.of("B")), Or.of(Variable.of("B"), Variable.of("A")));
+    assertEquals(Or.of(Variable.of("A"), Variable.of("B")).hashCode(), Or.of(Variable.of("B"), Variable.of("A")).hashCode());
+    assertEquals(Or.of(Variable.of("A"), Variable.of("B")).hashCode(), Or.of(Variable.of("A"), Variable.of("B")).hashCode());
+    assertNotEquals(Or.of(Variable.of("A"), Variable.of("B")), Or.of(Variable.of("B"), Variable.of("C")));
+    assertNotEquals(Or.of(Variable.of("A"), Variable.of("B")).hashCode(), Or.of(Variable.of("A"), Variable.of("C")).hashCode());
+    assertNotEquals(Or.of(Variable.of("A"), Variable.of("B")).hashCode(), And.of(Variable.of("A"), Variable.of("B")).hashCode());
+  }
+
 }

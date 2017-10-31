@@ -3,7 +3,7 @@ package com.bpodgursky.jbool_expressions;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -66,7 +66,7 @@ public class ExprUtil {
   }
 
   public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit){
-    Set<Expression<K>> andTerms = new HashSet<Expression<K>>();
+    Set<Expression<K>> andTerms = new LinkedHashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!omit.contains(eachExpr)){
         andTerms.add(eachExpr);
@@ -78,11 +78,11 @@ public class ExprUtil {
 
   public static <K> Expression<K>[] allExceptMatch(List<Expression<K>> exprs, Expression<K> omit) {
     //noinspection unchecked
-    return allExceptMatch(exprs.toArray(new Expression[0]), omit);
+    return allExceptMatch(exprs.toArray(new Expression[exprs.size()]), omit);
   }
 
     public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit){
-    Set<Expression<K>> andTerms = new HashSet<Expression<K>>();
+    Set<Expression<K>> andTerms = new LinkedHashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!eachExpr.equals(omit)){
         andTerms.add(eachExpr);
@@ -121,7 +121,7 @@ public class ExprUtil {
     }else if(expr instanceof Not){
       return getVariables(((Not<K>) expr).getE());
     }else if(expr instanceof NExpression){
-      Set<K> vars = new HashSet<K>();
+      Set<K> vars = new LinkedHashSet<K>();
       for(Expression<K> child: ((NExpression<K>)expr).expressions){
         vars.addAll(getVariables(child));
       }

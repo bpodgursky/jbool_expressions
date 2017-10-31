@@ -7,6 +7,8 @@ import com.bpodgursky.jbool_expressions.rules.RuleSet;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.assertNotEquals;
+
 public class TestNot extends JBoolTestCase {
 
   public void testSimplify(){
@@ -41,6 +43,11 @@ public class TestNot extends JBoolTestCase {
 
     assertSimplify("!B", "(! B)");
 
+  }
+
+  public void testEqualsHashCode() {
+    assertNotEquals(Variable.of("E"), Not.of(Variable.of("E")));
+    assertNotEquals(Variable.of("E").hashCode(), Not.of(Variable.of("E")).hashCode());
   }
 
 }
