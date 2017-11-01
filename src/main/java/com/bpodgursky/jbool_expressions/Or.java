@@ -11,7 +11,7 @@ public class Or<K> extends NExpression<K> {
   private Optional<String> cachedStringRepresentation = Optional.absent();
 
   private Or(List<? extends Expression<K>> children) {
-    super(children, 2313);
+    super(children, 1487);
   }
 
   @Override

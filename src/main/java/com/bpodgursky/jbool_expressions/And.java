@@ -12,7 +12,7 @@ public class And<K> extends NExpression<K> {
 
 
   private And(List<? extends Expression<K>> children) {
-    super(children, 2312);
+    super(children, 1483);
   }
 
   @Override
