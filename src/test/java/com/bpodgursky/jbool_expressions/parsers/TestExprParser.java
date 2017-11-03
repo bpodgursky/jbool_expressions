@@ -29,6 +29,23 @@ public class TestExprParser extends JBoolTestCase {
     Assert.assertEquals(Not.of(Literal.<String>getTrue()), ExprParser.parse("!(true)"));
 
     Assert.assertEquals(And.of(Not.of(Variable.of("' A:aa+)(*&^%$#@!_123'")), Variable.of("A")), ExprParser.parse("!' A:aa+)(*&^%$#@!_123' & A"));
+
+    Assert.assertEquals(
+        Not.of(Not.of(Variable.of("A"))),
+        ExprParser.parse("!!A")
+    );
+
+    Assert.assertEquals(
+        Not.of(Not.of(Not.of(Variable.of("A")))),
+        ExprParser.parse("!!!A")
+    );
+
+    Assert.assertEquals(
+        Not.of(Not.of(Or.of(Variable.of("A"), Variable.of("B")))),
+        ExprParser.parse("!!(A | B)")
+    );
+
+
   }
 
   public void testQuotedMapper(){
