@@ -68,6 +68,12 @@
       <artifactId>antlr</artifactId>
       <version>3.5.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.6</version>
+    </dependency>
+
   </dependencies>
 
   <build>

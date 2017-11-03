@@ -28,5 +28,5 @@ WS : ( ' ' | '\t' | '\r' | '\n' )+ { $channel = HIDDEN; };
 expression : orexpression;
 orexpression : andexpression (OR^ andexpression)*;
 andexpression : notexpression (AND^ notexpression)*;
-notexpression : NOT^ atom | atom;
+notexpression : NOT^ notexpression | atom;
 atom : TRUE | FALSE | NAME | QUOTED_NAME | LPAREN! orexpression RPAREN!;
