@@ -61,7 +61,7 @@ public class GenerateExpressionExamples {
 
     FileWriter writer = new FileWriter(output);
 
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 50000; i++) {
       Expression<String> expr = recurse(rand, variables, minExprLength, maxExprLength, 0, maxDepth);
       writer.write(expr.toString() + "\n");
     }
@@ -125,3 +125,4 @@ public class GenerateExpressionExamples {
   }
 
 }
+

@@ -21,11 +21,6 @@ public class BenchmarkPerformance {
       String[] nameParts = file.getName().split("_");
 
       System.out.println("Looking at dataset");
-      System.out.println("\tPrefix length:\t"+nameParts[1]);
-      System.out.println("\tNum variables:\t"+nameParts[2]);
-      System.out.println("\tMin expr length:\t"+nameParts[3]);
-      System.out.println("\tMax expr length:\t"+nameParts[4]);
-      System.out.println("\tMax depth:\t"+nameParts[5]);
 
       long parseTime = 0;
       long simplifyTime = 0;
@@ -36,7 +31,7 @@ public class BenchmarkPerformance {
       while(scan.hasNext()){
         String expr = scan.nextLine();
 
-        if(++scanned % 10 == 0){
+        if(++scanned % 1000 == 0){
           System.out.println(scanned+"...");
         }
 
@@ -60,13 +55,19 @@ public class BenchmarkPerformance {
 
       }
 
-      System.out.println("Total parse time:\t"+parseTime);
-      System.out.println("Total simplify time:\t"+simplifyTime);
-      System.out.println("Total sop time:\t"+sopTime);
-      System.out.println("Total pos time:\t"+posTime);
+      System.out.println("\tPrefix length:\t"+nameParts[1]);
+      System.out.println("\tNum variables:\t"+nameParts[2]);
+      System.out.println("\tMin expr length:\t"+nameParts[3]);
+      System.out.println("\tMax expr length:\t"+nameParts[4]);
+      System.out.println("\tMax depth:\t"+nameParts[5]);
+      System.out.println("\t\tTotal parse time:\t"+parseTime);
+      System.out.println("\t\tTotal simplify time:\t"+simplifyTime);
+      System.out.println("\t\tTotal sop time:\t"+sopTime);
+      System.out.println("\t\tTotal pos time:\t"+posTime);
 
     }
 
   }
 
 }
+
