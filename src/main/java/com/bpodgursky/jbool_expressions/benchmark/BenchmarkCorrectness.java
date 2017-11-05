@@ -32,7 +32,7 @@ public class BenchmarkCorrectness {
 
         Expression<String> parsed = ExprParser.parse(expr);
         Expression<String> posStr = RuleSet.toPos(parsed);
-        results.write(posStr+"\n");
+        results.write(posStr.toLexicographicString()+"\n");
 
       }
 
