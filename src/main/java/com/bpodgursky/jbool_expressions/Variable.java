@@ -2,6 +2,7 @@ package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,11 @@ public class Variable<K> extends Expression<K> {
 
   @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
+    return this;
+  }
+
+  @Override
+  public Expression<K> sort(Comparator<Expression> comparator) {
     return this;
   }
 

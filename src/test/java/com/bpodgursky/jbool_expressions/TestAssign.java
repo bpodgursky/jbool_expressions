@@ -1,6 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import junit.framework.TestCase;
 
 import java.util.Collections;
@@ -15,13 +16,13 @@ public class TestAssign extends TestCase {
         )
     );
 
-    Expression<String> expr = RuleSet.assign(expr3, Collections.singletonMap("A", false));
+    Expression<String> expr = RulesHelper.assign(expr3, Collections.singletonMap("A", false));
     assertEquals("(B & (C | D))", expr.toString());
 
-    expr = RuleSet.assign(expr, Collections.singletonMap("B", true));
+    expr = RulesHelper.assign(expr, Collections.singletonMap("B", true));
     assertEquals("(C | D)", expr.toString());
 
-    expr = RuleSet.assign(expr, Collections.singletonMap("C", true));
+    expr = RulesHelper.assign(expr, Collections.singletonMap("C", true));
     assertEquals(Literal.<String>getTrue(), expr);
   }
 }

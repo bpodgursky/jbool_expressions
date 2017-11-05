@@ -2,6 +2,7 @@ package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class Literal<K> extends Expression<K>{
@@ -46,6 +47,12 @@ public class Literal<K> extends Expression<K>{
   public Expression<K> apply(List<Rule<?, K>> rules) {
     return this;
   }
+
+  @Override
+  public Expression<K> sort(Comparator<Expression> comparator) {
+    return this;
+  }
+
   @Override
   public String getExprType() {
     return EXPR_TYPE;

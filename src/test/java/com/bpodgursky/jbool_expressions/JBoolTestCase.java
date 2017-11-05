@@ -8,6 +8,7 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import junit.framework.TestCase;
@@ -35,7 +36,7 @@ public abstract class JBoolTestCase extends TestCase {
   }
 
   public void assertApply(String expected, String orig, List<Rule<?, String>> rules){
-    assertEquals(expected, RuleSet.applyAll(expr(orig), rules).toString());
+    assertEquals(expected, RulesHelper.applyAll(expr(orig), rules).toString());
   }
 
   public void assertToSop(String expected, String orig){
@@ -61,8 +62,8 @@ public abstract class JBoolTestCase extends TestCase {
     Queue<K> variableCopy = Lists.newLinkedList(variables);
 
     if(variableCopy.isEmpty()){
-      Expression<K> s1Eval = RuleSet.assign(s1, assignmentCopy);
-      Expression<K> s2Eval = RuleSet.assign(s2, assignmentCopy);
+      Expression<K> s1Eval = RulesHelper.assign(s1, assignmentCopy);
+      Expression<K> s2Eval = RulesHelper.assign(s2, assignmentCopy);
 
       assertEquals(s1Eval, s2Eval);
     }

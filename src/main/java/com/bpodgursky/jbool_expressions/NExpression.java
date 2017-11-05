@@ -1,30 +1,33 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.google.common.collect.Lists;
 
-public abstract class NExpression<K> extends Expression<K>{
+public abstract class NExpression<K> extends Expression<K> {
 
   public final Expression<K>[] expressions;
   private int hashCode;
 
   /**
    * @param expressions The expressions
-   * @param seed Each subclass of NExpression should have a different seed for hash code.
-   *             It allows better hash code generation.
+   * @param seed        Each subclass of NExpression should have a different seed for hash code.
+   *                    It allows better hash code generation.
    */
-  protected NExpression(List<? extends Expression<K>> expressions, int seed){
-    if(expressions.isEmpty()){
+  protected NExpression(Expression<K>[] expressions, int seed, Comparator<Expression> sort) {
+    if (expressions.length == 0) {
       throw new IllegalArgumentException("Arguments length 0!");
     }
 
-    this.expressions = expressions.toArray(ExprUtil.<K>expr(expressions.size()));
-    Arrays.sort(this.expressions);
+    this.expressions = Arrays.copyOf(expressions, expressions.length);
+    Arrays.sort(this.expressions, sort);
 
     //For NExpressions we compute the hash code up front and cache it.
     hashCode = Objects.hash(seed, Arrays.hashCode(this.expressions));
@@ -32,26 +35,45 @@ public abstract class NExpression<K> extends Expression<K>{
 
   @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
-    List<Expression<K>> childCopy = Lists.newArrayList();
-    for(Expression<K> expr: expressions){
-      childCopy.add(RuleSet.applyAll(expr, rules));
+    Expression<K>[] children = new Expression[this.expressions.length];
+    for (int i = 0; i < this.expressions.length; i++) {
+      children[i] = RulesHelper.applyAll(this.expressions[i], rules);
     }
-    return create(childCopy);
+    return create(children);
   }
 
-  public List<Expression<K>> getChildren(){
+  public List<Expression<K>> getChildren() {
     return ExprUtil.list(expressions);
   }
 
-  public abstract NExpression<K> create(List<? extends Expression<K>> children);
+  public NExpression<K> create(Expression<K>[] children) {
+    return create(children, HASH_COMPARATOR);
+  }
+
+  protected abstract NExpression<K> create(Expression<K>[] children, Comparator<Expression> comparator);
+
+  @Override
+  public Expression<K> sort(Comparator<Expression> comparator) {
+
+    Expression<K>[] children = new Expression[this.expressions.length];
+    for (int i = 0; i < this.expressions.length; i++) {
+      children[i] = expressions[i].sort(comparator);
+    }
+
+    return create(children, comparator);
+  }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    NExpression<?> that = (NExpression<?>) o;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    NExpression<?> that = (NExpression<?>)o;
     return hashCode == that.hashCode &&
-            Arrays.equals(expressions, that.expressions);
+        Arrays.equals(expressions, that.expressions);
   }
 
   @Override
