@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 public class TestExprParser extends JBoolTestCase {
 
-  public void testIt(){
+  public void testIt() {
     Assert.assertEquals(Variable.of("A"), ExprParser.parse("A"));
     Assert.assertEquals(Variable.of("AA"), ExprParser.parse("AA"));
     Assert.assertEquals(Not.of(Variable.of("A")), ExprParser.parse("!A"));
@@ -48,7 +48,7 @@ public class TestExprParser extends JBoolTestCase {
 
   }
 
-  public void testQuotedMapper(){
+  public void testQuotedMapper() {
 
     QuotedMapper<Integer> intMapper = new QuotedMapper<Integer>() {
       @Override
@@ -59,5 +59,17 @@ public class TestExprParser extends JBoolTestCase {
 
     assertEquals(Variable.of(1), ExprParser.parse("'1'", intMapper));
     assertEquals(Not.of(Variable.of(1)), ExprParser.parse("!'1'", intMapper));
+  }
+
+  public void testLexSort() {
+
+    assertEquals("(A & B & !C)", And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C")))
+        .toString()
+    );
+
+    assertEquals("(!C & A & B)", And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C")))
+        .toLexicographicString()
+    );
+
   }
 }

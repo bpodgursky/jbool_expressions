@@ -1,9 +1,12 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.google.common.base.Optional;
 
 public class Not<K> extends Expression<K> {
@@ -29,12 +32,12 @@ public class Not<K> extends Expression<K> {
 
   @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
-    return new Not<K>(RuleSet.applyAll(e, rules));
+    return new Not<K>(RulesHelper.applyAll(e, rules));
   }
 
   @Override
-  public boolean equals(Expression expr) {
-    return expr instanceof Not && ((Not)expr).getE().equals(getE());
+  public Expression<K> sort(Comparator<Expression> comparator) {
+    return Not.of(e.sort(comparator));
   }
 
   public static <K> Not<K> of(Expression<K> e) {
@@ -44,5 +47,19 @@ public class Not<K> extends Expression<K> {
   @Override
   public String getExprType() {
     return EXPR_TYPE;
+  }
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Not<?> not = (Not<?>) o;
+    return Objects.equals(e, not.e);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(e);
   }
 }

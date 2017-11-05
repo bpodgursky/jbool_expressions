@@ -28,7 +28,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
   }
 
   private NExpression<K> ofSame(NExpression<K> first, List<? extends Expression<K>> others) {
-    return first.create(others);
+    return first.create(others.toArray(new Expression[others.size()]));
   }
 
   private NExpression<K> ofOpposite(NExpression<K> first, List<? extends Expression<K>> others) {
@@ -77,7 +77,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
               expression
           );
 
-          remainder.add(subExpr.create(Lists.newArrayList(remaining)));
+          remainder.add(subExpr.create(remaining));
         }
 
         List<Expression<K>> objects = Lists.newArrayList(ExprUtil.allExceptMatch(input.getChildren(), common));

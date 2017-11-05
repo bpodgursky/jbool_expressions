@@ -9,6 +9,7 @@ import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
 public class ExampleRunner {
   public static void main(String[] args) {
@@ -25,11 +26,11 @@ public class ExampleRunner {
     System.out.println(simplified);
     //  (A & B)
 
-    Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
+    Expression<String> halfAssigned = RulesHelper.assign(simplified, Collections.singletonMap("A", true));
     System.out.println(halfAssigned);
     //  B
 
-    Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
+    Expression<String> resolved = RulesHelper.assign(halfAssigned, Collections.singletonMap("B", true));
     System.out.println(resolved);
     //  true
 

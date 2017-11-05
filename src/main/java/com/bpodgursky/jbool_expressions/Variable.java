@@ -2,7 +2,9 @@ package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class Variable<K> extends Expression<K> {
   public static final String EXPR_TYPE = "variable";
@@ -27,8 +29,8 @@ public class Variable<K> extends Expression<K> {
   }
 
   @Override
-  public boolean equals(Expression expr) {
-    return expr instanceof Variable && ((Variable)expr).getValue().equals(getValue());
+  public Expression<K> sort(Comparator<Expression> comparator) {
+    return this;
   }
 
   public static <K> Variable<K> of(K value){
@@ -38,5 +40,18 @@ public class Variable<K> extends Expression<K> {
   @Override
   public String getExprType() {
     return EXPR_TYPE;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Variable<?> variable = (Variable<?>) o;
+    return Objects.equals(value, variable.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(value);
   }
 }
