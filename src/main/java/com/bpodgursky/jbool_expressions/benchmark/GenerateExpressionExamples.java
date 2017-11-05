@@ -28,7 +28,7 @@ public class GenerateExpressionExamples {
         1,
         5,
         2,
-        10,
+        10, 
         6
     );
 
