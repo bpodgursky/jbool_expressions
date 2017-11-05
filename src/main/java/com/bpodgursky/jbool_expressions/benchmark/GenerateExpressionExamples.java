@@ -26,9 +26,9 @@ public class GenerateExpressionExamples {
     generateExpressionsFile(
         "datasets",
         1,
-        10,
+        5,
         2,
-        8,
+        10,
         6
     );
 
