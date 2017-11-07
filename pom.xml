@@ -9,7 +9,7 @@
 
   <groupId>com.bpodgursky</groupId>
   <artifactId>jbool_expressions</artifactId>
-  <version>1.12-SNAPSHOT</version>
+  <version>1.13-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>jbool_expressions</name>
