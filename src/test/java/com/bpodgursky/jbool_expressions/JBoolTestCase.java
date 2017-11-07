@@ -62,8 +62,8 @@ public abstract class JBoolTestCase extends TestCase {
     Queue<K> variableCopy = Lists.newLinkedList(variables);
 
     if(variableCopy.isEmpty()){
-      Expression<K> s1Eval = RulesHelper.assign(s1, assignmentCopy);
-      Expression<K> s2Eval = RulesHelper.assign(s2, assignmentCopy);
+      Expression<K> s1Eval = RuleSet.assign(s1, assignmentCopy);
+      Expression<K> s2Eval = RuleSet.assign(s2, assignmentCopy);
 
       assertEquals(s1Eval, s2Eval);
     }

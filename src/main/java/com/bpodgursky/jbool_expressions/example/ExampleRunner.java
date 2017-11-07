@@ -9,7 +9,6 @@ import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
 public class ExampleRunner {
   public static void main(String[] args) {
