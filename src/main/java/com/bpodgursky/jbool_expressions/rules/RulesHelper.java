@@ -57,12 +57,6 @@ public class RulesHelper {
     return tmp;
   }
 
-  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values) {
-    List<Rule<?, K>> rules = Lists.newArrayList(RulesHelper.<K>simplifyRules());
-    rules.add(new Assign<K>(values));
-    return applySet(root, rules);
-  }
-
   public static <K> Expression<K> applySet(Expression<K> root, List<Rule<?, K>> allRules) {
     return applyAll(root, allRules);
   }

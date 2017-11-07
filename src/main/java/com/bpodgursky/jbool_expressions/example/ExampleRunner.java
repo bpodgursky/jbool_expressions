@@ -26,11 +26,11 @@ public class ExampleRunner {
     System.out.println(simplified);
     //  (A & B)
 
-    Expression<String> halfAssigned = RulesHelper.assign(simplified, Collections.singletonMap("A", true));
+    Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
     System.out.println(halfAssigned);
     //  B
 
-    Expression<String> resolved = RulesHelper.assign(halfAssigned, Collections.singletonMap("B", true));
+    Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
     System.out.println(resolved);
     //  true
 

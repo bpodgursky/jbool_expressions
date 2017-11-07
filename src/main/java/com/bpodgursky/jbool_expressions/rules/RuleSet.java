@@ -9,16 +9,18 @@ import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Not;
 import com.google.common.collect.Lists;
 
+import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applySet;
+
 //  intended user facing methods
 public class RuleSet {
 
   public static <K> Expression<K> simplify(Expression<K> root) {
-    return RulesHelper.applySet(root, RulesHelper.<K>simplifyRules());
+    return applySet(root, RulesHelper.<K>simplifyRules());
   }
 
-  public static <K> Expression<K> toSop(Expression<K> root){
-    root = RulesHelper.applySet(root, Lists.<Rule<?, K>>newArrayList(new DeMorgan<K>()));
-    return RulesHelper.applySet(root, RulesHelper.<K>toSopRules());
+  public static <K> Expression<K> toSop(Expression<K> root) {
+    root = applySet(root, Lists.<Rule<?, K>>newArrayList(new DeMorgan<K>()));
+    return applySet(root, RulesHelper.<K>toSopRules());
   }
 
   public static <K> Expression<K> toPos(Expression<K> root) {
@@ -30,7 +32,13 @@ public class RuleSet {
     //  not + demorgan
     Not<K> inverse2 = Not.of(sopInv);
 
-    return (RulesHelper.applySet(inverse2, RulesHelper.<K>demorganRules()));
+    return (applySet(inverse2, RulesHelper.<K>demorganRules()));
+  }
+
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values) {
+    List<Rule<?, K>> rules = Lists.newArrayList(RulesHelper.<K>simplifyRules());
+    rules.add(new Assign<K>(values));
+    return applySet(root, rules);
   }
 
   /**
