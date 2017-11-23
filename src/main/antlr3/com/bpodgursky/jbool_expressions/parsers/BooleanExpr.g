@@ -14,8 +14,8 @@ package com.bpodgursky.jbool_expressions.parsers;
 package com.bpodgursky.jbool_expressions.parsers;
 }
 
-LPAREN : '(' ;
-RPAREN : ')' ;
+LPAREN : '(';
+RPAREN : ')';
 AND : '&';
 OR : '|';
 NOT : '!';
@@ -29,4 +29,4 @@ expression : orexpression;
 orexpression : andexpression (OR^ andexpression)*;
 andexpression : notexpression (AND^ notexpression)*;
 notexpression : NOT^ notexpression | atom;
-atom : TRUE | FALSE | NAME | QUOTED_NAME | LPAREN! orexpression RPAREN!;
+atom : TRUE | FALSE | NAME | QUOTED_NAME | LPAREN^ orexpression RPAREN!;
