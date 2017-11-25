@@ -43,6 +43,11 @@ public class And<K> extends NExpression<K> {
     return of(ExprUtil.<K>list(child1, child2));
   }
 
+  @SafeVarargs
+  public static <K> And<K> of(Expression<K>... children) {
+    return new And<>(children, HASH_COMPARATOR);
+  }
+
   public static <K> And<K> of(Expression<K> child1) {
     return of(ExprUtil.<K>list(child1));
   }
