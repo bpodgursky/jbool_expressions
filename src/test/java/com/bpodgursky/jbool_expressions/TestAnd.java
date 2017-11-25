@@ -57,4 +57,8 @@ public class TestAnd extends JBoolTestCase {
     assertNotEquals(And.of(Variable.of("A"), Variable.of("B")).hashCode(), Or.of(Variable.of("A"), Variable.of("B")).hashCode());
   }
 
+  public void testConstructionViaArray() {
+    assertEquals("(A & B & C & D & E)", And.of(Variable.of("A"), Variable.of("B"), Variable.of("C"), Variable.of("D"), Variable.of("E")).toString());
+  }
+
 }

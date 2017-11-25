@@ -182,26 +182,8 @@ jbool_expressions is available via maven central:
 <dependency>
     <groupId>com.bpodgursky</groupId>
     <artifactId>jbool_expressions</artifactId>
-    <version>1.10</version>
+    <version>1.13</version>
 </dependency>
-```
-Snapshots are available via sonatype:
-
-```xml
-<repository>
-    <id>sonatype-oss-public</id>
-    <url>https://oss.sonatype.org/content/groups/public/</url>
-    <snapshots>
-      <enabled>true</enabled>
-    </snapshots>
-</repository>
-
-<dependency>
-    <groupId>com.bpodgursky</groupId>
-    <artifactId>jbool_expressions</artifactId>
-    <version>1.3</version>
-</dependency>
-
 ```
 
 Building

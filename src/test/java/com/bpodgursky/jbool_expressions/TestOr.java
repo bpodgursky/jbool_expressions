@@ -37,4 +37,8 @@ public class TestOr extends JBoolTestCase {
     assertNotEquals(Or.of(Variable.of("A"), Variable.of("B")).hashCode(), And.of(Variable.of("A"), Variable.of("B")).hashCode());
   }
 
+
+  public void testConstructionViaArray() {
+    assertEquals("(A | B | C | D | E)", Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C"), Variable.of("D"), Variable.of("E")).toString());
+  }
 }

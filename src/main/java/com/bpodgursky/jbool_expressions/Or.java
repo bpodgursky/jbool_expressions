@@ -33,6 +33,10 @@ public class Or<K> extends NExpression<K> {
     return cachedStringRepresentation.get();
   }
 
+  public static <K> Or<K> of(Expression<K>... children) {
+    return of(ExprUtil.<K>list(children));
+  }
+
   public static <K> Or<K> of(Expression<K> child1, Expression<K> child2, Expression<K> child3, Expression<K> child4) {
     return of(ExprUtil.<K>list(child1, child2, child3, child4));
   }
