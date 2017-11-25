@@ -1,46 +1,48 @@
 package com.bpodgursky.jbool_expressions.parsers;
 
 import com.bpodgursky.jbool_expressions.*;
-import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class TestExprParser extends JBoolTestCase {
 
   public void testIt() {
-    Assert.assertEquals(Variable.of("A"), ExprParser.parse("A"));
-    Assert.assertEquals(Variable.of("AA"), ExprParser.parse("AA"));
-    Assert.assertEquals(Not.of(Variable.of("A")), ExprParser.parse("!A"));
-    Assert.assertEquals(Not.of(Variable.of("A")), ExprParser.parse("   !  A "));
-    Assert.assertEquals(Not.of(Variable.of("A")), ExprParser.parse("  ( !  (A) )"));
-    Assert.assertEquals(And.of(Variable.of("A"), Variable.of("B")), ExprParser.parse("  A & (B)  "));
-    Assert.assertEquals(And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C"))), RuleSet.simplify(ExprParser.parse("(  A & (B) & !C )")));
-    Assert.assertEquals(Or.of(Variable.of("A"), Variable.of("B")), ExprParser.parse("(  A | (B)  )"));
-    Assert.assertEquals(Not.of(Or.of(Variable.of("A"), Variable.of("B"))), ExprParser.parse("!(  A | (B)  )"));
-    Assert.assertEquals(Or.of(And.of(Variable.of("A"), Variable.of("B")), Variable.of("C")), ExprParser.parse("  A & (B) | C "));
-    Assert.assertEquals(And.of(Or.of(Variable.of("A"), Variable.of("B")), Variable.of("C")), ExprParser.parse("(A | B) & C"));
-    Assert.assertEquals(And.of(Not.of(Or.of(Variable.of("A"), Variable.of("B"))), Variable.of("C")), ExprParser.parse("!(A | B) & C"));
-    Assert.assertEquals(Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C"), And.of(Variable.of("D"), Variable.of("E"))),
-        RuleSet.simplify(ExprParser.parse("A | (B | C )| D&E")));
+    assertLexEquals(Variable.of("A"), ExprParser.parse("A"));
+    assertLexEquals(Variable.of("AA"), ExprParser.parse("AA"));
+    assertLexEquals(Not.of(Variable.of("A")), ExprParser.parse("!A"));
+    assertLexEquals(Not.of(Variable.of("A")), ExprParser.parse("   !  A "));
+    assertLexEquals(Not.of(Variable.of("A")), ExprParser.parse("  ( !  (A) )"));
+    assertLexEquals(And.of(Variable.of("A"), Variable.of("B")), ExprParser.parse("  A & (B)  "));
+    assertLexEquals(And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C"))), ExprParser.parse("(  A & (B) & !C )"));
+    assertLexEquals(Or.of(Variable.of("A"), Variable.of("B")), ExprParser.parse("(  A | (B)  )"));
+    assertLexEquals(Not.of(Or.of(Variable.of("A"), Variable.of("B"))), ExprParser.parse("!(  A | (B)  )"));
+    assertLexEquals(Or.of(And.of(Variable.of("A"), Variable.of("B")), Variable.of("C")), ExprParser.parse("  A & (B) | C "));
+    assertLexEquals(And.of(Or.of(Variable.of("A"), Variable.of("B")), Variable.of("C")), ExprParser.parse("(A | B) & C"));
+    assertLexEquals(And.of(Not.of(Or.of(Variable.of("A"), Variable.of("B"))), Variable.of("C")), ExprParser.parse("!(A | B) & C"));
+    assertLexEquals(Or.of(Variable.of("A"), Or.of(Variable.of("B"), Variable.of("C")), And.of(Variable.of("D"), Variable.of("E"))),
+        ExprParser.parse("A | (B | C )| D & E"));
 
-    Assert.assertEquals(Literal.<String>getFalse(), ExprParser.parse("false"));
-    Assert.assertEquals(Literal.<String>getTrue(), ExprParser.parse("true"));
-    Assert.assertEquals(Literal.<String>getTrue(), ExprParser.parse("(true)"));
+    assertLexEquals(Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C"), And.of(Variable.of("D"), Variable.of("E"))),
+            ExprParser.parse("A | B | C | D & E"));
 
-    Assert.assertEquals(Not.of(Literal.<String>getTrue()), ExprParser.parse("!(true)"));
+    assertLexEquals(Literal.<String>getFalse(), ExprParser.parse("false"));
+    assertLexEquals(Literal.<String>getTrue(), ExprParser.parse("true"));
+    assertLexEquals(Literal.<String>getTrue(), ExprParser.parse("(true)"));
 
-    Assert.assertEquals(And.of(Not.of(Variable.of("' A:aa+)(*&^%$#@!_123'")), Variable.of("A")), ExprParser.parse("!' A:aa+)(*&^%$#@!_123' & A"));
+    assertLexEquals(Not.of(Literal.<String>getTrue()), ExprParser.parse("!(true)"));
 
-    Assert.assertEquals(
+    assertLexEquals(And.of(Not.of(Variable.of("' A:aa+)(*&^%$#@!_123'")), Variable.of("A")), ExprParser.parse("!' A:aa+)(*&^%$#@!_123' & A"));
+
+    assertLexEquals(
         Not.of(Not.of(Variable.of("A"))),
         ExprParser.parse("!!A")
     );
 
-    Assert.assertEquals(
+    assertLexEquals(
         Not.of(Not.of(Not.of(Variable.of("A")))),
         ExprParser.parse("!!!A")
     );
 
-    Assert.assertEquals(
+    assertLexEquals(
         Not.of(Not.of(Or.of(Variable.of("A"), Variable.of("B")))),
         ExprParser.parse("!!(A | B)")
     );
@@ -71,5 +73,9 @@ public class TestExprParser extends JBoolTestCase {
         .toLexicographicString()
     );
 
+  }
+
+  private void assertLexEquals(Expression expected, Expression actual) {
+    Assert.assertEquals(expected.toLexicographicString(), actual.toLexicographicString());
   }
 }

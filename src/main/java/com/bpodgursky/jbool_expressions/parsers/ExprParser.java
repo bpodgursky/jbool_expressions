@@ -1,5 +1,7 @@
 package com.bpodgursky.jbool_expressions.parsers;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.antlr.runtime.ANTLRStringStream;
@@ -45,13 +47,28 @@ public class ExprParser {
     if(tree.getType() == BooleanExprParser.AND){
       List<Expression<T>> children = Lists.newArrayList();
       for(int i = 0; i < tree.getChildCount(); i++){
-        children.add(parse(tree.getChild(i), mapper));
+        Tree child = tree.getChild(i);
+        Expression<T> parse = parse(child, mapper);
+        if(child.getType() == BooleanExprParser.AND) {
+          children.addAll(Arrays.asList(((And<T>) parse).expressions));
+        }
+        else {
+          children.add(parse);
+        }
       }
+
       return And.of(children);
     }else if(tree.getType() == BooleanExprParser.OR){
       List<Expression<T>> children = Lists.newArrayList();
       for(int i = 0; i < tree.getChildCount(); i++){
-        children.add(parse(tree.getChild(i), mapper));
+        Tree child = tree.getChild(i);
+        Expression<T> parse = parse(child, mapper);
+        if(child.getType() == BooleanExprParser.OR) {
+          children.addAll(Arrays.asList(((Or<T>) parse).expressions));
+        }
+        else {
+          children.add(parse);
+        }
       }
       return Or.of(children);
     }else if(tree.getType() == BooleanExprParser.NOT){
@@ -64,8 +81,13 @@ public class ExprParser {
       return Literal.getTrue();
     }else if(tree.getType() == BooleanExprParser.FALSE){
       return Literal.getFalse();
-    }else{
+    }
+    else if(tree.getType() == BooleanExprParser.LPAREN){
+      return parse(tree.getChild(0), mapper);
+    }
+    else{
       throw new RuntimeException("Unrecognized! "+tree.getType()+" "+tree.getText());
     }
   }
+
 }
