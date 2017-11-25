@@ -33,8 +33,9 @@ public class Or<K> extends NExpression<K> {
     return cachedStringRepresentation.get();
   }
 
+  @SafeVarargs
   public static <K> Or<K> of(Expression<K>... children) {
-    return of(ExprUtil.<K>list(children));
+    return new Or<>(children, HASH_COMPARATOR);
   }
 
   public static <K> Or<K> of(Expression<K> child1, Expression<K> child2, Expression<K> child3, Expression<K> child4) {
