@@ -47,6 +47,8 @@ public class TestExprParser extends JBoolTestCase {
         ExprParser.parse("!!(A | B)")
     );
 
+    assertLexEquals(Or.of(Variable.of("A"), Or.of(Variable.of("B"), Variable.of("C"))), ExprParser.parse("(A|(B|C))"));
+    assertLexEquals(Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C")  ), ExprParser.parse("(A|B|C)"));
 
   }
 
@@ -76,6 +78,7 @@ public class TestExprParser extends JBoolTestCase {
   }
 
   private void assertLexEquals(Expression expected, Expression actual) {
+    Assert.assertEquals(expected, actual);
     Assert.assertEquals(expected.toLexicographicString(), actual.toLexicographicString());
   }
 }
