@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Objects;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
-import com.google.common.base.Optional;
+import com.bpodgursky.jbool_expressions.utils.Optional;
 
 public class Not<K> extends Expression<K> {
   public static final String EXPR_TYPE = "not";
-  private Optional<String> cachedStringRepresentation = Optional.absent();
+  private Optional<String> cachedStringRepresentation = Optional.empty();
 
   private final Expression<K> e;
 

@@ -1,6 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -8,7 +9,6 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.eval.EvalEngine;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.google.common.collect.Maps;
 
 public class TestExpressions extends JBoolTestCase {
 
@@ -46,35 +46,35 @@ public class TestExpressions extends JBoolTestCase {
         Variable.of("A")
     );
 
-    Map<String, Boolean> values1 = Maps.newHashMap();
+    Map<String, Boolean> values1 = new HashMap<String, Boolean>();
     values1.put("A", true);
     assertEquals(true, EvalEngine.evaluateBoolean(expr, values1));
 
-    Map<String, Boolean> values2 = Maps.newHashMap();
+    Map<String, Boolean> values2 = new HashMap<String, Boolean>();
     values2.put("A", false);
     assertEquals(false, EvalEngine.evaluateBoolean(expr, values2));
 
-    Map<String, Boolean> values3 = Maps.newHashMap();
+    Map<String, Boolean> values3 = new HashMap<String, Boolean>();
     values3.put("A", false);
     values3.put("B", true);
     assertEquals(false, EvalEngine.evaluateBoolean(expr1, values3));
 
-    Map<String, Boolean> values4 = Maps.newHashMap();
+    Map<String, Boolean> values4 = new HashMap<String, Boolean>();
     values4.put("A", true);
     values4.put("B", true);
     assertEquals(true, EvalEngine.evaluateBoolean(expr1, values4));
 
-    Map<String, Boolean> values5 = Maps.newHashMap();
+    Map<String, Boolean> values5 = new HashMap<String, Boolean>();
     values5.put("A", true);
     values5.put("B", false);
     assertEquals(true, EvalEngine.evaluateBoolean(expr3, values5));
 
-    Map<String, Boolean> values6 = Maps.newHashMap();
+    Map<String, Boolean> values6 = new HashMap<String, Boolean>();
     values6.put("A", false);
     values6.put("B", false);
     assertEquals(false, EvalEngine.evaluateBoolean(expr3, values6));
 
-    Map<String, Boolean> values7 = Maps.newHashMap();
+    Map<String, Boolean> values7 = new HashMap<String, Boolean>();
     values7.put("A", false);
     assertEquals(true, EvalEngine.evaluateBoolean(expr4, values7));
 

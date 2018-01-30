@@ -1,15 +1,12 @@
 package com.bpodgursky.jbool_expressions;
 
-import java.util.ArrayList;
+import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-
-import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.rules.RulesHelper;
-import com.google.common.collect.Lists;
 
 public abstract class NExpression<K> extends Expression<K> {
 

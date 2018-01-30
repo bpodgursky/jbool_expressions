@@ -1,16 +1,14 @@
 package com.bpodgursky.jbool_expressions.rules;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import com.bpodgursky.jbool_expressions.Expression;
-import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RulesHelper {
 
   protected static <K> List<Rule<?, K>> simplifyRules() {
-    List<Rule<?, K>> rules = Lists.newArrayList();
+    List<Rule<?, K>> rules = new ArrayList<Rule<?, K>>();
     rules.add(new SimplifyAnd<K>());
     rules.add(new SimplifyOr<K>());
     rules.add(new SimplifyNot<K>());
@@ -24,14 +22,14 @@ public class RulesHelper {
   }
 
   protected static <K> List<Rule<?, K>> toSopRules(){
-    List<Rule<?, K>> rules = Lists.newArrayList(RulesHelper.<K>simplifyRules());
+    List<Rule<?, K>> rules = new ArrayList<Rule<?, K>>(RulesHelper.<K>simplifyRules());
     rules.add(new ToSOP<K>());
 
     return rules;
   }
 
   protected static <K> List<Rule<?, K>> demorganRules() {
-    List<Rule<?, K>> rules = Lists.newArrayList(RulesHelper.<K>simplifyRules());
+    List<Rule<?, K>> rules = new ArrayList<Rule<?, K>>(RulesHelper.<K>simplifyRules());
     rules.add(new DeMorgan<K>());
 
     return rules;
