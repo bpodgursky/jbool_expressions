@@ -1,6 +1,11 @@
 package com.bpodgursky.jbool_expressions.rules;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.And;
@@ -8,8 +13,6 @@ import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.NExpression;
 import com.bpodgursky.jbool_expressions.Or;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
 
 //  (A & B) | (A & C) => A & (B | C)
 //  (A | B | D) & (A | C | E) & F=> (A | ((B|D) & (C|E))) & F
@@ -46,7 +49,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
 
   public Expression<K> applyInternal(NExpression<K> input) {
 
-    HashMultimap<Expression<K>, NExpression<K>> byParent = HashMultimap.create();
+    Map<Expression<K>, Set<NExpression<K>>> byParent = new HashMap<Expression<K>, Set<NExpression<K>>>();
 
     //  for every internal expression which is an Or, check # unique instances of each internal expr
     for (Expression<K> expression : input.getChildren()) {
@@ -55,7 +58,12 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
         NExpression<K> inner = (NExpression<K>)expression;
 
         for (Expression<K> expr : inner.getChildren()) {
-          byParent.put(expr, inner);
+          Set<NExpression<K>> nExpressionSet = byParent.get(expr);
+          if (nExpressionSet == null) {
+            nExpressionSet = new HashSet<>();
+            byParent.put(expr, nExpressionSet);
+          }
+          nExpressionSet.add(inner);
         }
 
       }
@@ -68,7 +76,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
 
       if (common.size() > 1) {
 
-        List<NExpression<K>> remainder = Lists.newArrayList();
+        List<NExpression<K>> remainder = new ArrayList<NExpression<K>>();
 
         for (NExpression<K> subExpr : common) {
 
@@ -80,8 +88,8 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
           remainder.add(subExpr.create(remaining));
         }
 
-        List<Expression<K>> objects = Lists.newArrayList(ExprUtil.allExceptMatch(input.getChildren(), common));
-        objects.add(ofOpposite(input, Lists.newArrayList(expression, ofSame(input, remainder))));
+        List<Expression<K>> objects = new ArrayList<Expression<K>>(Arrays.asList(ExprUtil.allExceptMatch(input.getChildren(), common)));
+        objects.add(ofOpposite(input, new ArrayList<Expression<K>>(Arrays.asList(expression, ofSame(input, remainder)))));
 
         if (objects.size() > 1) {
           return ofSame(input, objects);

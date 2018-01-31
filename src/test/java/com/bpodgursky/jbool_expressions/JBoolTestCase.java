@@ -1,5 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -9,8 +11,6 @@ import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import junit.framework.TestCase;
 
 public abstract class JBoolTestCase extends TestCase {
@@ -53,13 +53,13 @@ public abstract class JBoolTestCase extends TestCase {
     Set<K> variables = ExprUtil.getVariables(s1);
     variables.addAll(ExprUtil.getVariables(s2));
 
-    evaluate(Lists.newLinkedList(variables), Maps.<K, Boolean>newHashMap(), s1, s2);
+    evaluate(new LinkedList<K>(variables), new HashMap<K, Boolean>(), s1, s2);
 
   }
 
   public <K> void evaluate(Queue<K> variables, Map<K, Boolean> assignments, Expression<K> s1, Expression<K> s2){
-    Map<K, Boolean> assignmentCopy = Maps.newHashMap(assignments);
-    Queue<K> variableCopy = Lists.newLinkedList(variables);
+    Map<K, Boolean> assignmentCopy = new HashMap<K, Boolean>(assignments);
+    Queue<K> variableCopy = new LinkedList<K>(variables);
 
     if(variableCopy.isEmpty()){
       Expression<K> s1Eval = RuleSet.assign(s1, assignmentCopy);

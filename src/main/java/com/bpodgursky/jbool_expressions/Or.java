@@ -3,15 +3,10 @@ package com.bpodgursky.jbool_expressions;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.google.common.base.Optional;
-
 import static com.bpodgursky.jbool_expressions.Seeds.OR_SEED;
 
 public class Or<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "or";
-  private Optional<String> cachedStringRepresentation = Optional.absent();
 
   public static <K> Or<K> of(Expression<K>[] children, Comparator<Expression> comparator) {
     return new Or<K>(children, comparator);
@@ -26,11 +21,9 @@ public class Or<K> extends NExpression<K> {
     return of(children, comparator);
   }
 
-  public String toString() {
-    if (!cachedStringRepresentation.isPresent()) {
-      cachedStringRepresentation = Optional.of("(" + StringUtils.join(expressions, " | ") + ")");
-    }
-    return cachedStringRepresentation.get();
+  @Override
+  protected String getDelimiter() {
+    return " | ";
   }
 
   @SafeVarargs

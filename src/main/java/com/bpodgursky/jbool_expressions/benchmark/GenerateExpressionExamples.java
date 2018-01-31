@@ -13,8 +13,6 @@ import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
 
 public class GenerateExpressionExamples {
 
@@ -44,9 +42,9 @@ public class GenerateExpressionExamples {
 
     new File(outputDir).mkdirs();
 
-    ArrayList<String> variables = Lists.newArrayList();
+    ArrayList<String> variables = new ArrayList<String>();
 
-    String prefix = StringUtils.join(Collections.nCopies(variablePrefixLength, "X"), "");
+    String prefix = String.join("", Collections.nCopies(variablePrefixLength, "X"));
     for (int i = 0; i < numVariables; i++) {
       variables.add(prefix + i);
     }
@@ -95,7 +93,7 @@ public class GenerateExpressionExamples {
     //  and / or
     if (next == 0 || next == 1) {
 
-      List<Expression<String>> terms = Lists.newArrayList();
+      List<Expression<String>> terms = new ArrayList<Expression<String>>();
 
       for (int i = 0; i < minExprLength + rand.nextInt(maxExprLength - minExprLength); i++) {
         terms.add(recurse(rand, variables, minExprLength, maxExprLength, depth + 1, maxDepth));

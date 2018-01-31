@@ -1,17 +1,19 @@
 package com.bpodgursky.jbool_expressions.eval;
 
-import com.bpodgursky.jbool_expressions.*;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.bpodgursky.jbool_expressions.And;
+import com.bpodgursky.jbool_expressions.Expression;
+import com.bpodgursky.jbool_expressions.Literal;
+import com.bpodgursky.jbool_expressions.Not;
+import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.Variable;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class EvalEngine {
 
   public static <K> Map<String, EvalRule<K>> booleanRules(){
-    Map<String, EvalRule<K>> rules = Maps.newHashMap();
+    Map<String, EvalRule<K>> rules = new HashMap();
     rules.put(And.EXPR_TYPE, new EvalAnd<K>());
     rules.put(Or.EXPR_TYPE, new EvalOr<K>());
     rules.put(Not.EXPR_TYPE, new EvalNot<K>());
