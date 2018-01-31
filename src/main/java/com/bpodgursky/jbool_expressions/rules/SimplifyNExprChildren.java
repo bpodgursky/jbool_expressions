@@ -4,8 +4,8 @@ import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.NExpression;
 import com.bpodgursky.jbool_expressions.Or;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //  a | (a & b) = a, and the like
@@ -91,7 +91,7 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
 
   private NExpression<K> removeChild(NExpression<K> node, int index) {
 
-    List<Expression<K>> copy = Lists.newArrayList();
+    List<Expression<K>> copy = new ArrayList<Expression<K>>();
     for (int i = 0; i < node.expressions.length; i++) {
       if (i != index) {
         copy.add(node.expressions[i]);
