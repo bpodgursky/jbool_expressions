@@ -1,8 +1,5 @@
 package com.bpodgursky.jbool_expressions;
 
-import com.bpodgursky.jbool_expressions.utils.Optional;
-import com.bpodgursky.jbool_expressions.utils.StringUtils;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -10,7 +7,6 @@ import static com.bpodgursky.jbool_expressions.Seeds.AND_SEED;
 
 public class And<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "and";
-  private Optional<String> cachedStringRepresentation = Optional.empty();
 
   public static <K> And<K> of(Expression<K>[] children, Comparator<Expression> comparator) {
     return new And<K>(children, comparator);
@@ -25,11 +21,9 @@ public class And<K> extends NExpression<K> {
     return of(children, comparator);
   }
 
-  public String toString() {
-    if (!cachedStringRepresentation.isPresent()) {
-      cachedStringRepresentation = Optional.of("(" + StringUtils.join(expressions, " & ") + ")");
-    }
-    return cachedStringRepresentation.get();
+  @Override
+  protected String getDelimiter() {
+    return " & ";
   }
 
   public static <K> And<K> of(Expression<K> child1, Expression<K> child2, Expression<K> child3) {

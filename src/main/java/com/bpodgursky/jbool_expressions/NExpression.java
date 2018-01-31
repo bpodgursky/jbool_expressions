@@ -7,11 +7,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class NExpression<K> extends Expression<K> {
 
   public final Expression<K>[] expressions;
   private int hashCode;
+  private Optional<String> cachedStringRepresentation = Optional.empty();
 
   /**
    * @param expressions The expressions
@@ -77,4 +81,18 @@ public abstract class NExpression<K> extends Expression<K> {
   public int hashCode() {
     return hashCode;
   }
+
+  public String toString() {
+    return cachedStringRepresentation.orElseGet(() -> createStringRepresentation());
+  }
+
+  private String createStringRepresentation() {
+    String stringRepresentation = Stream.of(expressions)
+            .map(String::valueOf)
+            .collect(Collectors.joining(getDelimiter(), "(", ")"));
+    cachedStringRepresentation = Optional.of(stringRepresentation);
+    return stringRepresentation;
+  }
+
+  protected abstract String getDelimiter();
 }
