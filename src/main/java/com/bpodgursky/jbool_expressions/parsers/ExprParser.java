@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 
 public class ExprParser {
 
-  public static Expression<String> parse(String expression){
+  public static Expression<String> parse(String expression) {
     return parse(expression, new IdentityMap());
   }
 
@@ -36,57 +36,55 @@ public class ExprParser {
       BooleanExprParser.expression_return ret = parser.expression();
 
       //acquire parse result
-      CommonTree ast = (CommonTree) ret.getTree();
+      CommonTree ast = (CommonTree)ret.getTree();
       return parse(ast, mapper);
     } catch (RecognitionException e) {
       throw new IllegalStateException("Recognition exception is never thrown, only declared.");
     }
   }
 
-  public static <T> Expression<T> parse(Tree tree, TokenMapper<T> mapper){
-    if(tree.getType() == BooleanExprParser.AND){
+  public static <T> Expression<T> parse(Tree tree, TokenMapper<T> mapper) {
+    if (tree.getType() == BooleanExprParser.AND) {
       List<Expression<T>> children = Lists.newArrayList();
-      for(int i = 0; i < tree.getChildCount(); i++){
+      for (int i = 0; i < tree.getChildCount(); i++) {
         Tree child = tree.getChild(i);
         Expression<T> parse = parse(child, mapper);
-        if(child.getType() == BooleanExprParser.AND) {
-          children.addAll(Arrays.asList(((And<T>) parse).expressions));
-        }
-        else {
+        if (child.getType() == BooleanExprParser.AND) {
+          children.addAll(Arrays.asList(((And<T>)parse).expressions));
+        } else {
           children.add(parse);
         }
       }
 
       return And.of(children);
-    }else if(tree.getType() == BooleanExprParser.OR){
+    } else if (tree.getType() == BooleanExprParser.OR) {
       List<Expression<T>> children = Lists.newArrayList();
-      for(int i = 0; i < tree.getChildCount(); i++){
+      for (int i = 0; i < tree.getChildCount(); i++) {
         Tree child = tree.getChild(i);
         Expression<T> parse = parse(child, mapper);
-        if(child.getType() == BooleanExprParser.OR) {
-          children.addAll(Arrays.asList(((Or<T>) parse).expressions));
-        }
-        else {
+        if (child.getType() == BooleanExprParser.OR) {
+          children.addAll(Arrays.asList(((Or<T>)parse).expressions));
+        } else {
           children.add(parse);
         }
       }
       return Or.of(children);
-    }else if(tree.getType() == BooleanExprParser.NOT){
+    } else if (tree.getType() == BooleanExprParser.NOT) {
       return Not.of(parse(tree.getChild(0), mapper));
-    }else if(tree.getType() == BooleanExprParser.NAME){
+    } else if (tree.getType() == BooleanExprParser.NAME) {
       return Variable.of(mapper.getVariable(tree.getText()));
-    } else if(tree.getType() == BooleanExprParser.QUOTED_NAME){
+    } else if (tree.getType() == BooleanExprParser.QUOTED_NAME) {
       return Variable.of(mapper.getVariable(tree.getText()));
-    } else if(tree.getType() == BooleanExprParser.TRUE){
+    } else if (tree.getType() == BooleanExprParser.DOUBLE_QUOTED_NAME) {
+      return Variable.of(mapper.getVariable(tree.getText()));
+    } else if (tree.getType() == BooleanExprParser.TRUE) {
       return Literal.getTrue();
-    }else if(tree.getType() == BooleanExprParser.FALSE){
+    } else if (tree.getType() == BooleanExprParser.FALSE) {
       return Literal.getFalse();
-    }
-    else if(tree.getType() == BooleanExprParser.LPAREN){
+    } else if (tree.getType() == BooleanExprParser.LPAREN) {
       return parse(tree.getChild(0), mapper);
-    }
-    else{
-      throw new RuntimeException("Unrecognized! "+tree.getType()+" "+tree.getText());
+    } else {
+      throw new RuntimeException("Unrecognized! " + tree.getType() + " " + tree.getText());
     }
   }
 

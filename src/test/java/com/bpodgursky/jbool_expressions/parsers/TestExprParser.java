@@ -65,6 +65,29 @@ public class TestExprParser extends JBoolTestCase {
     assertEquals(Not.of(Variable.of(1)), ExprParser.parse("!'1'", intMapper));
   }
 
+  public void testSingleQuotes(){
+
+    assertEquals(Or.of(Variable.of("'test@gmail.com'"), Variable.of("'test2@gmail.com'")),
+        ExprParser.parse("( 'test@gmail.com' | 'test2@gmail.com' )"));
+
+
+    assertEquals(Or.of(Variable.of("'test & gmail.com'"), Variable.of("'test2 & gmail.com'")),
+        ExprParser.parse("( 'test & gmail.com' | 'test2 & gmail.com' )"));
+
+  }
+
+
+  public void testDoubleQuotes(){
+
+    assertEquals(Or.of(Variable.of("\"test@gmail.com\""), Variable.of("\"test2@gmail.com\"")),
+        ExprParser.parse("( \"test@gmail.com\" | \"test2@gmail.com\" )"));
+
+    //  defend against the indefensible
+    assertEquals(Or.of(Variable.of("\"test & gmail.com\""), Variable.of("\"test2 & gmail.com\"")),
+        ExprParser.parse("( \"test & gmail.com\" | \"test2 & gmail.com\" )"));
+
+  }
+
   public void testLexSort() {
 
     assertEquals("(A & B & !C)", And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C")))
