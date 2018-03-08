@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 import static com.bpodgursky.jbool_expressions.Seeds.OR_SEED;
 
 public class Or<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "or";
-  private Optional<String> cachedStringRepresentation = Optional.absent();
+  private Optional<String> cachedStringRepresentation = Optional.empty();
 
   public static <K> Or<K> of(Expression<K>[] children, Comparator<Expression> comparator) {
     return new Or<K>(children, comparator);

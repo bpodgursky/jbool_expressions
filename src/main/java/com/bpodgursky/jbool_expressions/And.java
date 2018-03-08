@@ -5,15 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
-
-import com.google.common.base.Optional;
 
 import static com.bpodgursky.jbool_expressions.Seeds.AND_SEED;
 
 public class And<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "and";
-  private Optional<String> cachedStringRepresentation = Optional.absent();
+  private Optional<String> cachedStringRepresentation = Optional.empty();
 
   public static <K> And<K> of(Expression<K>[] children, Comparator<Expression> comparator) {
     return new And<K>(children, comparator);
