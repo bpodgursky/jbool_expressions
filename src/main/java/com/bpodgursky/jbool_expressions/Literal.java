@@ -3,7 +3,10 @@ package com.bpodgursky.jbool_expressions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Literal<K> extends Expression<K>{
   public static final String EXPR_TYPE = "literal";
@@ -66,5 +69,11 @@ public class Literal<K> extends Expression<K>{
   @Override
   public int hashCode() {
     return Boolean.hashCode(value);
+  }
+  public Set<K> getAllK(){
+	  return new HashSet<K>();
+  }
+  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
+	  return this;
   }
 }

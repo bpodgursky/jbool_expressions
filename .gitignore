@@ -2,3 +2,6 @@ target
 datasets
 .idea
 *.iml
+.classpath
+.project
+.settings

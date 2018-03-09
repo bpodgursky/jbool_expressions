@@ -3,8 +3,11 @@ package com.bpodgursky.jbool_expressions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
@@ -79,5 +82,12 @@ public abstract class NExpression<K> extends Expression<K> {
   @Override
   public int hashCode() {
     return hashCode;
+  }
+  public Set<K> getAllK(){
+	  Set<K> set=new HashSet<K>();
+	  for(int i=0;i<expressions.length;i++){
+		  set.addAll(expressions[i].getAllK());
+	  }
+	  return set;
   }
 }

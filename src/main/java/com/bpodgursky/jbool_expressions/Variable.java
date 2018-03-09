@@ -3,8 +3,11 @@ package com.bpodgursky.jbool_expressions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Variable<K> extends Expression<K> {
   public static final String EXPR_TYPE = "variable";
@@ -53,5 +56,16 @@ public class Variable<K> extends Expression<K> {
   @Override
   public int hashCode() {
     return Objects.hash(value);
+  }
+  public Set<K> getAllK(){
+	  Set<K> set=new HashSet<K>();
+	  set.add(value);
+	  return set;
+  }
+  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
+	  if(m.containsKey(getValue())){
+	      return m.get(getValue());
+	    }
+	    return this;
   }
 }

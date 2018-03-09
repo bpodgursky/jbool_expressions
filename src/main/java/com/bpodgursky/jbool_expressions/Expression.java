@@ -2,6 +2,8 @@ package com.bpodgursky.jbool_expressions;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
@@ -45,4 +47,8 @@ public abstract class Expression<K> {
   public String toLexicographicString(){
     return sort(LEXICOGRAPHIC_COMPARATOR).toString();
   }
+  
+  public abstract Set<K> getAllK();
+  
+  public abstract Expression<K> replaceVariablesWith(Map<K,Expression<K>> m);
 }
