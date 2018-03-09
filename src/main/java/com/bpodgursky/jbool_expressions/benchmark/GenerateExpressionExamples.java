@@ -14,7 +14,6 @@ import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
 
 public class GenerateExpressionExamples {
 
@@ -46,7 +45,7 @@ public class GenerateExpressionExamples {
 
     ArrayList<String> variables = Lists.newArrayList();
 
-    String prefix = StringUtils.join(Collections.nCopies(variablePrefixLength, "X"), "");
+    String prefix = String.join("", Collections.nCopies(variablePrefixLength, "X"));
     for (int i = 0; i < numVariables; i++) {
       variables.add(prefix + i);
     }
