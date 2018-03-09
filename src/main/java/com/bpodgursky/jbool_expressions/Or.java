@@ -29,7 +29,7 @@ public class Or<K> extends NExpression<K> {
 
   public String toString() {
     if (!cachedStringRepresentation.isPresent()) {
-      cachedStringRepresentation = Optional.of("(" + String.join(" | ", Arrays.stream(expressions).map(Object::toString).collect(Collectors.toList())) + ")");
+      cachedStringRepresentation = Optional.of(Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")")));
     }
     return cachedStringRepresentation.get();
   }
