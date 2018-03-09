@@ -2,7 +2,10 @@ package com.bpodgursky.jbool_expressions.rules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.And;
@@ -10,7 +13,6 @@ import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.NExpression;
 import com.bpodgursky.jbool_expressions.Or;
-import com.google.common.collect.HashMultimap;
 
 //  (A & B) | (A & C) => A & (B | C)
 //  (A | B | D) & (A | C | E) & F=> (A | ((B|D) & (C|E))) & F
@@ -47,7 +49,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
 
   public Expression<K> applyInternal(NExpression<K> input) {
 
-    HashMultimap<Expression<K>, NExpression<K>> byParent = HashMultimap.create();
+    Map<Expression<K>, Set<NExpression<K>>> byParent = new HashMap<>();
 
     //  for every internal expression which is an Or, check # unique instances of each internal expr
     for (Expression<K> expression : input.getChildren()) {
@@ -56,7 +58,8 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
         NExpression<K> inner = (NExpression<K>)expression;
 
         for (Expression<K> expr : inner.getChildren()) {
-          byParent.put(expr, inner);
+          Set<NExpression<K>> nExpressionSet = byParent.computeIfAbsent(expr, k -> new HashSet<>());
+          nExpressionSet.add(inner);
         }
 
       }
