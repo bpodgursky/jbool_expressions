@@ -9,7 +9,7 @@ import com.bpodgursky.jbool_expressions.Expression;
 
 public class RulesHelper {
 
-  protected static <K> List<Rule<?, K>> simplifyRules() {
+  public static <K> List<Rule<?, K>> simplifyRules() {
     List<Rule<?, K>> rules = new ArrayList<>();
     rules.add(new SimplifyAnd<K>());
     rules.add(new SimplifyOr<K>());
@@ -23,14 +23,14 @@ public class RulesHelper {
     return rules;
   }
 
-  protected static <K> List<Rule<?, K>> toSopRules(){
+  public static <K> List<Rule<?, K>> toSopRules(){
     List<Rule<?, K>> rules = new ArrayList<>(RulesHelper.<K>simplifyRules());
     rules.add(new ToSOP<K>());
 
     return rules;
   }
 
-  protected static <K> List<Rule<?, K>> demorganRules() {
+  public static <K> List<Rule<?, K>> demorganRules() {
     List<Rule<?, K>> rules = new ArrayList<>(RulesHelper.<K>simplifyRules());
     rules.add(new DeMorgan<K>());
 
