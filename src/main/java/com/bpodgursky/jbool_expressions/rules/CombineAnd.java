@@ -1,11 +1,11 @@
 package com.bpodgursky.jbool_expressions.rules;
 
 
-import com.google.common.collect.Lists;
 import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CombineAnd<K> extends Rule<And<K>, K> {
@@ -16,7 +16,7 @@ public class CombineAnd<K> extends Rule<And<K>, K> {
       if (expr instanceof And) {
         And<K> childAnd = (And<K>) expr;
 
-        List<Expression<K>> newChildren = Lists.newArrayList();
+        List<Expression<K>> newChildren = new ArrayList<>();
         ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(and.expressions, childAnd));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 

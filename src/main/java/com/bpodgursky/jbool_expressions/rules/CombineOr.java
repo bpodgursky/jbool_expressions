@@ -1,10 +1,10 @@
 package com.bpodgursky.jbool_expressions.rules;
 
-import com.google.common.collect.Lists;
 import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Or;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CombineOr<K> extends Rule<Or<K>, K> {
@@ -15,7 +15,7 @@ public class CombineOr<K> extends Rule<Or<K>, K> {
       if (expr instanceof Or) {
         Or<K> childAnd = (Or<K>) expr;
 
-        List<Expression<K>> newChildren = Lists.newArrayList();
+        List<Expression<K>> newChildren = new ArrayList<>();
         ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(or.expressions, childAnd));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 

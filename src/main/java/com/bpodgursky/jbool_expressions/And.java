@@ -6,7 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 import static com.bpodgursky.jbool_expressions.Seeds.AND_SEED;
 
@@ -29,7 +32,7 @@ public class And<K> extends NExpression<K> {
 
   public String toString() {
     if (!cachedStringRepresentation.isPresent()) {
-      cachedStringRepresentation = Optional.of("(" + StringUtils.join(expressions, " & ") + ")");
+      cachedStringRepresentation = Optional.of("(" + String.join(" & ", Arrays.stream(expressions).map(Object::toString).collect(Collectors.toList())) + ")");
     }
     return cachedStringRepresentation.get();
   }

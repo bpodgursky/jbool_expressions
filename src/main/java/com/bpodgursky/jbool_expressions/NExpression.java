@@ -9,7 +9,6 @@ import java.util.Objects;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
-import com.google.common.collect.Lists;
 
 public abstract class NExpression<K> extends Expression<K> {
 

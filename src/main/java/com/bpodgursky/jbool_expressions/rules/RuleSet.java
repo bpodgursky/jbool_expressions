@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Not;
-import com.google.common.collect.Lists;
 
 import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applySet;
 
@@ -19,7 +18,7 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> toSop(Expression<K> root) {
-    root = applySet(root, Lists.<Rule<?, K>>newArrayList(new DeMorgan<K>()));
+    root = applySet(root, new ArrayList<>(Collections.singleton(new DeMorgan<K>())));
     return applySet(root, RulesHelper.<K>toSopRules());
   }
 
@@ -36,7 +35,7 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values) {
-    List<Rule<?, K>> rules = Lists.newArrayList(RulesHelper.<K>simplifyRules());
+    List<Rule<?, K>> rules = new ArrayList<>(RulesHelper.<K>simplifyRules());
     rules.add(new Assign<K>(values));
     return applySet(root, rules);
   }

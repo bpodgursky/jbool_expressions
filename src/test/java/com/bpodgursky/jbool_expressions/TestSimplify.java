@@ -1,12 +1,12 @@
 package com.bpodgursky.jbool_expressions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.SimplifyNExprChildren;
-import com.google.common.collect.Lists;
 
 public class TestSimplify extends JBoolTestCase {
 
@@ -31,7 +31,7 @@ public class TestSimplify extends JBoolTestCase {
 
 
     // test in isolation to catch a few potential errors
-    ArrayList<Rule<?, String>> rules = Lists.<Rule<?, String>>newArrayList(new SimplifyNExprChildren<String>());
+    ArrayList<Rule<?, String>> rules = new ArrayList<>(Collections.singletonList(new SimplifyNExprChildren<String>()));
 
     assertApply("(A & (A & B))", "(A & B) & A", rules);
     assertApply("(A)", "A & (A | B)", rules);
