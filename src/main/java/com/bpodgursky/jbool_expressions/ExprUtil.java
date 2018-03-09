@@ -1,5 +1,6 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,18 +8,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 
 public class ExprUtil {
 
   public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr, Expression<K> omitFromOr) {
     Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
-    List<Expression<K>> newChildren = Lists.newArrayList();
+    List<Expression<K>> newChildren = new ArrayList<>();
     //  for each child of the or,  we want it AND all other children of the and
 
     for (Expression<K> orChild : internalOr.expressions) {
       if(!orChild.equals(omitFromOr)) {
-        List<Expression<K>> andOthers = Lists.newArrayList();
+        List<Expression<K>> andOthers = new ArrayList<>();
         ExprUtil.addAll(andOthers, childrenNew);
         andOthers.add(orChild);
 
@@ -31,9 +31,9 @@ public class ExprUtil {
 
   public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr){
     Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
-    List<Expression<K>> newChildren = Lists.newArrayList(childrenNew);
+    List<Expression<K>> newChildren = new ArrayList<>(Arrays.asList(childrenNew));
 
-    List<Expression<K>> orOthers = Lists.newArrayList();
+    List<Expression<K>> orOthers = new ArrayList<>();
     for (Expression<K> orChild : internalOr.expressions) {
 
       if(!orChild.equals(omitFromOr)) {
@@ -49,9 +49,9 @@ public class ExprUtil {
 
   public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd){
     Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
-    List<Expression<K>> newChildren = Lists.newArrayList(childrenNew);
+    List<Expression<K>> newChildren = new ArrayList<>(Arrays.asList(childrenNew));
 
-    List<Expression<K>> andOthers = Lists.newArrayList();
+    List<Expression<K>> andOthers = new ArrayList<>();
     for (Expression<K> andChild : internalAnd.expressions) {
 
       if(!andChild.equals(omitFromAnd)) {

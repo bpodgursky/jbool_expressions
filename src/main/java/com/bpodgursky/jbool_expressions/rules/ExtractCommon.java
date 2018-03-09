@@ -1,5 +1,7 @@
 package com.bpodgursky.jbool_expressions.rules;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +11,6 @@ import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.NExpression;
 import com.bpodgursky.jbool_expressions.Or;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
 
 //  (A & B) | (A & C) => A & (B | C)
 //  (A | B | D) & (A | C | E) & F=> (A | ((B|D) & (C|E))) & F
@@ -68,7 +69,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
 
       if (common.size() > 1) {
 
-        List<NExpression<K>> remainder = Lists.newArrayList();
+        List<NExpression<K>> remainder = new ArrayList<>();
 
         for (NExpression<K> subExpr : common) {
 
@@ -80,8 +81,8 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
           remainder.add(subExpr.create(remaining));
         }
 
-        List<Expression<K>> objects = Lists.newArrayList(ExprUtil.allExceptMatch(input.getChildren(), common));
-        objects.add(ofOpposite(input, Lists.newArrayList(expression, ofSame(input, remainder))));
+        List<Expression<K>> objects = new ArrayList<>(Arrays.asList(ExprUtil.allExceptMatch(input.getChildren(), common)));
+        objects.add(ofOpposite(input, new ArrayList<>(Arrays.asList(expression, ofSame(input, remainder)))));
 
         if (objects.size() > 1) {
           return ofSame(input, objects);

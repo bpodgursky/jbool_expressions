@@ -1,7 +1,5 @@
 package com.bpodgursky.jbool_expressions.rules;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.bpodgursky.jbool_expressions.*;
 
 import java.util.*;
@@ -38,7 +36,7 @@ public class SimplifyOr<K> extends Rule<Or<K>, K> {
   }
 
   private Expression<K> copyWithoutFalse(Or<K> input){
-    List<Expression<K>> copy = Lists.newArrayList();
+    List<Expression<K>> copy = new ArrayList<>();
     for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {
         Literal l = (Literal) expr;
