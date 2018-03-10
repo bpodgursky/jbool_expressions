@@ -50,5 +50,5 @@ public abstract class Expression<K> {
   
   public abstract Set<K> getAllK();
   
-  public abstract Expression<K> replaceVariablesWith(Map<K,Expression<K>> m);
+  public abstract Expression<K> replaceVars(Map<K,Expression<K>> m);
 }

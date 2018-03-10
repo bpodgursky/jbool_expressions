@@ -64,11 +64,12 @@ public class Or<K> extends NExpression<K> {
   public String getExprType() {
     return EXPR_TYPE;
   }
-  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
-	  Expression<K>[] children = new Expression[this.expressions.length];
-	    for (int i = 0; i < this.expressions.length; i++) {
-	      children[i] = this.expressions[i].replaceVariablesWith(m);
-	    }
-	    return of(children);
+
+  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+    Expression<K>[] children = new Expression[this.expressions.length];
+    for (int i = 0; i < this.expressions.length; i++) {
+      children[i] = this.expressions[i].replaceVars(m);
+    }
+    return of(children);
   }
 }

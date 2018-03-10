@@ -2,6 +2,7 @@ package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -14,15 +15,15 @@ public class Variable<K> extends Expression<K> {
 
   private final K value;
 
-  private Variable(K value){
+  private Variable(K value) {
     this.value = value;
   }
 
-  public K getValue(){
+  public K getValue() {
     return value;
   }
 
-  public String toString(){
+  public String toString() {
     return value.toString();
   }
 
@@ -36,7 +37,7 @@ public class Variable<K> extends Expression<K> {
     return this;
   }
 
-  public static <K> Variable<K> of(K value){
+  public static <K> Variable<K> of(K value) {
     return new Variable<K>(value);
   }
 
@@ -47,9 +48,13 @@ public class Variable<K> extends Expression<K> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Variable<?> variable = (Variable<?>) o;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Variable<?> variable = (Variable<?>)o;
     return Objects.equals(value, variable.value);
   }
 
@@ -57,15 +62,15 @@ public class Variable<K> extends Expression<K> {
   public int hashCode() {
     return Objects.hash(value);
   }
-  public Set<K> getAllK(){
-	  Set<K> set=new HashSet<K>();
-	  set.add(value);
-	  return set;
+
+  public Set<K> getAllK() {
+    return Collections.singleton(value);
   }
-  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
-	  if(m.containsKey(getValue())){
-	      return m.get(getValue());
-	    }
-	    return this;
+
+  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+    if (m.containsKey(getValue())) {
+      return m.get(getValue());
+    }
+    return this;
   }
 }

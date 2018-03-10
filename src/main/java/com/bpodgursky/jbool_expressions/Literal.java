@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Literal<K> extends Expression<K>{
+public class Literal<K> extends Expression<K> {
   public static final String EXPR_TYPE = "literal";
 
   private final boolean value;
@@ -17,32 +17,32 @@ public class Literal<K> extends Expression<K>{
   private static final Literal FALSE = new Literal(false);
 
   @SuppressWarnings("unchecked")
-  public static <V> Literal<V> getTrue(){
+  public static <V> Literal<V> getTrue() {
     return TRUE;
   }
 
   @SuppressWarnings("unchecked")
-  public static <V> Literal<V> getFalse(){
+  public static <V> Literal<V> getFalse() {
     return FALSE;
   }
 
-  public static <K> Literal<K> of(boolean value){
-    if(value){
+  public static <K> Literal<K> of(boolean value) {
+    if (value) {
       return getTrue();
-    }else{
+    } else {
       return getFalse();
     }
   }
 
-  private Literal(boolean value){
+  private Literal(boolean value) {
     this.value = value;
   }
 
-  public String toString(){
+  public String toString() {
     return Boolean.valueOf(value).toString();
   }
 
-  public boolean getValue(){
+  public boolean getValue() {
     return value;
   }
 
@@ -70,10 +70,12 @@ public class Literal<K> extends Expression<K>{
   public int hashCode() {
     return Boolean.hashCode(value);
   }
-  public Set<K> getAllK(){
-	  return new HashSet<K>();
+
+  public Set<K> getAllK() {
+    return new HashSet<K>();
   }
-  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
-	  return this;
+
+  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+    return this;
   }
 }

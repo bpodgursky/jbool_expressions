@@ -1,15 +1,14 @@
 package com.bpodgursky.jbool_expressions;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
+
 import java.util.Optional;
 
 public class Not<K> extends Expression<K> {
@@ -55,9 +54,13 @@ public class Not<K> extends Expression<K> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Not<?> not = (Not<?>) o;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Not<?> not = (Not<?>)o;
     return Objects.equals(e, not.e);
   }
 
@@ -65,11 +68,12 @@ public class Not<K> extends Expression<K> {
   public int hashCode() {
     return Objects.hash(e);
   }
-  public Set<K> getAllK(){
-	  Set<K> set=new HashSet<K>();
-	  set.addAll(e.getAllK());
-	  return set;
-  }public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
-	  return of(e.replaceVariablesWith(m));
+
+  public Set<K> getAllK() {
+    return e.getAllK();
+  }
+
+  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+    return of(e.replaceVars(m));
   }
 }

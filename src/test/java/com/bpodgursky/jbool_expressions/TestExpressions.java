@@ -1,6 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -77,6 +78,19 @@ public class TestExpressions extends JBoolTestCase {
     Map<String, Boolean> values7 = new HashMap<>();
     values7.put("A", false);
     assertEquals(true, EvalEngine.evaluateBoolean(expr4, values7));
+
+  }
+
+  public void testReplacement(){
+
+    Expression<String> expr = expr("(F & !D & (C | !A ))");
+
+    assertEquals(new HashSet<>(Arrays.asList("A", "C", "D", "F")), expr.getAllK());
+
+    assertEquals(
+        "(F & !D & (C | !(B & C)))",
+        expr.replaceVars(Collections.singletonMap("A", expr("(B & C)"))).toString()
+    );
 
   }
 

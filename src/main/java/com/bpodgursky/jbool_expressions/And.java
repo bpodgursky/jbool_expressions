@@ -1,15 +1,12 @@
 package com.bpodgursky.jbool_expressions;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 import static com.bpodgursky.jbool_expressions.Seeds.AND_SEED;
@@ -64,11 +61,12 @@ public class And<K> extends NExpression<K> {
   public String getExprType() {
     return EXPR_TYPE;
   }
-  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
-	  Expression<K>[] children = new Expression[this.expressions.length];
-	    for (int i = 0; i < this.expressions.length; i++) {
-	      children[i] = this.expressions[i].replaceVariablesWith(m);
-	    }
-	    return of(children);
+
+  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+    Expression<K>[] children = new Expression[this.expressions.length];
+    for (int i = 0; i < this.expressions.length; i++) {
+      children[i] = this.expressions[i].replaceVars(m);
+    }
+    return of(children);
   }
 }
