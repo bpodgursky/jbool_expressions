@@ -3,6 +3,7 @@ package com.bpodgursky.jbool_expressions;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 
 import java.util.Optional;
@@ -62,5 +63,12 @@ public class Or<K> extends NExpression<K> {
   @Override
   public String getExprType() {
     return EXPR_TYPE;
+  }
+  public Expression<K> replaceVariablesWith(Map<K,Expression<K>> m){
+	  Expression<K>[] children = new Expression[this.expressions.length];
+	    for (int i = 0; i < this.expressions.length; i++) {
+	      children[i] = this.expressions[i].replaceVariablesWith(m);
+	    }
+	    return of(children);
   }
 }
