@@ -79,6 +79,10 @@ public class TestExpressions extends JBoolTestCase {
     values7.put("A", false);
     assertEquals(true, EvalEngine.evaluateBoolean(expr4, values7));
 
+    Map<String, Boolean> values8 = new HashMap<>();
+    values8.put("B", true);
+    assertEquals(true, EvalEngine.evaluateBoolean(expr3, values8));
+
   }
 
   public void testReplacement(){

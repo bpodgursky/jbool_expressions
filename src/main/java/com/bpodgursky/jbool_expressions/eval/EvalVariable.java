@@ -15,9 +15,6 @@ public class EvalVariable<K> extends EvalRule<K> {
   @Override
   public boolean evaluate(Expression<K> expression, Map<String, EvalRule<K>> rules) {
     Variable<K> var = (Variable<K>) expression;
-    if(!values.containsKey(var.getValue())){
-      throw new RuntimeException("value not specified for variable: "+var);
-    }
-    return values.get(var.getValue());
+    return values.getOrDefault(var.getValue(), false);
   }
 }
