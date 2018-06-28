@@ -1,5 +1,6 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,7 @@ import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
-public abstract class Expression<K> {
+public abstract class Expression<K> implements Serializable {
 
   public static final Comparator<Expression> HASH_COMPARATOR = new HashComparator();
 
