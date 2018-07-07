@@ -18,7 +18,7 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> toSop(Expression<K> root) {
-    root = applySet(root, new ArrayList<>(Collections.singleton(new DeMorgan<K>())));
+    root = applySet(root, RulesHelper.<K>demorganRules());
     return applySet(root, RulesHelper.<K>toSopRules());
   }
 
