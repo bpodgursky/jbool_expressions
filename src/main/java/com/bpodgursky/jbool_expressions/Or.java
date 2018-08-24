@@ -6,14 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bpodgursky.jbool_expressions.Seeds.OR_SEED;
 
+import com.google.common.base.Optional;
+
 public class Or<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "or";
-  private Optional<String> cachedStringRepresentation = Optional.empty();
+  private Optional<String> cachedStringRepresentation = Optional.absent();
 
   public static <K> Or<K> of(Expression<K>[] children, Comparator<Expression> comparator) {
     return new Or<K>(children, comparator);
