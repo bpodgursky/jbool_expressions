@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import com.bpodgursky.jbool_expressions.rules.RuleSet;
 
 
 public class ExprUtil {
@@ -129,4 +136,32 @@ public class ExprUtil {
     }
     return Collections.emptySet();
   }
+
+  //  returns the variables from "most simplifying" to "least simplifying" if resolved
+  public static <K> List<K> getConstraintsByWeight(Expression<K> expression) {
+
+    Map<K, Integer> simplificationWeights = new HashMap<>(); 
+
+    for (K variable : expression.getAllK()) {
+      //  not sure this is the right decision, but sort here by best potential.  could also average true/false case.
+      simplificationWeights.put(variable, Math.min(
+          RuleSet.assign(expression, Collections.singletonMap(variable, true)).getAllK().size(),
+          RuleSet.assign(expression, Collections.singletonMap(variable, false)).getAllK().size()
+      ));
+    }
+
+    return simplificationWeights.entrySet().stream()
+        .sorted((o1, o2) -> {
+          int val = Integer.compare(o1.getValue(), o2.getValue());
+          if(val != 0){
+            return val;
+          }
+          //  just to be deterministic
+          return o1.getKey().toString().compareTo(o2.getKey().toString());
+        })
+        .map(Map.Entry::getKey)
+        .collect(Collectors.toList());
+
+  }
+
 }
