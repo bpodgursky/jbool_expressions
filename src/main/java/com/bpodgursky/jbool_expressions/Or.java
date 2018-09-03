@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bpodgursky.jbool_expressions.Seeds.OR_SEED;
 
 public class Or<K> extends NExpression<K> {
   public static final String EXPR_TYPE = "or";
-  private Optional<String> cachedStringRepresentation = Optional.empty();
+  private String cachedStringRepresentation = null;
 
   public static <K> Or<K> of(Expression<K>[] children, Comparator<Expression> comparator) {
     return new Or<K>(children, comparator);
@@ -29,10 +28,10 @@ public class Or<K> extends NExpression<K> {
   }
 
   public String toString() {
-    if (!cachedStringRepresentation.isPresent()) {
-      cachedStringRepresentation = Optional.of(Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")")));
+    if (cachedStringRepresentation == null) {
+      cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")"));
     }
-    return cachedStringRepresentation.get();
+    return cachedStringRepresentation;
   }
 
   @SafeVarargs

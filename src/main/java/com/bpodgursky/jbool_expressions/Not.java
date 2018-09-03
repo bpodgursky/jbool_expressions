@@ -9,11 +9,9 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
-import java.util.Optional;
-
 public class Not<K> extends Expression<K> {
   public static final String EXPR_TYPE = "not";
-  private Optional<String> cachedStringRepresentation = Optional.empty();
+  private String cachedStringRepresentation = null;
 
   private final Expression<K> e;
 
@@ -26,10 +24,10 @@ public class Not<K> extends Expression<K> {
   }
 
   public String toString() {
-    if (!cachedStringRepresentation.isPresent()) {
-      cachedStringRepresentation = Optional.of("!" + e);
+    if (cachedStringRepresentation == null) {
+      cachedStringRepresentation = "!" + e;
     }
-    return cachedStringRepresentation.get();
+    return cachedStringRepresentation;
   }
 
   @Override
