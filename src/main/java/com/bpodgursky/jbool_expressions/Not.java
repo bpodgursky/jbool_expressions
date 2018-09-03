@@ -1,5 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
+import com.google.common.base.Optional;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +11,9 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
-import java.util.Optional;
-
 public class Not<K> extends Expression<K> {
   public static final String EXPR_TYPE = "not";
-  private Optional<String> cachedStringRepresentation = Optional.empty();
+  private Optional<String> cachedStringRepresentation = Optional.absent();
 
   private final Expression<K> e;
 
