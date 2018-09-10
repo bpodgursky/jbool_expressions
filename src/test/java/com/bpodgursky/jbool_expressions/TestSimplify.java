@@ -48,7 +48,6 @@ public class TestSimplify extends JBoolTestCase {
     assertToPos("(A & (!C | !D | !E | !F))", "A & (!A | !C | !D | !E | !F)");
     assertToSop("(D | !A)", "!((!D | !A) & A)");
     assertToSop("(A | !D)", "((!D & !A) | A)");
-
   }
 
   public void testCollapseNegation() {

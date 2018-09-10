@@ -71,6 +71,11 @@ public class Not<K> extends Expression<K> {
     return e.getAllK();
   }
 
+  @Override
+  public void collectK(Set<K> set, int limit) {
+    e.collectK(set, limit);
+  }
+
   public Expression<K> replaceVars(Map<K, Expression<K>> m) {
     return of(e.replaceVars(m));
   }

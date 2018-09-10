@@ -24,10 +24,10 @@ public class GenerateExpressionExamples {
     generateExpressionsFile(
         "datasets",
         1,
+        8,
         5,
-        2,
-        10, 
-        6
+        15,
+        7
     );
 
   }
@@ -59,7 +59,7 @@ public class GenerateExpressionExamples {
 
     FileWriter writer = new FileWriter(output);
 
-    for (int i = 0; i < 50000; i++) {
+    for (int i = 0; i < 5000; i++) {
       Expression<String> expr = recurse(rand, variables, minExprLength, maxExprLength, 0, maxDepth);
       writer.write(expr.toString() + "\n");
     }

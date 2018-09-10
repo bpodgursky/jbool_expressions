@@ -63,8 +63,14 @@ public class Variable<K> extends Expression<K> {
     return Objects.hash(value);
   }
 
-  public Set<K> getAllK() {
-    return Collections.singleton(value);
+  @Override
+  public void collectK(Set<K> set, int limit) {
+
+    if(set.size() >= limit){
+      return;
+    }
+
+    set.add(value);
   }
 
   public Expression<K> replaceVars(Map<K, Expression<K>> m) {

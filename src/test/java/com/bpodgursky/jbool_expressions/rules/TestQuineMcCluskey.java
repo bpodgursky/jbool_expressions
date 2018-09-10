@@ -34,14 +34,11 @@ public class TestQuineMcCluskey extends JBoolTestCase {
 
     Set<QuineMcCluskey.Implicant> implicants = QuineMcCluskey.getMergedImplicants(minterms);
 
-    System.out.println(implicants);
-
     QuineMcCluskey.EPICalculation epis = QuineMcCluskey.getEssentialPrimeImplicants(implicants, Arrays.asList(
         4, 8, 10, 11, 12, 15
     ));
 
     Set<QuineMcCluskey.Implicant> epiTerms = epis.getEpis();
-    System.out.println(epiTerms);
     assertEquals(2, epiTerms.size());
     assertTrue(epiTerms.contains(new QuineMcCluskey.Implicant(4, 8)));
     assertTrue(epiTerms.contains(new QuineMcCluskey.Implicant(10, 5)));
@@ -87,7 +84,7 @@ public class TestQuineMcCluskey extends JBoolTestCase {
 
     Expression<String> expr = expr("(!A & !B) | (!A & !C) | (!B & C) | (B & !C) | (A & C) | (A & B)");
 
-    Expression<String> simplified = QuineMcCluskey.simplify(expr);
+    Expression<String> simplified = QuineMcCluskey.toDNF(expr);
 
     assertTrue(
         Or.of(Arrays.asList(

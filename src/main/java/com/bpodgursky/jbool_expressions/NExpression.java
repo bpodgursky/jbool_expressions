@@ -86,11 +86,15 @@ public abstract class NExpression<K> extends Expression<K> {
     return hashCode;
   }
 
-  public Set<K> getAllK() {
-    return Arrays.stream(expressions)
-        .map(Expression::getAllK)
-        .flatMap(Collection::stream)
-        .collect(Collectors.toSet());
+  public void collectK(Set<K> set, int limit){
+
+    if(set.size() >= limit){
+      return;
+    }
+
+    for (Expression<K> expression : expressions) {
+      expression.collectK(set, limit);
+    }
   }
 
 }

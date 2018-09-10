@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.And;
@@ -62,7 +62,7 @@ public class QuineMcCluskey {
     }
   }
 
-  public static <K> Expression<K> simplify(Expression<K> input) {
+  public static <K> Expression<K> toDNF(Expression<K> input) {
 
     ArrayList<K> variables = new ArrayList<>(input.getAllK());
     Collections.reverse(variables);
@@ -70,8 +70,11 @@ public class QuineMcCluskey {
     //  expand all true/false inputs
     List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input);
 
-    Set<Implicant> mergedImplicants = getMergedImplicants(minterms);
+    if (minterms.size() == Math.pow(2, variables.size())) {
+      return Literal.getTrue();
+    }
 
+    Set<Implicant> mergedImplicants = getMergedImplicants(minterms);
     EPICalculation essentialPrimeImplicants = getEssentialPrimeImplicants(mergedImplicants, minterms);
 
     List<Expression<K>> orChildren = new ArrayList<>();
@@ -82,18 +85,24 @@ public class QuineMcCluskey {
 
     //  use petrick's algorithm
     if (!essentialPrimeImplicants.uncoveredMinterms.isEmpty()) {
-      orChildren.addAll(getPetrickMethodImplicants(variables, essentialPrimeImplicants.uncoveredMinterms, new ArrayList<>(mergedImplicants)));
+      orChildren.addAll(getPetrickMethodImplicants(variables, essentialPrimeImplicants.uncoveredMinterms, new ArrayList<>(essentialPrimeImplicants.nonEpis)));
     }
 
-    return Or.of(orChildren);
+    if (orChildren.isEmpty()) {
+      return Literal.getFalse();
+    }
+
+    return RuleSet.simplify(Or.of(orChildren));
   }
 
   public static class EPICalculation {
     private final Set<Implicant> epis;
+    private final Set<Implicant> nonEpis;
     private final List<Integer> uncoveredMinterms;
 
-    private EPICalculation(Set<Implicant> epis, List<Integer> uncoveredMinterms) {
+    private EPICalculation(Set<Implicant> epis, Set<Implicant> nonEPIs, List<Integer> uncoveredMinterms) {
       this.epis = epis;
+      this.nonEpis = nonEPIs;
       this.uncoveredMinterms = uncoveredMinterms;
     }
 
@@ -110,6 +119,7 @@ public class QuineMcCluskey {
   public static EPICalculation getEssentialPrimeImplicants(Set<Implicant> implicants, List<Integer> minterms) {
 
     Set<Implicant> epis = new HashSet<>();
+    Set<Implicant> nonEPIs = new HashSet<>(implicants);
     List<Integer> uncoveredMinterms = new ArrayList<>();
 
     for (Integer minterm : minterms) {
@@ -119,14 +129,34 @@ public class QuineMcCluskey {
           .collect(Collectors.toList());
 
       if (coveringImplicants.size() == 1) {
-        epis.add(coveringImplicants.get(0));
+        Implicant implicant = coveringImplicants.get(0);
+        epis.add(implicant);
+        nonEPIs.remove(implicant);
       } else {
         uncoveredMinterms.add(minterm);
       }
 
     }
 
-    return new EPICalculation(epis, uncoveredMinterms);
+    List<Integer> remainingMinterms = new LinkedList<>();
+    for (Integer uncoveredMinterm : uncoveredMinterms) {
+
+      boolean coveredByEPIs = false;
+
+      for (Implicant epi : epis) {
+        if(covers(uncoveredMinterm, epi)){
+          coveredByEPIs = true;
+          break;
+        }
+      }
+
+      if(!coveredByEPIs){
+        remainingMinterms.add(uncoveredMinterm);
+      }
+
+    }
+
+    return new EPICalculation(epis, nonEPIs, remainingMinterms);
 
   }
 
@@ -167,12 +197,13 @@ public class QuineMcCluskey {
     }
 
     And<Integer> join = And.of(products);
-    Expression<Integer> asSop = RuleSet.toSop(join);
+    Expression<Integer> asSop = RulesHelper.applySet(join, RulesHelper.toSopRules());
 
     Or<Integer> root = (Or<Integer>)asSop;
 
     int smallestTerms = Integer.MAX_VALUE;
     Expression<Integer> bestTerm = null;
+
 
     for (Expression<Integer> child : root.getChildren()) {
 
@@ -186,21 +217,27 @@ public class QuineMcCluskey {
         allVars.addAll(expr.getAllK());
       }
 
-
       if (allVars.size() < smallestTerms) {
         bestTerm = child;
         smallestTerms = allVars.size();
       }
 
-
     }
 
-    And<Integer> bestAnd = (And<Integer>)bestTerm;
-
     List<Expression<K>> returnOrs = new ArrayList<>();
-    for (Expression<Integer> child : bestAnd.getChildren()) {
-      Variable<Integer> var = (Variable<Integer>)child;
+
+    if (bestTerm instanceof Variable) {
+      Variable<Integer> var = (Variable<Integer>)bestTerm;
       returnOrs.add(toExpr(implicantMapInv.get(var.getValue()), variables));
+
+    } else {
+
+      And<Integer> bestAnd = (And<Integer>)bestTerm;
+
+      for (Expression<Integer> child : bestAnd.getChildren()) {
+        Variable<Integer> var = (Variable<Integer>)child;
+        returnOrs.add(toExpr(implicantMapInv.get(var.getValue()), variables));
+      }
     }
 
     return returnOrs;
