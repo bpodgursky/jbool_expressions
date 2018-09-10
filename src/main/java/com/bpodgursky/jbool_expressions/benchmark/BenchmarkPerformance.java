@@ -61,7 +61,7 @@ public class BenchmarkPerformance {
       System.out.println("\tMax expr length:\t"+nameParts[4]);
       System.out.println("\tMax depth:\t"+nameParts[5]);
       System.out.println("\t\tTotal parse time:\t"+parseTime);
-      System.out.println("\t\tTotal simplify time:\t"+simplifyTime);
+      System.out.println("\t\tTotal toDNF time:\t"+simplifyTime);
       System.out.println("\t\tTotal sop time:\t"+sopTime);
       System.out.println("\t\tTotal pos time:\t"+posTime);
 

@@ -2,6 +2,7 @@ package com.bpodgursky.jbool_expressions;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,8 +49,14 @@ public abstract class Expression<K> implements Serializable {
   public String toLexicographicString(){
     return sort(LEXICOGRAPHIC_COMPARATOR).toString();
   }
-  
-  public abstract Set<K> getAllK();
-  
+
+  public Set<K> getAllK(){
+    Set<K> variables =new HashSet<>();
+    collectK(variables, Integer.MAX_VALUE);
+    return variables;
+  }
+
+  public abstract void collectK(Set<K> set, int limit);
+
   public abstract Expression<K> replaceVars(Map<K,Expression<K>> m);
 }

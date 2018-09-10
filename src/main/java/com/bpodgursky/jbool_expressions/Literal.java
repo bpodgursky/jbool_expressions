@@ -2,6 +2,7 @@ package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -71,8 +72,9 @@ public class Literal<K> extends Expression<K> {
     return Boolean.hashCode(value);
   }
 
-  public Set<K> getAllK() {
-    return new HashSet<K>();
+  @Override
+  public void collectK(Set<K> set, int limit) {
+    //  no op
   }
 
   public Expression<K> replaceVars(Map<K, Expression<K>> m) {
