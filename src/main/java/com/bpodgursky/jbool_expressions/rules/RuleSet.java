@@ -21,7 +21,7 @@ public class RuleSet {
   }
 
   /**
-   * This method transforms an expression to DNF, but at a variable cardinality >= 8, switches to the QuineMcCluskey algorithm.
+   * This method transforms an expression to DNF, but at a variable cardinality <= 8, switches to the QuineMcCluskey algorithm.
    *
    * The problem with using the switch globally is that QMC can be considerably slower than "naiive" simplification on really simple expressions.
    * For example, (A | B | C | D | E | F | G) takes 15ms using the standard toSop rules, but 120ms using QMC.  But QMC is dramatically faster
