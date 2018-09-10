@@ -20,17 +20,30 @@ public class RuleSet {
     return applySet(root, RulesHelper.simplifyRules());
   }
 
-  public static <K> Expression<K> toSop(Expression<K> root) {
-
+  /**
+   * This method transforms an expression to DNF, but at a variable cardinality >= 8, switches to the QuineMcCluskey algorithm.
+   *
+   * The problem with using the switch globally is that QMC can be considerably slower than "naiive" simplification on really simple expressions.
+   * For example, (A | B | C | D | E | F | G) takes 15ms using the standard toSop rules, but 120ms using QMC.  But QMC is dramatically faster
+   * on some larger expressions with the same number of variables -- see https://github.com/bpodgursky/jbool_expressions/issues/29 for an example.
+   *
+   * So for now, I'm going to add a new method instead of potentially introducing a performance regression on the old method.  If there's a smarter
+   * way to "guess" which method would be faster on a given expression, I'm happy to use it, but nothing comes to mind.
+   *
+   */
+  public static <K> Expression<K> toDNFViaQMC(Expression<K> root) {
     Set<K> variables = new HashSet<>();
-    root.collectK(variables, QMC_CARDINALITY_CUTOFF+1);
+    root.collectK(variables, QMC_CARDINALITY_CUTOFF + 1);
 
     if (variables.size() <= QMC_CARDINALITY_CUTOFF) {
       return QuineMcCluskey.toDNF(root);
+    } else {
+      return toSop(root);
     }
-     else {
-      return applySet(applySet(root, RulesHelper.demorganRules()), RulesHelper.toSopRules());
-    }
+  }
+
+  public static <K> Expression<K> toSop(Expression<K> root) {
+    return applySet(applySet(root, RulesHelper.demorganRules()), RulesHelper.toSopRules());
   }
 
   public static <K> Expression<K> toPos(Expression<K> root) {

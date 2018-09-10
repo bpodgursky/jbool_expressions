@@ -2,6 +2,7 @@ package com.bpodgursky.jbool_expressions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
@@ -60,6 +61,25 @@ public class TestSimplify extends JBoolTestCase {
     assertToSop("(m | n | (a & g & h & i & !l) | (a & g & h & j & !l) | (a & g & h & k & !l) | (b & g & h & i & !l) | (b & g & h & j & !l) | (b & g & h & k & !l) | (c & g & h & i & !l) | (c & g & h & j & !l) | (c & g & h & k & !l) | (d & g & h & i & !l) | (d & g & h & j & !l) | (d & g & h & k & !l) | (e & g & h & i & !l) | (e & g & h & j & !l) | (e & g & h & k & !l) | (f & g & h & i & !l) | (f & g & h & j & !l) | (f & g & h & k & !l))",
         "(( a | b | c | d | e | f ) & ( g & h & ( i | j | k ) & !( l | m | n ))) | ( m | n )"
     );
+
+  }
+
+  public void testQMCDNF() throws InterruptedException {
+
+    AtomicBoolean finished = new AtomicBoolean(false);
+
+    Thread thread = new Thread(() -> {
+      RuleSet.toDNFViaQMC(Not.of(expr("((b4 & b1 & !b3 & !c1 & c2 & c5) | (b4 & b1 & !b3 & !c1 & c2 & !c5) | (b4 & b1 & !b3 & !c1 & !c2 & c5) | (b4 & b1 & !b3 & !c1 & !c2 & !c5) | (b1 & b3 & !c1 & c2 & c5) | (b1 & b3 & !c1 & c2 & !c5) | (b1 & b3 & !c1 & !c2 & c5) | (b1 & b3 & !c1 & !c2 & !c5) | (!b4 & b1 & !b3 & !c1 & c2 & c5) | (!b4 & b1 & !b3 & !c1 & c2 & !c5) | (!b4 & b1 & !b3 & !c1 & !c2 & c5) | (!b4 & b1 & !b3 & !c1 & !c2 & !c5) | (b4 & !b1 & !c1 & b2 & c2 & c5) | (b4 & !b1 & !c1 & b2 & c2 & !c5) | (b4 & !b1 & !c1 & b2 & !c2 & c5) | (b4 & !b1 & !c1 & b2 & !c2 & !c5) | (!b1 & !c1 & !b2 & c2 & c5) | (!b1 & !c1 & !b2 & c2 & !c5) | (!b1 & !c1 & !b2 & !c2 & c5) | (!b1 & !c1 & !b2 & !c2 & !c5) | (!b4 & !b1 & !c1 & b2 & c2 & c5) | (!b4 & !b1 & !c1 & b2 & c2 & !c5) | (!b4 & !b1 & !c1 & b2 & !c2 & c5) | (!b4 & !b1 & !c1 & b2 & !c2 & !c5))")));
+      finished.set(true);
+    });
+
+    thread.start();
+
+    Thread.sleep(1000);
+
+    if(!finished.get()){
+      fail("QMC is not as fast as expected on this expression.");
+    }
 
   }
 
