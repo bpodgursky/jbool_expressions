@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.And;
+import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Literal;
 import com.bpodgursky.jbool_expressions.Not;
@@ -64,8 +67,7 @@ public class QuineMcCluskey {
 
   public static <K> Expression<K> toDNF(Expression<K> input) {
 
-    ArrayList<K> variables = new ArrayList<>(input.getAllK());
-    Collections.reverse(variables);
+    ArrayList<K> variables = new ArrayList<>(ExprUtil.getConstraintsByWeight(input));
 
     //  expand all true/false inputs
     List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input);
@@ -144,13 +146,13 @@ public class QuineMcCluskey {
       boolean coveredByEPIs = false;
 
       for (Implicant epi : epis) {
-        if(covers(uncoveredMinterm, epi)){
+        if (covers(uncoveredMinterm, epi)) {
           coveredByEPIs = true;
           break;
         }
       }
 
-      if(!coveredByEPIs){
+      if (!coveredByEPIs) {
         remainingMinterms.add(uncoveredMinterm);
       }
 
@@ -384,12 +386,26 @@ public class QuineMcCluskey {
   }
 
   public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables, Map<K, Boolean> assignments, Expression<K> input) {
+    List<Integer> minterms = new ArrayList<>();
+    findMinterms(pos, variables, input, assignments, minterms);
+    return minterms;
+  }
+
+  static AtomicLong evaled = new AtomicLong();
+
+  public static <K> void findMinterms(int pos, ArrayList<K> variables, Expression<K> input, Map<K, Boolean> assignments, List<Integer> collectedMinterms) {
 
     if (pos == variables.size()) {
 
-      boolean val = EvalEngine.evaluateBoolean(input, assignments);
+      Literal val = (Literal)input;
 
-      if (val) {
+      evaled.incrementAndGet();
+
+      if(evaled.get() % 1000000 == 0){
+        System.out.println("Evaluated minterms: "+evaled.get());
+      }
+
+      if (val.getValue()) {
         //  evaluate
         int minTerm = 0;
 
@@ -400,19 +416,28 @@ public class QuineMcCluskey {
           }
 
         }
-        return Collections.singletonList(minTerm);
+
+        collectedMinterms.add(minTerm);
+
+        if (collectedMinterms.size() % 100000 == 0) {
+          System.out.println();
+          System.out.println(System.currentTimeMillis());
+          System.out.println(minTerm + "\t" + collectedMinterms.size());
+        }
+
+        return;
+
       } else {
-        return Collections.emptyList();
+        return;
       }
     }
 
     assignments.put(variables.get(pos), true);
-    List<Integer> minterms = new ArrayList<>(findMinterms(pos + 1, variables, assignments, input));
+    findMinterms(pos + 1, variables, RuleSet.assign(input, Collections.singletonMap(variables.get(pos), true)), assignments, collectedMinterms);
 
     assignments.put(variables.get(pos), false);
-    minterms.addAll(findMinterms(pos + 1, variables, assignments, input));
+    findMinterms(pos + 1, variables, RuleSet.assign(input, Collections.singletonMap(variables.get(pos), false)), assignments, collectedMinterms);
 
-    return minterms;
   }
 
 }

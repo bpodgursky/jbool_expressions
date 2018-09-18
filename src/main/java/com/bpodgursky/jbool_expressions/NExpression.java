@@ -40,10 +40,35 @@ public abstract class NExpression<K> extends Expression<K> {
 
   @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
-    Expression<K>[] children = new Expression[this.expressions.length];
+    Expression<K>[] children = null;
+
+    boolean modified = false;
     for (int i = 0; i < this.expressions.length; i++) {
-      children[i] = RulesHelper.applyAll(this.expressions[i], rules);
+      Expression<K> newChild = RulesHelper.applyAll(this.expressions[i], rules);
+
+      if(newChild != this.expressions[i]){
+        modified = true;
+
+        if(children == null) {
+          children = new Expression[this.expressions.length];
+        }
+
+        children[i] = newChild;
+      }
+
     }
+
+    if(!modified){
+      return this;
+    }
+
+    //  backfill
+    for (int i = 0; i < this.expressions.length; i++) {
+      if(children[i] == null){
+        children[i] = this.expressions[i];
+      }
+    }
+
     return create(children);
   }
 

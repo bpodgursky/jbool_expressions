@@ -20,6 +20,21 @@ public class RuleSet {
     return applySet(root, RulesHelper.simplifyRules());
   }
 
+
+  public static <K> Expression<K> aggreessiveDNF(){
+
+    //  to dnf (A & B & C) | (A & B & D) => (E & C ) | (E & D)
+
+    //
+
+    //  to cnf, opposite
+
+    //  does matter for qmc
+
+
+    return null;
+  }
+
   /**
    * This method transforms an expression to DNF, but at a variable cardinality less than 9, switches to the QuineMcCluskey algorithm.
    *
@@ -43,6 +58,14 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> toSop(Expression<K> root) {
+    return applySet(applySet(root, RulesHelper.demorganRules()), RulesHelper.toSopRules());
+  }
+
+  public static <K> Expression<K> toSop2(Expression<K> root) {
+
+    //  to sop
+    //  demorgan
+
     return applySet(applySet(root, RulesHelper.demorganRules()), RulesHelper.toSopRules());
   }
 

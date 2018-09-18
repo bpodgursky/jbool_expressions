@@ -1,5 +1,6 @@
 package com.bpodgursky.jbool_expressions;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,18 @@ public class Not<K> extends Expression<K> {
 
   @Override
   public Expression<K> apply(List<Rule<?, K>> rules) {
-    return new Not<K>(RulesHelper.applyAll(e, rules));
+    Expression<K> e = RulesHelper.applyAll(this.e, rules);
+
+    if(e != this.e){
+      return new Not<K>(e);
+    }
+
+    return this;
+  }
+
+  @Override
+  public List<Expression<K>> getChildren() {
+    return Collections.singletonList(e);
   }
 
   @Override

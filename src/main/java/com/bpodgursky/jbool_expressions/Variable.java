@@ -33,6 +33,11 @@ public class Variable<K> extends Expression<K> {
   }
 
   @Override
+  public List<Expression<K>> getChildren() {
+    return Collections.emptyList();
+  }
+
+  @Override
   public Expression<K> sort(Comparator<Expression> comparator) {
     return this;
   }

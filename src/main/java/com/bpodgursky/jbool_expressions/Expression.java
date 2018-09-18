@@ -42,6 +42,8 @@ public abstract class Expression<K> implements Serializable {
 
   public abstract Expression<K> apply(List<Rule<?, K>> rules);
 
+  public abstract List<Expression<K>> getChildren();
+
   public abstract String getExprType();
 
   protected abstract Expression<K> sort(Comparator<Expression> comparator);
