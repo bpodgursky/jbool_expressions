@@ -7,7 +7,7 @@ import java.util.*;
 public class SimplifyAnd<K> extends Rule<And<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(And<K> input) {
+  public Expression<K> applyInternal(And<K> input, RuleSetCache<K> cache) {
 
     for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {

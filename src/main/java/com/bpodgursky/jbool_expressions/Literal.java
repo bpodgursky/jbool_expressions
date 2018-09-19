@@ -1,6 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,7 +49,7 @@ public class Literal<K> extends Expression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules) {
+  public Expression<K> apply(List<Rule<?, K>> rules, RuleSetCache<K> cache) {
     return this;
   }
 

@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
 public class Not<K> extends Expression<K> {
@@ -32,8 +33,8 @@ public class Not<K> extends Expression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules) {
-    Expression<K> e = RulesHelper.applyAll(this.e, rules);
+  public Expression<K> apply(List<Rule<?, K>> rules, RuleSetCache<K> cache) {
+    Expression<K> e = RulesHelper.applyAll(this.e, rules, cache);
 
     if(e != this.e){
       return new Not<K>(e);

@@ -14,7 +14,7 @@ public class Assign<K> extends Rule<Variable<K>, K> {
   }
 
   @Override
-  public Expression<K> applyInternal(Variable<K> var) {
+  public Expression<K> applyInternal(Variable<K> var, RuleSetCache<K> cache) {
     if(values.containsKey(var.getValue())){
       return Literal.of(values.get(var.getValue()));
     }

@@ -7,7 +7,7 @@ import java.util.*;
 public class SimplifyOr<K> extends Rule<Or<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(Or<K> input) {
+  public Expression<K> applyInternal(Or<K> input, RuleSetCache<K> cache) {
 
     for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {

@@ -11,7 +11,7 @@ import java.util.List;
 public class CombineAnd<K> extends Rule<And<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(And<K> and) {
+  public Expression<K> applyInternal(And<K> and, RuleSetCache<K> cache) {
     for (Expression<K> expr : and.expressions) {
       if (expr instanceof And) {
         And<K> childAnd = (And<K>) expr;

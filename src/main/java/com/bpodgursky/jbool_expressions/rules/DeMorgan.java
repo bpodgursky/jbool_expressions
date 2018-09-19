@@ -11,7 +11,7 @@ import java.util.List;
 public class DeMorgan<K> extends Rule<Not<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(Not<K> not) {
+  public Expression<K> applyInternal(Not<K> not, RuleSetCache<K> cache) {
       Expression<K> e = not.getE();
 
       if(e instanceof And){

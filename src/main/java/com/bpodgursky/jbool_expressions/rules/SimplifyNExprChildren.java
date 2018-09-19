@@ -12,7 +12,7 @@ import java.util.List;
 public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(NExpression<K> input) {
+  public Expression<K> applyInternal(NExpression<K> input, RuleSetCache<K> cache) {
 
     //  for each child of the or
 

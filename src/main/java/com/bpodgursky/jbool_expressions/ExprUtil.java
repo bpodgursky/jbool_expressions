@@ -14,12 +14,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
 
 
 public class ExprUtil {
 
-  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr, Expression<K> omitFromOr) {
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
+  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr, Expression<K> omitFromOr, RuleSetCache<K> cache) {
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr, cache);
     List<Expression<K>> newChildren = new ArrayList<>();
     //  for each child of the or,  we want it AND all other children of the and
 
@@ -36,8 +37,8 @@ public class ExprUtil {
     return Or.of(newChildren);
   }
 
-  public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr){
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
+  public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr, RuleSetCache<K> cache){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr, cache);
     List<Expression<K>> newChildren = new ArrayList<>(Arrays.asList(childrenNew));
 
     List<Expression<K>> orOthers = new ArrayList<>();
@@ -54,8 +55,8 @@ public class ExprUtil {
     return And.of(newChildren);
   }
 
-  public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd){
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
+  public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd, RuleSetCache<K> cache){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd, cache);
     List<Expression<K>> newChildren = new ArrayList<>(Arrays.asList(childrenNew));
 
     List<Expression<K>> andOthers = new ArrayList<>();
@@ -72,7 +73,7 @@ public class ExprUtil {
     return Or.of(newChildren);
   }
 
-  public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit){
+  public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit, RuleSetCache<K> cache){
     Set<Expression<K>> andTerms = new LinkedHashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!omit.contains(eachExpr)){
@@ -83,12 +84,12 @@ public class ExprUtil {
     return toArray(andTerms);
   }
 
-  public static <K> Expression<K>[] allExceptMatch(List<Expression<K>> exprs, Expression<K> omit) {
+  public static <K> Expression<K>[] allExceptMatch(List<Expression<K>> exprs, Expression<K> omit, RuleSetCache<K> cache) {
     //noinspection unchecked
-    return allExceptMatch(exprs.toArray(new Expression[exprs.size()]), omit);
+    return allExceptMatch(exprs.toArray(new Expression[exprs.size()]), omit, cache);
   }
 
-    public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit){
+    public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit, RuleSetCache<K> cache){
     Set<Expression<K>> andTerms = new LinkedHashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!eachExpr.equals(omit)){

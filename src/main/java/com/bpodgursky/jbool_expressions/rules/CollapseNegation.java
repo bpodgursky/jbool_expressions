@@ -11,7 +11,7 @@ import com.bpodgursky.jbool_expressions.Or;
 //  A & (!A | C) & D => A & C & D
 public class CollapseNegation<K> extends Rule<NExpression<K>, K> {
 
-  public Expression<K> applyInternal(NExpression<K> input) {
+  public Expression<K> applyInternal(NExpression<K> input, RuleSetCache<K> cache) {
 
     //  case 1:
     //  A | (!A & C) | D

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
 public abstract class NExpression<K> extends Expression<K> {
@@ -39,12 +40,12 @@ public abstract class NExpression<K> extends Expression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules) {
+  public Expression<K> apply(List<Rule<?, K>> rules, RuleSetCache<K> cache) {
     Expression<K>[] children = null;
 
     boolean modified = false;
     for (int i = 0; i < this.expressions.length; i++) {
-      Expression<K> newChild = RulesHelper.applyAll(this.expressions[i], rules);
+      Expression<K> newChild = RulesHelper.applyAll(this.expressions[i], rules, cache);
 
       if(newChild != this.expressions[i]){
         modified = true;

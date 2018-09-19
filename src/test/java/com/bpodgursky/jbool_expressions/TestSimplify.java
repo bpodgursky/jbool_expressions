@@ -90,10 +90,8 @@ public class TestSimplify extends JBoolTestCase {
 
   public void test(){
 
-    //  TODO consolidate variables
-
     Expression<String> exprIn = expr("!(!(A1|A2|A3)&!(B1&B2)&!(B3&B4)&!B5&(C1|C2|C3|C4))&!(!(A1|A2|A3)&!(B1&B2)&!(B5|B4)&!D1&C1)&!(!(A1|A2|A3)&!(B1&B2)&!D1&!B5&C1)&!(!(A1|A2|A3)&!(B6|B5)&!D1&(B7|B8)&(C1|C2|C4)&B9)&!(!(A1|A2|A3)&!(B5|B4)&!D1&(C1|C2|C4)&B8&B3)&!(!(A1|A2|A3)&!D1&!B1&(C1|C2|C4)&B2)&!(!(A1|A2|A3)&!D1&!B6&(C1|C2|C4)&B10)&!(!(A1|A2|A3)&B1&B2&C3)&!(!(B1&B2)&!(B3&B5)&(A1|A2)&(C1|C2))&!(!(B1&B2)&!(B3&B5)&(A1|A2)&772&C1)&!(!(B1&B2)&!(B3&B5)&(A1|A2)&C1)&!(!(B1&B2)&!(B3&B5)&C3)&!(!(B6|B5)&!D1&(A1|A2)&(C1|C2)&017&B8&B9)&!(!D1&!A3&(C1|C2|C4)&B7&B3)&!(!E1&B1&B2&C3)&!((!(B11&M014)&!(B11&B10)&!(B3&B4)&!B1&F1&C3)|(!(B11&B10)&!(B3&B4)&!B2&F1&C3))&!((!(B3|B9)&!B6&(C1|C2|C4)&D1)|(!B6&!B5&(C1|C2|C4)&D1))&!((F1|5XXL)&B1&B2&C3)&!((A1|A2|A3)&B1&B2&C3)&!((A1|A2)&B1&B2&C3)&!((B3|B9)&(C1|C2|C3|C4)&017&B5)&!(A3&C1)&!(B1&B2&C3)&(A1|A2|A4|A5|A6|A7|A8|A9|A10|A11|A12|A13)");
-    Expression<String> dnfd = QuineMcCluskey.toDNF(exprIn);
+    Expression<String> dnfd = RuleSet.toDNF(exprIn);
     System.out.println(dnfd);
 
 //    Expression<String> simpler = RuleSet.toDNF(Not.of(dnfd));
@@ -158,6 +156,12 @@ public class TestSimplify extends JBoolTestCase {
 
   //  get all sets of expressions that appear together as children
   //
+
+  //  TODO cache results -- simplified / DNF'd parts
+
+  //  TODO can we intern similar parts of the tree for memory savings?
+
+  //  TODO consolidate variables
 
 
   public <K> void aggressiveDNF(Expression<K> expr){

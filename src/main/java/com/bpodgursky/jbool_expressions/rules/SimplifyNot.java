@@ -7,7 +7,7 @@ import com.bpodgursky.jbool_expressions.Not;
 public class SimplifyNot<K> extends Rule<Not<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(Not<K> input) {
+  public Expression<K> applyInternal(Not<K> input, RuleSetCache<K> cache) {
     Expression<K> e = input.getE();
 
       if(e instanceof Literal){

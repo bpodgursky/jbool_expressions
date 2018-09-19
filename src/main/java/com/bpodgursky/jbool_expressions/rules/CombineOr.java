@@ -10,7 +10,7 @@ import java.util.List;
 public class CombineOr<K> extends Rule<Or<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(Or<K> or) {
+  public Expression<K> applyInternal(Or<K> or, RuleSetCache<K> cache) {
     for (Expression<K> expr : or.expressions) {
       if (expr instanceof Or) {
         Or<K> childAnd = (Or<K>) expr;

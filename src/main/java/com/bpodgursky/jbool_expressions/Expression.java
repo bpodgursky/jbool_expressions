@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
 
 public abstract class Expression<K> implements Serializable {
 
@@ -40,7 +41,7 @@ public abstract class Expression<K> implements Serializable {
     }
   }
 
-  public abstract Expression<K> apply(List<Rule<?, K>> rules);
+  public abstract Expression<K> apply(List<Rule<?, K>> rules, RuleSetCache<K> cache);
 
   public abstract List<Expression<K>> getChildren();
 

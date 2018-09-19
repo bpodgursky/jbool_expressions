@@ -47,7 +47,7 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
     throw new RuntimeException();
   }
 
-  public Expression<K> applyInternal(NExpression<K> input) {
+  public Expression<K> applyInternal(NExpression<K> input, RuleSetCache<K> cache) {
 
     Map<Expression<K>, Set<NExpression<K>>> byParent = new HashMap<>();
 

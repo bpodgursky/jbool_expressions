@@ -9,7 +9,7 @@ import static com.bpodgursky.jbool_expressions.ExprUtil.collapseToSOP;
 public class ToSOP<K> extends Rule<And<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(And<K> and) {
+  public Expression<K> applyInternal(And<K> and, RuleSetCache<K> cache) {
     //  if there are any children which are ORs,
     for (Expression<K> e : and.expressions) {
       if (e instanceof Or) {
