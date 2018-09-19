@@ -16,7 +16,7 @@ public class CombineOr<K> extends Rule<Or<K>, K> {
         Or<K> childAnd = (Or<K>) expr;
 
         List<Expression<K>> newChildren = new ArrayList<>();
-        ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(or.expressions, childAnd));
+        ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(or.expressions, childAnd, cache));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 
         return Or.of(newChildren);

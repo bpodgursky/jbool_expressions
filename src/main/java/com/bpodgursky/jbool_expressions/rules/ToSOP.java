@@ -15,7 +15,7 @@ public class ToSOP<K> extends Rule<And<K>, K> {
       if (e instanceof Or) {
         Or<K> or = (Or<K>) e;
 
-        return collapseToSOP(and, or, null);
+        return collapseToSOP(and, or, null, cache);
       }
     }
     return and;

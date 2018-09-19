@@ -78,13 +78,14 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
 
           Expression<K>[] remaining = ExprUtil.allExceptMatch(
               subExpr.getChildren(),
-              expression
+              expression,
+              cache
           );
 
           remainder.add(subExpr.create(remaining));
         }
 
-        List<Expression<K>> objects = new ArrayList<>(Arrays.asList(ExprUtil.allExceptMatch(input.getChildren(), common)));
+        List<Expression<K>> objects = new ArrayList<>(Arrays.asList(ExprUtil.allExceptMatch(input.getChildren(), common, cache)));
         objects.add(ofOpposite(input, new ArrayList<>(Arrays.asList(expression, ofSame(input, remainder)))));
 
         if (objects.size() > 1) {

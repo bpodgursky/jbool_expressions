@@ -64,14 +64,14 @@ public class RulesHelper {
 
     }
 
-    @Override
-    public Expression<K> intern(Expression<K> input) {
-      if(interned.containsKey(input)){
-        return interned.get(input);
-      }
-      interned.put(input, input);
-      return input;
-    }
+//    @Override
+//    public Expression<K> intern(Expression<K> input) {
+//      if(interned.containsKey(input)){
+//        return interned.get(input);
+//      }
+//      interned.put(input, input);
+//      return input;
+//    }
 
 
   }
@@ -94,7 +94,7 @@ public class RulesHelper {
       misses++;
     }
 
-    if((hits+misses) % 100000 == 0){
+    if((hits+misses) % 1000000 == 0){
       System.out.println();
       System.out.println(hits);
       System.out.println(misses);

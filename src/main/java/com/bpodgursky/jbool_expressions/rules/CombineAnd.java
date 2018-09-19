@@ -17,7 +17,7 @@ public class CombineAnd<K> extends Rule<And<K>, K> {
         And<K> childAnd = (And<K>) expr;
 
         List<Expression<K>> newChildren = new ArrayList<>();
-        ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(and.expressions, childAnd));
+        ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(and.expressions, childAnd, cache));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 
         return And.of(newChildren);
