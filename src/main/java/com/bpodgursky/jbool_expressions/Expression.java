@@ -53,9 +53,17 @@ public abstract class Expression<K> implements Serializable {
     return sort(LEXICOGRAPHIC_COMPARATOR).toString();
   }
 
+  private transient Set<K> k = null;
+
   public Set<K> getAllK(){
+
+    if(k != null){
+      return k;
+    }
+
     Set<K> variables =new HashSet<>();
     collectK(variables, Integer.MAX_VALUE);
+    this.k = variables;
     return variables;
   }
 

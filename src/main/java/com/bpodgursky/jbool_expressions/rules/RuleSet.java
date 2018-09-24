@@ -63,10 +63,10 @@ public class RuleSet {
 
   public static <K> Expression<K> toSop2(Expression<K> root) {
 
-    //  to sop
-    //  demorgan
+    List<Rule<?, K>> rules = RulesHelper.toSopRules();
+//    rules.add(new QMC<>());
 
-    return applySet(applySet(root, RulesHelper.demorganRules()), RulesHelper.toSopRules());
+    return applySet(applySet(root, RulesHelper.demorganRules()), rules);
   }
 
   public static <K> Expression<K> toPos(Expression<K> root) {

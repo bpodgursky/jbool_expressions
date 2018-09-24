@@ -39,40 +39,52 @@ public class RulesHelper {
 
   public static class UnboundedCache<K> implements RuleSetCache<K> {
 
-    private final Map<Expression<K>, Expression<K>> simplificatonCache;
-
-    private final Map<Expression<K>, Expression<K>> interned;
-
+    private final Map<Expression<K>, Expression<K>> cache;
+    private final Map<Class<? extends Rule>, Map<Expression<K>, Expression<K>>> simplificatonCache;
 
     public UnboundedCache() {
       this.simplificatonCache = new HashMap<>();
-      this.interned = new HashMap<>();
+      this.cache = new HashMap<>();
     }
 
     @Override
     public Expression<K> get(Expression<K> input) {
-      return simplificatonCache.get(input);
+      return cache.get(input);
+    }
+
+    @Override
+    public Expression<K> get(Class<? extends Rule> rule, Expression<K> input) {
+
+      Map<Expression<K>, Expression<K>> forRule = simplificatonCache.get(rule);
+
+      if (forRule != null) {
+        return forRule.get(input);
+      }
+
+      return null;
+
+    }
+
+    @Override
+    public void put(Class<? extends Rule> rule, Expression<K> input, Expression<K> output) {
+
+      if(!simplificatonCache.containsKey(rule)){
+        simplificatonCache.put(rule, new HashMap<>());
+      }
+
+      simplificatonCache.get(rule).put(input, output);
+
     }
 
     @Override
     public void put(Expression<K> input, Expression<K> output) {
-      simplificatonCache.put(input, output);
 
-      if(simplificatonCache.size() % 100000 == 0){
-        System.out.println(simplificatonCache.size());
+      if(cache.size() % 100000 == 0){
+        System.out.println("cache size: "+cache.size());
       }
 
+      cache.put(input, output);
     }
-
-//    @Override
-//    public Expression<K> intern(Expression<K> input) {
-//      if(interned.containsKey(input)){
-//        return interned.get(input);
-//      }
-//      interned.put(input, input);
-//      return input;
-//    }
-
 
   }
 
@@ -87,6 +99,13 @@ public class RulesHelper {
   public static <K> Expression<K> applyAll(Expression<K> e, List<Rule<?, K>> rules, RuleSetCache<K> cache) {
 
     Expression<K> cached = cache.get(e);
+
+    if((hits+misses) % 1000000 == 0){
+      System.out.println();
+      System.out.println("hits: "+hits);
+      System.out.println("misses:" +misses);
+    }
+
     if(cached != null){
       hits++;
       return cached;
@@ -94,16 +113,19 @@ public class RulesHelper {
       misses++;
     }
 
-    if((hits+misses) % 1000000 == 0){
-      System.out.println();
-      System.out.println(hits);
-      System.out.println(misses);
-    }
 
     Expression<K> orig = e;
     Expression<K> simplified = applyAllSingle(orig, rules, cache);
 
     while (!orig.equals(simplified)) {
+
+      if(orig.equals(simplified) && (orig != simplified)){
+        System.out.println();
+        System.out.println("y tho");
+        System.out.println(orig);
+        System.out.println(simplified);
+      }
+
       orig = simplified;
       simplified = applyAllSingle(orig, rules, cache);
     }
@@ -115,9 +137,20 @@ public class RulesHelper {
 
   private static <K> Expression<K> applyAllSingle(Expression<K> e, List<Rule<?, K>> rules, RuleSetCache<K> cache) {
     Expression<K> tmp = e.apply(rules, cache);
+
     for (Rule<?, K> r : rules) {
-      tmp = r.apply(tmp, cache);
+      Expression<K> input = tmp;
+      Expression<K> cached = cache.get(r.getClass(), input);
+
+      if (cached != null) {
+        tmp = cached;
+      }else{
+        tmp = r.apply(tmp, cache);
+        cache.put(r.getClass(), input, tmp);
+      }
+
     }
+
     return tmp;
   }
 
