@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.Expression;
@@ -68,7 +67,7 @@ public class QuineMcCluskey {
     Collections.reverse(variables);
 
     //  expand all true/false inputs
-    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input);
+    List<Integer> minterms = findMinterms(0, variables, new HashMap<K,Boolean>(), input);
 
     if (minterms.size() == Math.pow(2, variables.size())) {
       return Literal.getTrue();
@@ -124,9 +123,13 @@ public class QuineMcCluskey {
 
     for (Integer minterm : minterms) {
 
-      List<Implicant> coveringImplicants = implicants.stream()
-          .filter(implicant -> covers(minterm, implicant))
-          .collect(Collectors.toList());
+      List<Implicant> coveringImplicants = new ArrayList<>();
+      for (Implicant i :
+        implicants) {
+          if(covers(minterm, i)){
+            coveringImplicants.add(i);
+          }
+      }
 
       if (coveringImplicants.size() == 1) {
         Implicant implicant = coveringImplicants.get(0);
@@ -197,7 +200,7 @@ public class QuineMcCluskey {
     }
 
     And<Integer> join = And.of(products);
-    Expression<Integer> asSop = RulesHelper.applySet(join, RulesHelper.toSopRules());
+    Expression<Integer> asSop = RulesHelper.applySet(join, RulesHelper.<Integer>toSopRules());
 
     Or<Integer> root = (Or<Integer>)asSop;
 
@@ -355,7 +358,7 @@ public class QuineMcCluskey {
     for (Integer minterm : minterms) {
       int bits = numberOfSetBits(minterm);
       if (!mintermsByOnes.containsKey(bits)) {
-        mintermsByOnes.put(bits, new ArrayList<>());
+        mintermsByOnes.put(bits, new ArrayList<Integer>());
       }
       mintermsByOnes.get(bits).add(minterm);
     }

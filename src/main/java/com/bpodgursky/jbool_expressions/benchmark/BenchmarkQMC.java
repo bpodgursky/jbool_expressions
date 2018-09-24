@@ -89,7 +89,7 @@ public class BenchmarkQMC {
 
     ArrayList<K> variables = new ArrayList<>(allVariables);
 
-    return expand(variables, 0, a, b, new HashMap<>());
+    return expand(variables, 0, a, b, new HashMap<K, Boolean>());
 
   }
 

@@ -17,7 +17,7 @@ public class RuleSet {
   private static final int QMC_CARDINALITY_CUTOFF = 8;
 
   public static <K> Expression<K> simplify(Expression<K> root) {
-    return applySet(root, RulesHelper.simplifyRules());
+    return applySet(root, RulesHelper.<K>simplifyRules());
   }
 
   /**
@@ -43,7 +43,7 @@ public class RuleSet {
   }
 
   public static <K> Expression<K> toSop(Expression<K> root) {
-    return applySet(applySet(root, RulesHelper.demorganRules()), RulesHelper.toSopRules());
+    return applySet(applySet(root, RulesHelper.<K>demorganRules()), RulesHelper.<K>toSopRules());
   }
 
   public static <K> Expression<K> toPos(Expression<K> root) {
@@ -55,11 +55,11 @@ public class RuleSet {
     //  not + demorgan
     Not<K> inverse2 = Not.of(sopInv);
 
-    return (applySet(inverse2, RulesHelper.demorganRules()));
+    return (applySet(inverse2, RulesHelper.<K>demorganRules()));
   }
 
   public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values) {
-    List<Rule<?, K>> rules = new ArrayList<>(RulesHelper.simplifyRules());
+    List<Rule<?, K>> rules = new ArrayList<>(RulesHelper.<K>simplifyRules());
     rules.add(new Assign<>(values));
     return applySet(root, rules);
   }

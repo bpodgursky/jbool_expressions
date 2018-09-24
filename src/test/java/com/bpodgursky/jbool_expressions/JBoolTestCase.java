@@ -53,7 +53,7 @@ public abstract class JBoolTestCase extends TestCase {
     Set<K> variables = ExprUtil.getVariables(s1);
     variables.addAll(ExprUtil.getVariables(s2));
 
-    evaluate(new LinkedList<>(variables), new HashMap<>(), s1, s2);
+    evaluate(new LinkedList<>(variables), new HashMap<K,Boolean>(), s1, s2);
 
   }
 

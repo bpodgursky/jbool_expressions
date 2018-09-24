@@ -20,7 +20,7 @@ public class TestQuineMcCluskey extends JBoolTestCase {
     ArrayList<String> vars = new ArrayList<>(expr.getAllK());
     Collections.sort(vars);
 
-    List<Integer> minterms = QuineMcCluskey.findMinterms(0, vars, new HashMap<>(), expr);
+    List<Integer> minterms = QuineMcCluskey.findMinterms(0, vars, new HashMap<String,Boolean>(), expr);
 
     Collections.sort(minterms);
     assertEquals(Arrays.asList(3, 4, 5, 6, 7), minterms);

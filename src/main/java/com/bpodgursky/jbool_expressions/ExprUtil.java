@@ -10,8 +10,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 
@@ -150,18 +148,29 @@ public class ExprUtil {
       ));
     }
 
-    return simplificationWeights.entrySet().stream()
-        .sorted((o1, o2) -> {
-          int val = Integer.compare(o1.getValue(), o2.getValue());
-          if(val != 0){
-            return val;
-          }
-          //  just to be deterministic
-          return o1.getKey().toString().compareTo(o2.getKey().toString());
-        })
-        .map(Map.Entry::getKey)
-        .collect(Collectors.toList());
+    List<Map.Entry<K, Integer>> entries = new ArrayList<>(simplificationWeights.entrySet());
+    Collections.sort(entries,new EntryCompare<K>());
 
+    List<K> toReturn = new ArrayList<>();
+    for (Map.Entry<K, Integer> entry: entries
+         ) {
+      toReturn.add(entry.getKey());
+    }
+
+    return toReturn;
+  }
+
+  static class EntryCompare<K> implements Comparator<Map.Entry<K, Integer>> {
+
+    @Override
+    public int compare(Map.Entry<K, Integer> o1, Map.Entry<K, Integer> o2) {
+      int val = Integer.compare(o1.getValue(), o2.getValue());
+      if(val != 0){
+        return val;
+      }
+      //  just to be deterministic
+      return o1.getKey().toString().compareTo(o2.getKey().toString());
+    }
   }
 
 }

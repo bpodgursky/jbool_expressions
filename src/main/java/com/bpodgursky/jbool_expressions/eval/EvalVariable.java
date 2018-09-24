@@ -15,6 +15,9 @@ public class EvalVariable<K> extends EvalRule<K> {
   @Override
   public boolean evaluate(Expression<K> expression, Map<String, EvalRule<K>> rules) {
     Variable<K> var = (Variable<K>) expression;
-    return values.getOrDefault(var.getValue(), false);
+    if(values.containsKey(var.getValue())){
+      return values.get(var.getValue());
+    }
+    return false;
   }
 }

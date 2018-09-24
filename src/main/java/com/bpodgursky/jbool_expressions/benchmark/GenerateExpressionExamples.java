@@ -13,6 +13,7 @@ import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
+import com.sun.deploy.util.StringUtils;
 
 public class GenerateExpressionExamples {
 
@@ -44,7 +45,7 @@ public class GenerateExpressionExamples {
 
     ArrayList<String> variables = new ArrayList<>();
 
-    String prefix = String.join("", Collections.nCopies(variablePrefixLength, "X"));
+    String prefix = StringUtils.join(Collections.nCopies(variablePrefixLength, "X"),"");
     for (int i = 0; i < numVariables; i++) {
       variables.add(prefix + i);
     }

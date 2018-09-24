@@ -12,7 +12,7 @@ import java.util.Set;
 public class Literal<K> extends Expression<K> {
   public static final String EXPR_TYPE = "literal";
 
-  private final boolean value;
+  private final Boolean value;
 
   private static final Literal TRUE = new Literal(true);
   private static final Literal FALSE = new Literal(false);
@@ -69,7 +69,7 @@ public class Literal<K> extends Expression<K> {
 
   @Override
   public int hashCode() {
-    return Boolean.hashCode(value);
+    return value.hashCode();
   }
 
   @Override

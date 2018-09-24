@@ -1,12 +1,9 @@
 package com.bpodgursky.jbool_expressions;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-
-import java.util.stream.Collectors;
 
 import static com.bpodgursky.jbool_expressions.Seeds.OR_SEED;
 
@@ -29,7 +26,17 @@ public class Or<K> extends NExpression<K> {
 
   public String toString() {
     if (cachedStringRepresentation == null) {
-      cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")"));
+      StringBuilder builder = new StringBuilder();
+      builder.append('(');
+      for (int i=0;i<expressions.length;i++) {
+        Expression<K> expression = expressions[i];
+        builder.append(expression.toString());
+        if(i != expressions.length-1){
+          builder.append(" | ");
+        }
+      }
+      builder.append(')');
+      cachedStringRepresentation = builder.toString();
     }
     return cachedStringRepresentation;
   }

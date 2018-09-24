@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.ExprUtil;
@@ -58,7 +60,10 @@ public class ExtractCommon<K> extends Rule<NExpression<K>, K> {
         NExpression<K> inner = (NExpression<K>)expression;
 
         for (Expression<K> expr : inner.getChildren()) {
-          Set<NExpression<K>> nExpressionSet = byParent.computeIfAbsent(expr, k -> new HashSet<>());
+          if(!byParent.containsKey(expr)){
+            byParent.put(expr, new HashSet<NExpression<K>>());
+          }
+          Set<NExpression<K>> nExpressionSet = byParent.get(expr);
           nExpressionSet.add(inner);
         }
 
