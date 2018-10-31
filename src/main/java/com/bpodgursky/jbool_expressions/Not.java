@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class Not<K> extends Expression<K> {
   public static final String EXPR_TYPE = "not";
@@ -37,7 +39,7 @@ public class Not<K> extends Expression<K> {
     Expression<K> e = RulesHelper.applyAll(this.e, rules, cache);
 
     if(e != this.e){
-      return new Not<K>(e);
+      return cache.factory().not(e);
     }
 
     return this;
@@ -46,6 +48,18 @@ public class Not<K> extends Expression<K> {
   @Override
   public List<Expression<K>> getChildren() {
     return Collections.singletonList(e);
+  }
+
+  @Override
+  public Expression<K> map(Function<Expression<K>, Expression<K>> function, ExprFactory<K> factory) {
+
+    Expression<K> map = this.e.map(function, factory);
+
+    if(map != this.e){
+      return function.apply(factory.not(map));
+    }
+
+    return function.apply(this);
   }
 
   @Override
@@ -89,7 +103,7 @@ public class Not<K> extends Expression<K> {
     e.collectK(set, limit);
   }
 
-  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
-    return of(e.replaceVars(m));
+  public Expression<K> replaceVars(Map<K, Expression<K>> m, ExprFactory<K> factory) {
+    return of(e.replaceVars(m, factory));
   }
 }

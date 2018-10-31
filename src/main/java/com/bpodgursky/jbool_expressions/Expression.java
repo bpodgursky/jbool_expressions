@@ -6,9 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public abstract class Expression<K> implements Serializable {
 
@@ -45,6 +47,8 @@ public abstract class Expression<K> implements Serializable {
 
   public abstract List<Expression<K>> getChildren();
 
+  public abstract Expression<K> map(Function<Expression<K>, Expression<K>> function, ExprFactory<K> factory);
+
   public abstract String getExprType();
 
   protected abstract Expression<K> sort(Comparator<Expression> comparator);
@@ -69,5 +73,5 @@ public abstract class Expression<K> implements Serializable {
 
   public abstract void collectK(Set<K> set, int limit);
 
-  public abstract Expression<K> replaceVars(Map<K,Expression<K>> m);
+  public abstract Expression<K> replaceVars(Map<K,Expression<K>> m, ExprFactory<K> exprFactory);
 }

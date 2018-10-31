@@ -1,6 +1,7 @@
 package com.bpodgursky.jbool_expressions.example;
 
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.Expression;
@@ -9,6 +10,7 @@ import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class ExampleRunner {
   public static void main(String[] args) {
@@ -25,11 +27,11 @@ public class ExampleRunner {
     System.out.println(simplified);
     //  (A & B)
 
-    Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
+    Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true), new ExprFactory.Interning<>(new HashMap<>()));
     System.out.println(halfAssigned);
     //  B
 
-    Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
+    Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true), new ExprFactory.Interning<>(new HashMap<>()));
     System.out.println(resolved);
     //  true
 

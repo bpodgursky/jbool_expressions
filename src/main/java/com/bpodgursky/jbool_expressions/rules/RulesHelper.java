@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bpodgursky.jbool_expressions.Expression;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class RulesHelper {
 
@@ -41,10 +42,14 @@ public class RulesHelper {
 
     private final Map<Expression<K>, Expression<K>> cache;
     private final Map<Class<? extends Rule>, Map<Expression<K>, Expression<K>>> simplificatonCache;
+    private final ExprFactory<K> factory;
 
-    public UnboundedCache() {
+    private final Map<Expression<K>, Expression<K>> intern = new HashMap<>();
+
+    public UnboundedCache(ExprFactory<K> factory) {
       this.simplificatonCache = new HashMap<>();
       this.cache = new HashMap<>();
+      this.factory = factory;
     }
 
     @Override
@@ -68,33 +73,45 @@ public class RulesHelper {
     @Override
     public void put(Class<? extends Rule> rule, Expression<K> input, Expression<K> output) {
 
+      Expression<K> shrunkInput = input.map(new RuleSet.Intern<>(intern), factory);
+      Expression<K> shrunkOutput = output.map(new RuleSet.Intern<>(intern), factory);
+
       if(!simplificatonCache.containsKey(rule)){
         simplificatonCache.put(rule, new HashMap<>());
       }
 
-      simplificatonCache.get(rule).put(input, output);
+      Map<Expression<K>, Expression<K>> ruleCache = simplificatonCache.get(rule);
+      ruleCache.put(shrunkInput, shrunkOutput);
+
+      if(ruleCache.size() % 100000 == 0 && ruleCache.size() > 0){
+        System.out.println("cache size: "+ruleCache.size()+rule.getName());
+      }
 
     }
 
     @Override
     public void put(Expression<K> input, Expression<K> output) {
 
-      if(cache.size() % 100000 == 0){
+      Expression<K> shrunkInput = input.map(new RuleSet.Intern<>(intern), factory);
+      Expression<K> shrunkOutput = output.map(new RuleSet.Intern<>(intern), factory);
+
+      if(cache.size() % 100000 == 0 && cache.size() > 0){
         System.out.println("cache size: "+cache.size());
       }
 
-      cache.put(input, output);
+      cache.put(shrunkInput, shrunkOutput);
+    }
+
+    @Override
+    public ExprFactory<K> factory() {
+      return this.factory;
     }
 
   }
 
-  public static <K> Expression<K> applyAll(Expression<K> e, List<Rule<?, K>> rules) {
-    return applyAll(e, rules, new UnboundedCache<>());
-  }
 
   private static int hits = 0;
   private static int misses = 0;
-
 
   public static <K> Expression<K> applyAll(Expression<K> e, List<Rule<?, K>> rules, RuleSetCache<K> cache) {
 
@@ -113,18 +130,18 @@ public class RulesHelper {
       misses++;
     }
 
-
     Expression<K> orig = e;
     Expression<K> simplified = applyAllSingle(orig, rules, cache);
 
+    //  TODO pointer
     while (!orig.equals(simplified)) {
 
-      if(orig.equals(simplified) && (orig != simplified)){
-        System.out.println();
-        System.out.println("y tho");
-        System.out.println(orig);
-        System.out.println(simplified);
-      }
+//      if(orig.equals(simplified)){
+//        System.out.println();
+//        System.out.println("y tho");
+//        System.out.println(orig);
+//        System.out.println(simplified);
+//      }
 
       orig = simplified;
       simplified = applyAllSingle(orig, rules, cache);
@@ -136,26 +153,58 @@ public class RulesHelper {
   }
 
   private static <K> Expression<K> applyAllSingle(Expression<K> e, List<Rule<?, K>> rules, RuleSetCache<K> cache) {
+
+    Expression<K> cached = cache.get(e);
+
+    if((hits+misses) % 1000000 == 0){
+      System.out.println();
+      System.out.println("hits: "+hits);
+      System.out.println("misses:" +misses);
+    }
+
+    if(cached != null){
+      hits++;
+      return cached;
+    }else{
+      misses++;
+    }
+
     Expression<K> tmp = e.apply(rules, cache);
+
+//    if(tmp != e && tmp.equals(e)){
+//      System.out.println();
+//      System.out.println("sigh");
+//      System.out.println(tmp);
+//      System.out.println(e);
+//    }
 
     for (Rule<?, K> r : rules) {
       Expression<K> input = tmp;
-      Expression<K> cached = cache.get(r.getClass(), input);
 
-      if (cached != null) {
-        tmp = cached;
+      Expression<K> cached2 = cache.get(r.getClass(), input);
+//
+      if (cached2 != null) {
+        tmp = cached2;
       }else{
+
+        Expression<K> old = tmp;
         tmp = r.apply(tmp, cache);
-        cache.put(r.getClass(), input, tmp);
+
+        if (!old.equals(tmp)){
+          cache.put(r.getClass(), input, tmp);
+        }
+
       }
 
     }
+
+//    cache.put(e, tmp);
 
     return tmp;
   }
 
   public static <K> Expression<K> applySet(Expression<K> root, List<Rule<?, K>> allRules) {
-    return applyAll(root, allRules);
+    return applyAll(root, allRules, new UnboundedCache<>(new ExprFactory.Interning<>(new HashMap<>())));
   }
 
 

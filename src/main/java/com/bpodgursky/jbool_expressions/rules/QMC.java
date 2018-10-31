@@ -5,7 +5,8 @@ import com.bpodgursky.jbool_expressions.Expression;
 public class QMC<K> extends Rule<Expression<K>, K>  {
   @Override
   public Expression<K> applyInternal(Expression<K> input, RuleSetCache<K> cache) {
-    Expression<K> output = QuineMcCluskey.toDNF(input);
+
+    Expression<K> output = QuineMcCluskey.toDNF(input, cache);
     cache.put(QMC.class, output, output);
     //  TODO i'm not sure whether or not this can be more widely applicable, but we want to shortcut any attempt to recalculate this
     return output;

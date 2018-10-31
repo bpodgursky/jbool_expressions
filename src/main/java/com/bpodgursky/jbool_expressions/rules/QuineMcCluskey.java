@@ -21,6 +21,7 @@ import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
 import com.bpodgursky.jbool_expressions.eval.EvalEngine;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applyAll;
 import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applySet;
@@ -68,17 +69,21 @@ public class QuineMcCluskey {
     }
   }
 
-  public static <K> Expression<K> toDNF(Expression<K> input) {
+  public static <K> Expression<K> toDNF(Expression<K> input, RuleSetCache<K> cache) {
 
     //  if the input
 
     ArrayList<K> variables = new ArrayList<>(ExprUtil.getConstraintsByWeight(input));
 
     //  expand all true/false inputs
-    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input);
+    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input, cache);
 
     if (minterms.size() == Math.pow(2, variables.size())) {
       return Literal.getTrue();
+    }
+
+    if(minterms.isEmpty()){
+      return Literal.getFalse();
     }
 
     Set<Implicant> mergedImplicants = getMergedImplicants(minterms);
@@ -204,7 +209,7 @@ public class QuineMcCluskey {
     }
 
     And<Integer> join = And.of(products);
-    Expression<Integer> asSop = RulesHelper.applySet(join, RulesHelper.toSopRules());
+    Expression<Integer> asSop = applyAll(join, RulesHelper.toSopRules(), new RulesHelper.UnboundedCache<>(new ExprFactory.Default<>()));
 
     Or<Integer> root = (Or<Integer>)asSop;
 
@@ -390,9 +395,9 @@ public class QuineMcCluskey {
     return (((i + (i >>> 4)) & 0x0F0F0F0F) * 0x01010101) >>> 24;
   }
 
-  public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables, Map<K, Boolean> assignments, Expression<K> input) {
+  public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables, Map<K, Boolean> assignments, Expression<K> input, RuleSetCache<K> cache) {
     List<Integer> minterms = new ArrayList<>();
-    RulesHelper.UnboundedCache<K> cache = new RulesHelper.UnboundedCache<>();
+//    RulesHelper.UnboundedCache<K> cache = new RulesHelper.UnboundedCache<>(new ExprFactory.Interning<>(new HashMap<>()));
 
     findMinterms(pos, variables, input, assignments, minterms, cache);
     return minterms;
@@ -439,6 +444,7 @@ public class QuineMcCluskey {
       }
     }
 
+
     assignments.put(variables.get(pos), true);
     findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), true), cache), assignments, collectedMinterms, cache);
 
@@ -451,7 +457,7 @@ public class QuineMcCluskey {
 
   public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, RuleSetCache<K> cache) {
 
-    Expression<K> assigned = applyAll(root, Collections.singletonList(new Assign<>(values)));
+    Expression<K> assigned = RuleSet.assign(root, values, cache.factory());
 
     //  TODO save list of rules, don't recall
     Expression<K> simplified = applyAll(assigned, RulesHelper.simplifyRules(), cache);

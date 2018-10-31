@@ -19,7 +19,7 @@ public class CombineOr<K> extends Rule<Or<K>, K> {
         ExprUtil.addAll(newChildren, ExprUtil.allExceptMatch(or.expressions, childAnd, cache));
         ExprUtil.addAll(newChildren, childAnd.expressions);
 
-        return Or.of(newChildren);
+        return cache.factory().or(newChildren.toArray(new Expression[newChildren.size()]));
       }
     }
     return or;

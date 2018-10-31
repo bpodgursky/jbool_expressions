@@ -10,6 +10,7 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.eval.EvalEngine;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class TestExpressions extends JBoolTestCase {
 
@@ -93,7 +94,7 @@ public class TestExpressions extends JBoolTestCase {
 
     assertEquals(
         "(F & !D & (C | !(B & C)))",
-        expr.replaceVars(Collections.singletonMap("A", expr("(B & C)"))).toString()
+        expr.replaceVars(Collections.singletonMap("A", expr("(B & C)")), new ExprFactory.Interning<>(new HashMap<>())).toString()
     );
 
   }

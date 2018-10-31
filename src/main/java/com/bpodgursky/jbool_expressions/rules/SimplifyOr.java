@@ -1,6 +1,9 @@
 package com.bpodgursky.jbool_expressions.rules;
 
+import javax.xml.stream.FactoryConfigurationError;
+
 import com.bpodgursky.jbool_expressions.*;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import java.util.*;
 
@@ -15,7 +18,7 @@ public class SimplifyOr<K> extends Rule<Or<K>, K> {
 
         //  ignore anything that is "false"
         if (!l.getValue()) {
-          return copyWithoutFalse(input);
+          return copyWithoutFalse(input, cache.factory());
         } else {
           return Literal.of(true);
         }
@@ -35,7 +38,7 @@ public class SimplifyOr<K> extends Rule<Or<K>, K> {
     return input;
   }
 
-  private Expression<K> copyWithoutFalse(Or<K> input){
+  private Expression<K> copyWithoutFalse(Or<K> input, ExprFactory<K> factory){
     List<Expression<K>> copy = new ArrayList<>();
     for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {
@@ -53,7 +56,7 @@ public class SimplifyOr<K> extends Rule<Or<K>, K> {
       return Literal.of(false);
     }
 
-    return Or.of(copy);
+    return factory.or(copy.toArray(new Expression[copy.size()]));
   }
 
   @Override

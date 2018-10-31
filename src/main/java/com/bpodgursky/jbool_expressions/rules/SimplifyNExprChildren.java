@@ -4,6 +4,7 @@ import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.NExpression;
 import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
         // if child2 is true whenever child1 is true, return without child1
         if(i != j){
           if(checkExprSubset(child1, child2, input)){
-            return removeChild(input, i);
+            return removeChild(input, i, cache.factory());
           }
         }
       }
@@ -89,7 +90,7 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
     return false;
   }
 
-  private NExpression<K> removeChild(NExpression<K> node, int index) {
+  private Expression<K> removeChild(NExpression<K> node, int index, ExprFactory<K> factory) {
 
     List<Expression<K>> copy = new ArrayList<>();
     for (int i = 0; i < node.expressions.length; i++) {
@@ -100,11 +101,11 @@ public class SimplifyNExprChildren<K> extends Rule<NExpression<K>, K> {
 
     //  TODO factory probably
     if(node instanceof And){
-      return And.of(copy);
+      return factory.and(copy.toArray(new Expression[copy.size()]));
     }
 
     if(node instanceof Or){
-      return Or.of(copy);
+      return factory.or(copy.toArray(new Expression[copy.size()]));
     }
 
     throw new RuntimeException("Unknown child of NExpression");

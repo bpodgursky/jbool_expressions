@@ -15,6 +15,8 @@ import com.bpodgursky.jbool_expressions.eval.EvalEngine;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.QuineMcCluskey;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class BenchmarkQMC {
 
@@ -54,7 +56,7 @@ public class BenchmarkQMC {
         Expression<String> parsed2 = ExprParser.parse(expr);
 
         long beforeQMC = System.currentTimeMillis();
-        Expression<String> qmcDnf = QuineMcCluskey.toDNF(parsed2);
+        Expression<String> qmcDnf = QuineMcCluskey.toDNF(parsed2, new RulesHelper.UnboundedCache<>(new ExprFactory.Default<>()));
         long afterQMC = System.currentTimeMillis();
 
         long beforeSop = System.currentTimeMillis();

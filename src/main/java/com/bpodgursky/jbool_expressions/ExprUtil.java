@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 
 public class ExprUtil {
@@ -30,11 +31,11 @@ public class ExprUtil {
         ExprUtil.addAll(andOthers, childrenNew);
         andOthers.add(orChild);
 
-        newChildren.add(And.of(andOthers));
+        newChildren.add(cache.factory().and(andOthers.toArray(new Expression[andOthers.size()])));
       }
     }
 
-    return Or.of(newChildren);
+    return cache.factory().or(newChildren.toArray(new Expression[newChildren.size()]));
   }
 
   public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr, RuleSetCache<K> cache){
@@ -50,9 +51,9 @@ public class ExprUtil {
 
     }
 
-    newChildren.add(Or.of(orOthers));
+    newChildren.add(cache.factory().or(orOthers.toArray(new Expression[orOthers.size()])));
 
-    return And.of(newChildren);
+    return cache.factory().and(newChildren.toArray(new Expression[newChildren.size()]));
   }
 
   public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd, RuleSetCache<K> cache){
@@ -68,9 +69,8 @@ public class ExprUtil {
 
     }
 
-    newChildren.add(And.of(andOthers));
-
-    return Or.of(newChildren);
+    newChildren.add(cache.factory().and(andOthers.toArray(new Expression[andOthers.size()])));
+    return cache.factory().or(newChildren.toArray(new Expression[newChildren.size()]));
   }
 
   public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit, RuleSetCache<K> cache){
@@ -141,13 +141,16 @@ public class ExprUtil {
   //  returns the variables from "most simplifying" to "least simplifying" if resolved
   public static <K> List<K> getConstraintsByWeight(Expression<K> expression) {
 
-    Map<K, Integer> simplificationWeights = new HashMap<>(); 
+    Map<K, Integer> simplificationWeights = new HashMap<>();
+
+
+    ExprFactory.Interning<K> factory = new ExprFactory.Interning<>(new HashMap<>());
 
     for (K variable : expression.getAllK()) {
       //  not sure this is the right decision, but sort here by best potential.  could also average true/false case.
       simplificationWeights.put(variable, Math.min(
-          RuleSet.assign(expression, Collections.singletonMap(variable, true)).getAllK().size(),
-          RuleSet.assign(expression, Collections.singletonMap(variable, false)).getAllK().size()
+          RuleSet.assign(expression, Collections.singletonMap(variable, true), factory).getAllK().size(),
+          RuleSet.assign(expression, Collections.singletonMap(variable, false), factory).getAllK().size()
       ));
     }
 
