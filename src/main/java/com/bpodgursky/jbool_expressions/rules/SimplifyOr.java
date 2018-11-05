@@ -1,8 +1,8 @@
 package com.bpodgursky.jbool_expressions.rules;
 
-import javax.xml.stream.FactoryConfigurationError;
-
 import com.bpodgursky.jbool_expressions.*;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.*;
 public class SimplifyOr<K> extends Rule<Or<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(Or<K> input, RuleSetCache<K> cache) {
+  public Expression<K> applyInternal(Or<K> input, ExprOptions<K> options) {
 
     for (Expression<K> expr : input.expressions) {
       if (expr instanceof Literal) {
@@ -18,7 +18,7 @@ public class SimplifyOr<K> extends Rule<Or<K>, K> {
 
         //  ignore anything that is "false"
         if (!l.getValue()) {
-          return copyWithoutFalse(input, cache.factory());
+          return copyWithoutFalse(input, options.getExprFactory());
         } else {
           return Literal.of(true);
         }

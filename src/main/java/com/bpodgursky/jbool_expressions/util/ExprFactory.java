@@ -1,5 +1,6 @@
 package com.bpodgursky.jbool_expressions.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.bpodgursky.jbool_expressions.And;
@@ -38,8 +39,8 @@ public interface ExprFactory<K> {
 
     private Map<Expression<K>, Expression<K>> values;
 
-    public Interning(Map<Expression<K>, Expression<K>> values){
-      this.values = values;
+    public Interning(){
+      this.values = new HashMap<>();
     }
 
     private Expression<K> intern(Expression<K> expr){

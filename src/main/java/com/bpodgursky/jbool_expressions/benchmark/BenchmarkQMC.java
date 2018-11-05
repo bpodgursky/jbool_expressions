@@ -12,11 +12,10 @@ import java.util.Set;
 
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.eval.EvalEngine;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.QuineMcCluskey;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.rules.RulesHelper;
-import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class BenchmarkQMC {
 
@@ -36,27 +35,27 @@ public class BenchmarkQMC {
       long qmcTime = 0;
 
 
-      System.out.println("\tPrefix length:\t"+nameParts[1]);
-      System.out.println("\tNum variables:\t"+nameParts[2]);
-      System.out.println("\tMin expr length:\t"+nameParts[3]);
-      System.out.println("\tMax expr length:\t"+nameParts[4]);
-      System.out.println("\tMax depth:\t"+nameParts[5]);
+      System.out.println("\tPrefix length:\t" + nameParts[1]);
+      System.out.println("\tNum variables:\t" + nameParts[2]);
+      System.out.println("\tMin expr length:\t" + nameParts[3]);
+      System.out.println("\tMax expr length:\t" + nameParts[4]);
+      System.out.println("\tMax depth:\t" + nameParts[5]);
 
       int scanned = 0;
-      while(scan.hasNext()){
+      while (scan.hasNext()) {
         String expr = scan.nextLine();
 
-        if(++scanned % 100 == 0){
-          System.out.println(scanned+"...");
-          System.out.println("\t\tsop time:\t"+sopTime);
-          System.out.println("\t\tQMC time:\t"+qmcTime);
+        if (++scanned % 100 == 0) {
+          System.out.println(scanned + "...");
+          System.out.println("\t\tsop time:\t" + sopTime);
+          System.out.println("\t\tQMC time:\t" + qmcTime);
         }
 
         Expression<String> parsed1 = ExprParser.parse(expr);
         Expression<String> parsed2 = ExprParser.parse(expr);
 
         long beforeQMC = System.currentTimeMillis();
-        Expression<String> qmcDnf = QuineMcCluskey.toDNF(parsed2, new RulesHelper.UnboundedCache<>(new ExprFactory.Default<>()));
+        Expression<String> qmcDnf = QuineMcCluskey.toDNF(parsed2, ExprOptions.noCaching());
         long afterQMC = System.currentTimeMillis();
 
         long beforeSop = System.currentTimeMillis();
@@ -66,24 +65,22 @@ public class BenchmarkQMC {
         qmcTime += (afterQMC - beforeQMC);
         sopTime += (afterSop - beforeSop);
 
-        if(!checkEquivalent(dnf, qmcDnf)){
+        if (!checkEquivalent(dnf, qmcDnf)) {
           throw new RuntimeException();
         }
 
       }
 
 
-      System.out.println("\t\tTotal sop time:\t"+sopTime);
-      System.out.println("\t\tTotal QMC time:\t"+qmcTime);
+      System.out.println("\t\tTotal sop time:\t" + sopTime);
+      System.out.println("\t\tTotal QMC time:\t" + qmcTime);
     }
-
-
 
 
   }
 
 
-  public static <K> boolean checkEquivalent(Expression<K> a, Expression<K> b){
+  public static <K> boolean checkEquivalent(Expression<K> a, Expression<K> b) {
 
     Set<K> allVariables = new HashSet<>();
     allVariables.addAll(a.getAllK());
@@ -97,17 +94,17 @@ public class BenchmarkQMC {
 
   private static <K> boolean expand(ArrayList<K> variables, int i, Expression<K> a, Expression<K> b, Map<K, Boolean> assignments) {
 
-    if (i == variables.size()){
+    if (i == variables.size()) {
       return EvalEngine.evaluateBoolean(a, assignments) == EvalEngine.evaluateBoolean(b, assignments);
     }
 
     assignments.put(variables.get(i), true);
-    if(!expand(variables, i+1, a, b, assignments)){
+    if (!expand(variables, i + 1, a, b, assignments)) {
       return false;
     }
 
     assignments.put(variables.get(i), false);
-    if(!expand(variables, i+1, a, b, assignments)){
+    if (!expand(variables, i + 1, a, b, assignments)) {
       return false;
     }
 

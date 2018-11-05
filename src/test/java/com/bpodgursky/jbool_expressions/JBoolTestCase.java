@@ -7,10 +7,11 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.rules.RulesHelper;
+import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 import junit.framework.TestCase;
 
@@ -39,7 +40,7 @@ public abstract class JBoolTestCase extends TestCase {
   }
 
   public void assertApply(String expected, String orig, List<Rule<?, String>> rules){
-    assertEquals(expected, applyAll(expr(orig), rules, new RulesHelper.UnboundedCache<>(new ExprFactory.Interning<>(new HashMap<>()))).toString());
+    assertEquals(expected, applyAll(expr(orig), rules, ExprOptions.noCaching()).toString());
   }
 
   public void assertToSop(String expected, String orig){
@@ -65,8 +66,8 @@ public abstract class JBoolTestCase extends TestCase {
     Queue<K> variableCopy = new LinkedList<>(variables);
 
     if(variableCopy.isEmpty()){
-      Expression<K> s1Eval = RuleSet.assign(s1, assignmentCopy, new ExprFactory.Interning<>(new HashMap<>()));
-      Expression<K> s2Eval = RuleSet.assign(s2, assignmentCopy, new ExprFactory.Interning<>(new HashMap<>()));
+      Expression<K> s1Eval = RuleSet.assign(s1, assignmentCopy, ExprOptions.noCaching());
+      Expression<K> s2Eval = RuleSet.assign(s2, assignmentCopy, ExprOptions.noCaching());
 
       assertEquals(s1Eval, s2Eval);
     }

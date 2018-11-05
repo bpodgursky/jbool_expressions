@@ -4,6 +4,8 @@ import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import java.util.ArrayList;
@@ -12,10 +14,10 @@ import java.util.List;
 public class DeMorgan<K> extends Rule<Not<K>, K> {
 
   @Override
-  public Expression<K> applyInternal(Not<K> not, RuleSetCache<K> cache) {
+  public Expression<K> applyInternal(Not<K> not, ExprOptions<K> options) {
       Expression<K> e = not.getE();
 
-    ExprFactory<K> factory = cache.factory();
+    ExprFactory<K> factory = options.getExprFactory();
 
     if(e instanceof And){
         And<K> internal = (And<K>) e;

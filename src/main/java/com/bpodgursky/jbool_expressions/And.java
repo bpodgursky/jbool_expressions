@@ -9,8 +9,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
@@ -37,12 +38,12 @@ public class And<K> extends NExpression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules, RuleSetCache<K> cache) {
+  public Expression<K> apply(List<Rule<?, K>> rules, ExprOptions<K> options) {
     Expression<K>[] children = null;
 
     boolean modified = false;
     for (int i = 0; i < this.expressions.length; i++) {
-      Expression<K> newChild = RulesHelper.applyAll(this.expressions[i], rules, cache);
+      Expression<K> newChild = RulesHelper.applyAll(this.expressions[i], rules, options);
 
       if(newChild != this.expressions[i]){
         modified = true;
@@ -73,7 +74,7 @@ public class And<K> extends NExpression<K> {
       }
     }
 
-    return cache.factory().and(children);
+    return options.getExprFactory().and(children);
   }
 
   @Override

@@ -8,8 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSetCache;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
@@ -35,11 +36,11 @@ public class Not<K> extends Expression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules, RuleSetCache<K> cache) {
-    Expression<K> e = RulesHelper.applyAll(this.e, rules, cache);
+  public Expression<K> apply(List<Rule<?, K>> rules, ExprOptions<K> options) {
+    Expression<K> e = RulesHelper.applyAll(this.e, rules, options);
 
     if(e != this.e){
-      return cache.factory().not(e);
+      return options.getExprFactory().not(e);
     }
 
     return this;

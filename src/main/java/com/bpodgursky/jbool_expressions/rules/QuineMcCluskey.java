@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -20,11 +19,12 @@ import com.bpodgursky.jbool_expressions.Literal;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
-import com.bpodgursky.jbool_expressions.eval.EvalEngine;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applyAll;
-import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applySet;
 
 public class QuineMcCluskey {
 
@@ -69,14 +69,14 @@ public class QuineMcCluskey {
     }
   }
 
-  public static <K> Expression<K> toDNF(Expression<K> input, RuleSetCache<K> cache) {
+  public static <K> Expression<K> toDNF(Expression<K> input, ExprOptions<K> options) {
 
     //  if the input
 
-    ArrayList<K> variables = new ArrayList<>(ExprUtil.getConstraintsByWeight(input));
+    ArrayList<K> variables = new ArrayList<>(ExprUtil.getConstraintsByWeight(input, options));
 
     //  expand all true/false inputs
-    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input, cache);
+    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input, options);
 
     if (minterms.size() == Math.pow(2, variables.size())) {
       return Literal.getTrue();
@@ -209,7 +209,7 @@ public class QuineMcCluskey {
     }
 
     And<Integer> join = And.of(products);
-    Expression<Integer> asSop = applyAll(join, RulesHelper.toSopRules(), new RulesHelper.UnboundedCache<>(new ExprFactory.Default<>()));
+    Expression<Integer> asSop = applyAll(join, RulesHelper.toSopRules(), ExprOptions.allCaching());
 
     Or<Integer> root = (Or<Integer>)asSop;
 
@@ -395,17 +395,21 @@ public class QuineMcCluskey {
     return (((i + (i >>> 4)) & 0x0F0F0F0F) * 0x01010101) >>> 24;
   }
 
-  public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables, Map<K, Boolean> assignments, Expression<K> input, RuleSetCache<K> cache) {
+  public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables,
+                                               Map<K, Boolean> assignments, Expression<K> input,
+                                               ExprOptions<K> options) {
     List<Integer> minterms = new ArrayList<>();
-//    RulesHelper.UnboundedCache<K> cache = new RulesHelper.UnboundedCache<>(new ExprFactory.Interning<>(new HashMap<>()));
-
-    findMinterms(pos, variables, input, assignments, minterms, cache);
+    findMinterms(pos, variables, input, assignments, minterms, options);
     return minterms;
   }
 
   static AtomicLong evaled = new AtomicLong();
 
-  public static <K> void findMinterms(int pos, ArrayList<K> variables, Expression<K> input, Map<K, Boolean> assignments, List<Integer> collectedMinterms, RuleSetCache<K> cache) {
+  public static <K> void findMinterms(int pos,
+                                      ArrayList<K> variables,
+                                      Expression<K> input, Map<K, Boolean> assignments,
+                                      List<Integer> collectedMinterms,
+                                      ExprOptions<K> options) {
 
     if (pos == variables.size()) {
 
@@ -446,21 +450,21 @@ public class QuineMcCluskey {
 
 
     assignments.put(variables.get(pos), true);
-    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), true), cache), assignments, collectedMinterms, cache);
+    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), true), options), assignments, collectedMinterms, options);
 
     assignments.put(variables.get(pos), false);
-    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), false), cache), assignments, collectedMinterms, cache);
+    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), false), options), assignments, collectedMinterms, options);
 
   }
 
 
 
-  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, RuleSetCache<K> cache) {
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, ExprOptions<K> options) {
 
-    Expression<K> assigned = RuleSet.assign(root, values, cache.factory());
+    Expression<K> assigned = RuleSet.assign(root, values, options);
 
     //  TODO save list of rules, don't recall
-    Expression<K> simplified = applyAll(assigned, RulesHelper.simplifyRules(), cache);
+    Expression<K> simplified = applyAll(assigned, RulesHelper.simplifyRules(), options);
 
     return simplified;
   }

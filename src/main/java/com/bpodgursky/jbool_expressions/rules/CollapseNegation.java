@@ -6,12 +6,14 @@ import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.NExpression;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 
 //  A | (!A & C) | D => A | C | D
 //  A & (!A | C) & D => A & C & D
 public class CollapseNegation<K> extends Rule<NExpression<K>, K> {
 
-  public Expression<K> applyInternal(NExpression<K> input, RuleSetCache<K> cache) {
+  public Expression<K> applyInternal(NExpression<K> input, ExprOptions<K> options) {
 
     //  case 1:
     //  A | (!A & C) | D
@@ -33,7 +35,7 @@ public class CollapseNegation<K> extends Rule<NExpression<K>, K> {
                 //  if otherChild == !subChild
                 //  A and !A
                 if (areNegation(subChild, otherChild)) {
-                  return ExprUtil.stripNegation(inOr, child, subChild, cache);
+                  return ExprUtil.stripNegation(inOr, child, subChild, options);
                 }
               }
             }
@@ -49,7 +51,7 @@ public class CollapseNegation<K> extends Rule<NExpression<K>, K> {
           for (Expression<K> otherChild : input.getChildren()) {
             for (Expression<K> subChild : child.getChildren()) {
               if (areNegation(subChild, otherChild)) {
-                return ExprUtil.stripNegation(andIn, child, subChild, cache);
+                return ExprUtil.stripNegation(andIn, child, subChild, options);
               }
             }
           }

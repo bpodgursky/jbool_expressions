@@ -94,7 +94,7 @@ public class TestExpressions extends JBoolTestCase {
 
     assertEquals(
         "(F & !D & (C | !(B & C)))",
-        expr.replaceVars(Collections.singletonMap("A", expr("(B & C)")), new ExprFactory.Interning<>(new HashMap<>())).toString()
+        expr.replaceVars(Collections.singletonMap("A", expr("(B & C)")), new ExprFactory.Default<>()).toString()
     );
 
   }
