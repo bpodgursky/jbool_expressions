@@ -20,7 +20,7 @@ public class BenchmarkPerformance {
 
       String[] nameParts = file.getName().split("_");
 
-      System.out.println("Looking at dataset");
+      System.out.println("Looking at dataset "+file.getName());
 
       long parseTime = 0;
       long simplifyTime = 0;
