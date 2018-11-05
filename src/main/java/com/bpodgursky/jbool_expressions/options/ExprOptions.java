@@ -56,7 +56,20 @@ public class ExprOptions<K> {
     );
   }
 
-  public static <K> ExprOptions<K> allCaching() {
+  public static <K> ExprOptions<K> onlyCaching() {
+
+    Map<Expression<K>, Expression<K>> internMap = new HashMap<>();
+
+    return new ExprOptions<>(
+        new InternFunction.None<>(),
+        new UnboundedRuleSetCache<>(new InternFunction.None<>()),
+        new UnboundedRuleCache<>(new InternFunction.None<>()),
+        new ExprFactory.Default<>()
+    );
+  }
+
+
+  public static <K> ExprOptions<K> allCacheIntern() {
 
     Map<Expression<K>, Expression<K>> internMap = new HashMap<>();
     Intern<K> internFunction = new Intern<>(internMap);
@@ -65,7 +78,7 @@ public class ExprOptions<K> {
         internFunction,
         new UnboundedRuleSetCache<>(internFunction),
         new UnboundedRuleCache<>(internFunction),
-        new ExprFactory.Interning<>()
+        new ExprFactory.Interning<>(internMap)
     );
   }
 

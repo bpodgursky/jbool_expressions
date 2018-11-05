@@ -19,10 +19,7 @@ import com.bpodgursky.jbool_expressions.Literal;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
-import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
-import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
-import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applyAll;
 
@@ -209,7 +206,7 @@ public class QuineMcCluskey {
     }
 
     And<Integer> join = And.of(products);
-    Expression<Integer> asSop = applyAll(join, RulesHelper.toSopRules(), ExprOptions.allCaching());
+    Expression<Integer> asSop = applyAll(join, RulesHelper.toSopRules(), ExprOptions.allCacheIntern());
 
     Or<Integer> root = (Or<Integer>)asSop;
 

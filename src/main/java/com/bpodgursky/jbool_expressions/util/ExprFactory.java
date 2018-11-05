@@ -39,8 +39,8 @@ public interface ExprFactory<K> {
 
     private Map<Expression<K>, Expression<K>> values;
 
-    public Interning(){
-      this.values = new HashMap<>();
+    public Interning(Map<Expression<K>, Expression<K>> internMap){
+      this.values = internMap;
     }
 
     private Expression<K> intern(Expression<K> expr){

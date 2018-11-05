@@ -2,14 +2,9 @@ package com.bpodgursky.jbool_expressions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
-import com.bpodgursky.jbool_expressions.parsers.ExprParser;
-import com.bpodgursky.jbool_expressions.rules.QuineMcCluskey;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.SimplifyNExprChildren;
@@ -74,7 +69,7 @@ public class TestSimplify extends JBoolTestCase {
     AtomicBoolean finished = new AtomicBoolean(false);
 
     Thread thread = new Thread(() -> {
-      RuleSet.toDNFViaQMC(Not.of(expr("((b4 & b1 & !b3 & !c1 & c2 & c5) | (b4 & b1 & !b3 & !c1 & c2 & !c5) | (b4 & b1 & !b3 & !c1 & !c2 & c5) | (b4 & b1 & !b3 & !c1 & !c2 & !c5) | (b1 & b3 & !c1 & c2 & c5) | (b1 & b3 & !c1 & c2 & !c5) | (b1 & b3 & !c1 & !c2 & c5) | (b1 & b3 & !c1 & !c2 & !c5) | (!b4 & b1 & !b3 & !c1 & c2 & c5) | (!b4 & b1 & !b3 & !c1 & c2 & !c5) | (!b4 & b1 & !b3 & !c1 & !c2 & c5) | (!b4 & b1 & !b3 & !c1 & !c2 & !c5) | (b4 & !b1 & !c1 & b2 & c2 & c5) | (b4 & !b1 & !c1 & b2 & c2 & !c5) | (b4 & !b1 & !c1 & b2 & !c2 & c5) | (b4 & !b1 & !c1 & b2 & !c2 & !c5) | (!b1 & !c1 & !b2 & c2 & c5) | (!b1 & !c1 & !b2 & c2 & !c5) | (!b1 & !c1 & !b2 & !c2 & c5) | (!b1 & !c1 & !b2 & !c2 & !c5) | (!b4 & !b1 & !c1 & b2 & c2 & c5) | (!b4 & !b1 & !c1 & b2 & c2 & !c5) | (!b4 & !b1 & !c1 & b2 & !c2 & c5) | (!b4 & !b1 & !c1 & b2 & !c2 & !c5))")), ExprOptions.allCaching());
+      RuleSet.toDNFViaQMC(Not.of(expr("((b4 & b1 & !b3 & !c1 & c2 & c5) | (b4 & b1 & !b3 & !c1 & c2 & !c5) | (b4 & b1 & !b3 & !c1 & !c2 & c5) | (b4 & b1 & !b3 & !c1 & !c2 & !c5) | (b1 & b3 & !c1 & c2 & c5) | (b1 & b3 & !c1 & c2 & !c5) | (b1 & b3 & !c1 & !c2 & c5) | (b1 & b3 & !c1 & !c2 & !c5) | (!b4 & b1 & !b3 & !c1 & c2 & c5) | (!b4 & b1 & !b3 & !c1 & c2 & !c5) | (!b4 & b1 & !b3 & !c1 & !c2 & c5) | (!b4 & b1 & !b3 & !c1 & !c2 & !c5) | (b4 & !b1 & !c1 & b2 & c2 & c5) | (b4 & !b1 & !c1 & b2 & c2 & !c5) | (b4 & !b1 & !c1 & b2 & !c2 & c5) | (b4 & !b1 & !c1 & b2 & !c2 & !c5) | (!b1 & !c1 & !b2 & c2 & c5) | (!b1 & !c1 & !b2 & c2 & !c5) | (!b1 & !c1 & !b2 & !c2 & c5) | (!b1 & !c1 & !b2 & !c2 & !c5) | (!b4 & !b1 & !c1 & b2 & c2 & c5) | (!b4 & !b1 & !c1 & b2 & c2 & !c5) | (!b4 & !b1 & !c1 & b2 & !c2 & c5) | (!b4 & !b1 & !c1 & b2 & !c2 & !c5))")), ExprOptions.allCacheIntern());
       finished.set(true);
     });
 

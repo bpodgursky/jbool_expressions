@@ -6,8 +6,12 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 import com.bpodgursky.jbool_expressions.Expression;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+
+import static com.bpodgursky.jbool_expressions.options.ExprOptions.allCacheIntern;
+import static com.bpodgursky.jbool_expressions.options.ExprOptions.onlyCaching;
 
 public class BenchmarkPerformance {
 
@@ -28,6 +32,8 @@ public class BenchmarkPerformance {
       long posTime = 0;
 
       int scanned = 0;
+
+
       while(scan.hasNext()){
         String expr = scan.nextLine();
 
@@ -39,13 +45,13 @@ public class BenchmarkPerformance {
         Expression<String> parsed = ExprParser.parse(expr);
         long exprParseTime = System.currentTimeMillis();
 
-        RuleSet.simplify(parsed);
+        RuleSet.simplify(parsed, onlyCaching());
         long exprSimplifyTime = System.currentTimeMillis();
 
-        RuleSet.toSop(parsed);
+        RuleSet.toSop(parsed, onlyCaching());
         long exprSopTime = System.currentTimeMillis();
 
-        RuleSet.toPos(parsed);
+        RuleSet.toPos(parsed, onlyCaching());
         long exprPosTime = System.currentTimeMillis();
 
         parseTime += (exprParseTime - exprStartTime);
@@ -61,7 +67,7 @@ public class BenchmarkPerformance {
       System.out.println("\tMax expr length:\t"+nameParts[4]);
       System.out.println("\tMax depth:\t"+nameParts[5]);
       System.out.println("\t\tTotal parse time:\t"+parseTime);
-      System.out.println("\t\tTotal toDNF time:\t"+simplifyTime);
+      System.out.println("\t\tTotal simplify time:\t"+simplifyTime);
       System.out.println("\t\tTotal sop time:\t"+sopTime);
       System.out.println("\t\tTotal pos time:\t"+posTime);
 
