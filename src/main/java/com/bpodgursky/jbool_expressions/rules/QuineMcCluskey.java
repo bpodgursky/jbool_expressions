@@ -73,7 +73,7 @@ public class QuineMcCluskey {
     ArrayList<K> variables = new ArrayList<>(ExprUtil.getConstraintsByWeight(input, options));
 
     //  expand all true/false inputs
-    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input, options);
+    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input, RulesHelper.simplifyRules(), options);
 
     if (minterms.size() == Math.pow(2, variables.size())) {
       return Literal.getTrue();
@@ -394,29 +394,23 @@ public class QuineMcCluskey {
 
   public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables,
                                                Map<K, Boolean> assignments, Expression<K> input,
+                                               List<Rule<?, K>> simplifyRules,
                                                ExprOptions<K> options) {
     List<Integer> minterms = new ArrayList<>();
-    findMinterms(pos, variables, input, assignments, minterms, options);
+    findMinterms(pos, variables, input, assignments, minterms, simplifyRules, options);
     return minterms;
   }
-
-  static AtomicLong evaled = new AtomicLong();
 
   public static <K> void findMinterms(int pos,
                                       ArrayList<K> variables,
                                       Expression<K> input, Map<K, Boolean> assignments,
                                       List<Integer> collectedMinterms,
+                                      List<Rule<?, K>> simplifyRules,
                                       ExprOptions<K> options) {
 
     if (pos == variables.size()) {
 
       Literal val = (Literal)input;
-
-      evaled.incrementAndGet();
-
-      if(evaled.get() % 1000000 == 0){
-        System.out.println("Evaluated minterms: "+evaled.get());
-      }
 
       if (val.getValue()) {
         //  evaluate
@@ -432,12 +426,6 @@ public class QuineMcCluskey {
 
         collectedMinterms.add(minTerm);
 
-        if (collectedMinterms.size() % 100000 == 0) {
-          System.out.println();
-          System.out.println(System.currentTimeMillis());
-          System.out.println(minTerm + "\t" + collectedMinterms.size());
-        }
-
         return;
 
       } else {
@@ -447,23 +435,16 @@ public class QuineMcCluskey {
 
 
     assignments.put(variables.get(pos), true);
-    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), true), options), assignments, collectedMinterms, options);
+    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), true), simplifyRules, options), assignments, collectedMinterms, simplifyRules, options);
 
     assignments.put(variables.get(pos), false);
-    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), false), options), assignments, collectedMinterms, options);
+    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), false), simplifyRules, options), assignments, collectedMinterms, simplifyRules, options);
 
   }
 
 
-
-  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, ExprOptions<K> options) {
-
-    Expression<K> assigned = RuleSet.assign(root, values, options);
-
-    //  TODO save list of rules, don't recall
-    Expression<K> simplified = applyAll(assigned, RulesHelper.simplifyRules(), options);
-
-    return simplified;
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, List<Rule<?, K>> simplifyRules, ExprOptions<K> options) {
+    return applyAll(RuleSet.assign(root, values, options), simplifyRules, options);
   }
 
 }

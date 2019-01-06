@@ -29,11 +29,6 @@ public class Or<K> extends NExpression<K> {
     super(children, OR_SEED, comparator);
   }
 
-  //  @Override
-  //  public NExpression<K> create(Expression<K>[] children, Comparator<Expression> comparator) {
-  //    return of(children, comparator);
-  //  }
-
   public String toString() {
     if (cachedStringRepresentation == null) {
       cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")"));

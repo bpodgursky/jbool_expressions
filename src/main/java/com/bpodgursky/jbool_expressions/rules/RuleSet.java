@@ -105,6 +105,10 @@ public class RuleSet {
     }
   }
 
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values) {
+    return assign(root, values, ExprOptions.noCaching());
+  }
+
   public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, ExprOptions<K> options) {
     root = root.map(new Assign<>(values), options.getExprFactory());
     return applyAll(root, RulesHelper.simplifyRules(), options);

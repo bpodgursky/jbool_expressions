@@ -22,7 +22,6 @@ public class ExprOptions<K> {
   private RuleSetCache<K> ruleSetCache;
   private RuleCache<K> ruleCache;
   private ExprFactory<K> exprFactory;
-  //  TODO test which of the above can actually improve things
 
   public ExprOptions(InternFunction<K> preInternFunction,
                      RuleSetCache<K> ruleSetCache,

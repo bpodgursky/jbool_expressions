@@ -83,18 +83,4 @@ public class TestSimplify extends JBoolTestCase {
 
   }
 
-  //expr("!(!(A1|A2|A3)&!(B1&B2)&!(B3&B4)&!B5&(C1|C2|C3|C4))&!(!(A1|A2|A3)&!(B1&B2)&!(B5|B4)&!D1&C1)&!(!(A1|A2|A3)&!(B1&B2)&!D1&!B5&C1)&!(!(A1|A2|A3)&!(B6|B5)&!D1&(B7|B8)&(C1|C2|C4)&B9)&!(!(A1|A2|A3)&!(B5|B4)&!D1&(C1|C2|C4)&B8&B3)&!(!(A1|A2|A3)&!D1&!B1&(C1|C2|C4)&B2)&!(!(A1|A2|A3)&!D1&!B6&(C1|C2|C4)&B10)&!(!(A1|A2|A3)&B1&B2&C3)&!(!(B1&B2)&!(B3&B5)&(A1|A2)&(C1|C2))&!(!(B1&B2)&!(B3&B5)&(A1|A2)&772&C1)&!(!(B1&B2)&!(B3&B5)&(A1|A2)&C1)&!(!(B1&B2)&!(B3&B5)&C3)&!(!(B6|B5)&!D1&(A1|A2)&(C1|C2)&017&B8&B9)&!(!D1&!A3&(C1|C2|C4)&B7&B3)&!(!E1&B1&B2&C3)&!((!(B11&M014)&!(B11&B10)&!(B3&B4)&!B1&F1&C3)|(!(B11&B10)&!(B3&B4)&!B2&F1&C3))&!((!(B3|B9)&!B6&(C1|C2|C4)&D1)|(!B6&!B5&(C1|C2|C4)&D1))&!((F1|5XXL)&B1&B2&C3)&!((A1|A2|A3)&B1&B2&C3)&!((A1|A2)&B1&B2&C3)&!((B3|B9)&(C1|C2|C3|C4)&017&B5)&!(A3&C1)&!(B1&B2&C3)&(A1|A2|A4|A5|A6|A7|A8|A9|A10|A11|A12|A13)")
-
-  //  IDEAS
-
-  //  count sub-expressions
-  //  is the goal to eliminate size == make normal simplification faster
-  //    swap out big expressions
-  //  goal is to eliminate variables == make qmc faster
-  //    first level -- see if swapping out any single common subexpression eliminates any variables
-  //    second -- see if swapping out any two, three, X subexpressions eliminates any variables
-  //      challenge -- find ones which are likely to contain all of some variables.  this is min cover problem.
-  //  get all sets of expressions that appear together as children
-
-
 }

@@ -19,16 +19,16 @@ public abstract class Expression<K> implements Serializable {
 
   public static final Comparator<Expression> LEXICOGRAPHIC_COMPARATOR = new LexicographicComparator();
 
-  public static class HashComparator implements Comparator<Expression>  {
+  public static class HashComparator implements Comparator<Expression> {
     @Override
     public int compare(Expression o1, Expression o2) {
 
-      if(o1 == o2){
+      if (o1 == o2) {
         return 0;
       }
 
       int compare = Integer.compare(o1.hashCode(), o2.hashCode());
-      if(compare == 0 && !o1.equals(o2)) {
+      if (compare == 0 && !o1.equals(o2)) {
         // If hashcode matches and expressions are not equal then we may have a hash collision.
         // This is very unlikely to happen but if it does then go for string comparison (slow).
         return LEXICOGRAPHIC_COMPARATOR.compare(o1, o2);
@@ -54,19 +54,19 @@ public abstract class Expression<K> implements Serializable {
 
   protected abstract Expression<K> sort(Comparator<Expression> comparator);
 
-  public String toLexicographicString(){
+  public String toLexicographicString() {
     return sort(LEXICOGRAPHIC_COMPARATOR).toString();
   }
 
   private transient Set<K> k = null;
 
-  public Set<K> getAllK(){
+  public Set<K> getAllK() {
 
-    if(k != null){
+    if (k != null) {
       return k;
     }
 
-    Set<K> variables =new HashSet<>();
+    Set<K> variables = new HashSet<>();
     collectK(variables, Integer.MAX_VALUE);
     this.k = variables;
     return variables;
@@ -74,5 +74,5 @@ public abstract class Expression<K> implements Serializable {
 
   public abstract void collectK(Set<K> set, int limit);
 
-  public abstract Expression<K> replaceVars(Map<K,Expression<K>> m, ExprFactory<K> exprFactory);
+  public abstract Expression<K> replaceVars(Map<K, Expression<K>> m, ExprFactory<K> exprFactory);
 }
