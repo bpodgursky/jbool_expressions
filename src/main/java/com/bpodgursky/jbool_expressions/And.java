@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
@@ -47,12 +46,6 @@ public class And<K> extends NExpression<K> {
 
       if(newChild != this.expressions[i]){
         modified = true;
-
-//        if(newChild.equals(this.expressions[i])) {
-//          System.out.println();
-//          System.out.println(newChild);
-//          System.out.println(this.expressions[i]);
-//        }
 
         if(children == null) {
           children = new Expression[this.expressions.length];

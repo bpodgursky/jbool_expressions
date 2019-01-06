@@ -57,9 +57,6 @@ public class ExprOptions<K> {
   }
 
   public static <K> ExprOptions<K> onlyCaching() {
-
-    Map<Expression<K>, Expression<K>> internMap = new HashMap<>();
-
     return new ExprOptions<>(
         new InternFunction.None<>(),
         new UnboundedRuleSetCache<>(new InternFunction.None<>()),
