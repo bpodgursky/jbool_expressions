@@ -1,14 +1,17 @@
 package com.bpodgursky.jbool_expressions;
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 public class Variable<K> extends Expression<K> {
   public static final String EXPR_TYPE = "variable";
@@ -28,8 +31,18 @@ public class Variable<K> extends Expression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules) {
+  public Expression<K> apply(List<Rule<?, K>> rules, ExprOptions<K> options) {
     return this;
+  }
+
+  @Override
+  public List<Expression<K>> getChildren() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public Expression<K> map(Function<Expression<K>, Expression<K>> function, ExprFactory<K> factory) {
+    return function.apply(this);
   }
 
   @Override
@@ -73,7 +86,7 @@ public class Variable<K> extends Expression<K> {
     set.add(value);
   }
 
-  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+  public Expression<K> replaceVars(Map<K, Expression<K>> m, ExprFactory<K> factory) {
     if (m.containsKey(getValue())) {
       return m.get(getValue());
     }

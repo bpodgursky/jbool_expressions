@@ -1,8 +1,8 @@
 package com.bpodgursky.jbool_expressions;
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.DeMorgan;
-import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
@@ -31,13 +31,13 @@ public class TestNot extends JBoolTestCase {
     Expression<String> expr1 = ExprParser.parse("(! ( A | B))");
 
     assertEquals(after1.toString(),
-        RulesHelper.<String>applySet(expr1, Arrays.<Rule<?, String>>asList(new DeMorgan<String>())).toString());
+        RulesHelper.applySet(expr1, Arrays.asList(new DeMorgan<>()), ExprOptions.noCaching()).toString());
 
     Expression<String> expr2 = ExprParser.parse("(! ( A&  B))");
     Expression<String> after2 = ExprParser.parse("( (! A)|  (! B))");
 
     assertEquals(after2.toString(),
-        RulesHelper.<String>applySet(expr2, Arrays.<Rule<?, String>>asList(new DeMorgan<String>())).toString());
+        RulesHelper.applySet(expr2, Arrays.asList(new DeMorgan<>()), ExprOptions.noCaching()).toString());
 
     Not<String> n3 = Not.of(Variable.of("b"));
     assertEquals(n3, RuleSet.simplify(n3));

@@ -1,20 +1,10 @@
 package com.bpodgursky.jbool_expressions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 
 public abstract class NExpression<K> extends Expression<K> {
 
@@ -38,34 +28,8 @@ public abstract class NExpression<K> extends Expression<K> {
     hashCode = Objects.hash(seed, Arrays.hashCode(this.expressions));
   }
 
-  @Override
-  public Expression<K> apply(List<Rule<?, K>> rules) {
-    Expression<K>[] children = new Expression[this.expressions.length];
-    for (int i = 0; i < this.expressions.length; i++) {
-      children[i] = RulesHelper.applyAll(this.expressions[i], rules);
-    }
-    return create(children);
-  }
-
   public List<Expression<K>> getChildren() {
     return ExprUtil.list(expressions);
-  }
-
-  public NExpression<K> create(Expression<K>[] children) {
-    return create(children, HASH_COMPARATOR);
-  }
-
-  protected abstract NExpression<K> create(Expression<K>[] children, Comparator<Expression> comparator);
-
-  @Override
-  public Expression<K> sort(Comparator<Expression> comparator) {
-
-    Expression<K>[] children = new Expression[this.expressions.length];
-    for (int i = 0; i < this.expressions.length; i++) {
-      children[i] = expressions[i].sort(comparator);
-    }
-
-    return create(children, comparator);
   }
 
   @Override

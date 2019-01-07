@@ -9,15 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.And;
+import com.bpodgursky.jbool_expressions.ExprUtil;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Literal;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
-import com.bpodgursky.jbool_expressions.eval.EvalEngine;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
+
+import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applyAll;
 
 public class QuineMcCluskey {
 
@@ -62,16 +66,21 @@ public class QuineMcCluskey {
     }
   }
 
-  public static <K> Expression<K> toDNF(Expression<K> input) {
+  public static <K> Expression<K> toDNF(Expression<K> input, ExprOptions<K> options) {
 
-    ArrayList<K> variables = new ArrayList<>(input.getAllK());
-    Collections.reverse(variables);
+    //  if the input
+
+    ArrayList<K> variables = new ArrayList<>(ExprUtil.getConstraintsByWeight(input, options));
 
     //  expand all true/false inputs
-    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input);
+    List<Integer> minterms = findMinterms(0, variables, new HashMap<>(), input, RulesHelper.simplifyRules(), options);
 
     if (minterms.size() == Math.pow(2, variables.size())) {
       return Literal.getTrue();
+    }
+
+    if(minterms.isEmpty()){
+      return Literal.getFalse();
     }
 
     Set<Implicant> mergedImplicants = getMergedImplicants(minterms);
@@ -144,13 +153,13 @@ public class QuineMcCluskey {
       boolean coveredByEPIs = false;
 
       for (Implicant epi : epis) {
-        if(covers(uncoveredMinterm, epi)){
+        if (covers(uncoveredMinterm, epi)) {
           coveredByEPIs = true;
           break;
         }
       }
 
-      if(!coveredByEPIs){
+      if (!coveredByEPIs) {
         remainingMinterms.add(uncoveredMinterm);
       }
 
@@ -197,7 +206,7 @@ public class QuineMcCluskey {
     }
 
     And<Integer> join = And.of(products);
-    Expression<Integer> asSop = RulesHelper.applySet(join, RulesHelper.toSopRules());
+    Expression<Integer> asSop = applyAll(join, RulesHelper.toSopRules(), ExprOptions.allCacheIntern());
 
     Or<Integer> root = (Or<Integer>)asSop;
 
@@ -383,13 +392,27 @@ public class QuineMcCluskey {
     return (((i + (i >>> 4)) & 0x0F0F0F0F) * 0x01010101) >>> 24;
   }
 
-  public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables, Map<K, Boolean> assignments, Expression<K> input) {
+  public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables,
+                                               Map<K, Boolean> assignments, Expression<K> input,
+                                               List<Rule<?, K>> simplifyRules,
+                                               ExprOptions<K> options) {
+    List<Integer> minterms = new ArrayList<>();
+    findMinterms(pos, variables, input, assignments, minterms, simplifyRules, options);
+    return minterms;
+  }
+
+  public static <K> void findMinterms(int pos,
+                                      ArrayList<K> variables,
+                                      Expression<K> input, Map<K, Boolean> assignments,
+                                      List<Integer> collectedMinterms,
+                                      List<Rule<?, K>> simplifyRules,
+                                      ExprOptions<K> options) {
 
     if (pos == variables.size()) {
 
-      boolean val = EvalEngine.evaluateBoolean(input, assignments);
+      Literal val = (Literal)input;
 
-      if (val) {
+      if (val.getValue()) {
         //  evaluate
         int minTerm = 0;
 
@@ -400,19 +423,28 @@ public class QuineMcCluskey {
           }
 
         }
-        return Collections.singletonList(minTerm);
+
+        collectedMinterms.add(minTerm);
+
+        return;
+
       } else {
-        return Collections.emptyList();
+        return;
       }
     }
 
+
     assignments.put(variables.get(pos), true);
-    List<Integer> minterms = new ArrayList<>(findMinterms(pos + 1, variables, assignments, input));
+    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), true), simplifyRules, options), assignments, collectedMinterms, simplifyRules, options);
 
     assignments.put(variables.get(pos), false);
-    minterms.addAll(findMinterms(pos + 1, variables, assignments, input));
+    findMinterms(pos + 1, variables, assign(input, Collections.singletonMap(variables.get(pos), false), simplifyRules, options), assignments, collectedMinterms, simplifyRules, options);
 
-    return minterms;
+  }
+
+
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, List<Rule<?, K>> simplifyRules, ExprOptions<K> options) {
+    return applyAll(RuleSet.assign(root, values, options), simplifyRules, options);
   }
 
 }

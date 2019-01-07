@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 
 public class ExprUtil {
 
-  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr, Expression<K> omitFromOr) {
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
+  public static <K> Expression<K> collapseToSOP(And<K> and, Or<K> internalOr, Expression<K> omitFromOr, ExprOptions<K> options) {
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr, options);
     List<Expression<K>> newChildren = new ArrayList<>();
     //  for each child of the or,  we want it AND all other children of the and
 
@@ -29,15 +30,15 @@ public class ExprUtil {
         ExprUtil.addAll(andOthers, childrenNew);
         andOthers.add(orChild);
 
-        newChildren.add(And.of(andOthers));
+        newChildren.add(options.getExprFactory().and(andOthers.toArray(new Expression[andOthers.size()])));
       }
     }
 
-    return Or.of(newChildren);
+    return options.getExprFactory().or(newChildren.toArray(new Expression[newChildren.size()]));
   }
 
-  public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr){
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr);
+  public static <K> Expression<K> stripNegation(And<K> and, Or<K> internalOr, Expression<K> omitFromOr, ExprOptions<K> options){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(and.expressions, internalOr, options);
     List<Expression<K>> newChildren = new ArrayList<>(Arrays.asList(childrenNew));
 
     List<Expression<K>> orOthers = new ArrayList<>();
@@ -49,13 +50,13 @@ public class ExprUtil {
 
     }
 
-    newChildren.add(Or.of(orOthers));
+    newChildren.add(options.getExprFactory().or(orOthers.toArray(new Expression[orOthers.size()])));
 
-    return And.of(newChildren);
+    return options.getExprFactory().and(newChildren.toArray(new Expression[newChildren.size()]));
   }
 
-  public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd){
-    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd);
+  public static <K> Expression<K> stripNegation(Or<K> or, And<K> internalAnd, Expression<K> omitFromAnd, ExprOptions<K> options){
+    Expression<K>[] childrenNew = ExprUtil.allExceptMatch(or.expressions, internalAnd, options);
     List<Expression<K>> newChildren = new ArrayList<>(Arrays.asList(childrenNew));
 
     List<Expression<K>> andOthers = new ArrayList<>();
@@ -67,12 +68,11 @@ public class ExprUtil {
 
     }
 
-    newChildren.add(And.of(andOthers));
-
-    return Or.of(newChildren);
+    newChildren.add(options.getExprFactory().and(andOthers.toArray(new Expression[andOthers.size()])));
+    return options.getExprFactory().or(newChildren.toArray(new Expression[newChildren.size()]));
   }
 
-  public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit){
+  public static <K> Expression<K>[] allExceptMatch(Collection<Expression<K>> exprs, Set<? extends Expression<K>> omit, ExprOptions<K> options){
     Set<Expression<K>> andTerms = new LinkedHashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!omit.contains(eachExpr)){
@@ -83,12 +83,12 @@ public class ExprUtil {
     return toArray(andTerms);
   }
 
-  public static <K> Expression<K>[] allExceptMatch(List<Expression<K>> exprs, Expression<K> omit) {
+  public static <K> Expression<K>[] allExceptMatch(List<Expression<K>> exprs, Expression<K> omit, ExprOptions<K> options) {
     //noinspection unchecked
-    return allExceptMatch(exprs.toArray(new Expression[exprs.size()]), omit);
+    return allExceptMatch(exprs.toArray(new Expression[exprs.size()]), omit, options);
   }
 
-    public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit){
+    public static <K> Expression<K>[] allExceptMatch(Expression<K>[] exprs, Expression<K> omit, ExprOptions<K> options){
     Set<Expression<K>> andTerms = new LinkedHashSet<Expression<K>>();
     for(Expression<K> eachExpr: exprs){
       if(!eachExpr.equals(omit)){
@@ -138,15 +138,15 @@ public class ExprUtil {
   }
 
   //  returns the variables from "most simplifying" to "least simplifying" if resolved
-  public static <K> List<K> getConstraintsByWeight(Expression<K> expression) {
+  public static <K> List<K> getConstraintsByWeight(Expression<K> expression, ExprOptions<K> options) {
 
-    Map<K, Integer> simplificationWeights = new HashMap<>(); 
+    Map<K, Integer> simplificationWeights = new HashMap<>();
 
     for (K variable : expression.getAllK()) {
       //  not sure this is the right decision, but sort here by best potential.  could also average true/false case.
       simplificationWeights.put(variable, Math.min(
-          RuleSet.assign(expression, Collections.singletonMap(variable, true)).getAllK().size(),
-          RuleSet.assign(expression, Collections.singletonMap(variable, false)).getAllK().size()
+          RuleSet.assign(expression, Collections.singletonMap(variable, true), options).getAllK().size(),
+          RuleSet.assign(expression, Collections.singletonMap(variable, false), options).getAllK().size()
       ));
     }
 

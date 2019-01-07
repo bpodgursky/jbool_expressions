@@ -10,6 +10,9 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.JBoolTestCase;
 import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class TestQuineMcCluskey extends JBoolTestCase {
 
@@ -20,7 +23,7 @@ public class TestQuineMcCluskey extends JBoolTestCase {
     ArrayList<String> vars = new ArrayList<>(expr.getAllK());
     Collections.sort(vars);
 
-    List<Integer> minterms = QuineMcCluskey.findMinterms(0, vars, new HashMap<>(), expr);
+    List<Integer> minterms = QuineMcCluskey.findMinterms(0, vars, new HashMap<>(), expr, RulesHelper.simplifyRules(), ExprOptions.noCaching());
 
     Collections.sort(minterms);
     assertEquals(Arrays.asList(3, 4, 5, 6, 7), minterms);
@@ -84,7 +87,7 @@ public class TestQuineMcCluskey extends JBoolTestCase {
 
     Expression<String> expr = expr("(!A & !B) | (!A & !C) | (!B & C) | (B & !C) | (A & C) | (A & B)");
 
-    Expression<String> simplified = QuineMcCluskey.toDNF(expr);
+    Expression<String> simplified = QuineMcCluskey.toDNF(expr, ExprOptions.noCaching());
 
     assertTrue(
         Or.of(Arrays.asList(

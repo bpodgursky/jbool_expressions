@@ -7,6 +7,7 @@ import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.Not;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.Variable;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 
@@ -25,11 +26,11 @@ public class ExampleRunner {
     System.out.println(simplified);
     //  (A & B)
 
-    Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true));
+    Expression<String> halfAssigned = RuleSet.assign(simplified, Collections.singletonMap("A", true), ExprOptions.noCaching());
     System.out.println(halfAssigned);
     //  B
 
-    Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true));
+    Expression<String> resolved = RuleSet.assign(halfAssigned, Collections.singletonMap("B", true), ExprOptions.noCaching());
     System.out.println(resolved);
     //  true
 

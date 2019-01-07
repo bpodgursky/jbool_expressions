@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import com.bpodgursky.jbool_expressions.Expression;
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 
@@ -31,7 +32,7 @@ public class BenchmarkCorrectness {
         }
 
         Expression<String> parsed = ExprParser.parse(expr);
-        Expression<String> posStr = RuleSet.toPos(parsed);
+        Expression<String> posStr = RuleSet.toPos(parsed, ExprOptions.noCaching());
         results.write(posStr.toLexicographicString()+"\n");
 
       }

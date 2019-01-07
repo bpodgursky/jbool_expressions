@@ -6,7 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
+import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.rules.RulesHelper;
+import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 import static com.bpodgursky.jbool_expressions.Seeds.OR_SEED;
 
@@ -22,17 +29,92 @@ public class Or<K> extends NExpression<K> {
     super(children, OR_SEED, comparator);
   }
 
-  @Override
-  public NExpression<K> create(Expression<K>[] children, Comparator<Expression> comparator) {
-    return of(children, comparator);
-  }
-
   public String toString() {
     if (cachedStringRepresentation == null) {
       cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")"));
     }
     return cachedStringRepresentation;
   }
+
+  @Override
+  public Expression<K> apply(List<Rule<?, K>> rules, ExprOptions<K> options) {
+    Expression<K>[] children = null;
+
+    boolean modified = false;
+    for (int i = 0; i < this.expressions.length; i++) {
+      Expression<K> newChild = RulesHelper.applyAll(this.expressions[i], rules, options);
+
+      if (newChild != this.expressions[i]) {
+        modified = true;
+
+        if (children == null) {
+          children = new Expression[this.expressions.length];
+        }
+
+        children[i] = newChild;
+      }
+
+    }
+
+    if (!modified) {
+      return this;
+    }
+
+    //  backfill
+    for (int i = 0; i < this.expressions.length; i++) {
+      if (children[i] == null) {
+        children[i] = this.expressions[i];
+      }
+    }
+
+    return options.getExprFactory().or(children);
+  }
+
+  @Override
+  public Expression<K> map(Function<Expression<K>, Expression<K>> function, ExprFactory<K> factory) {
+    Expression<K>[] children = null;
+
+    boolean modified = false;
+    for (int i = 0; i < this.expressions.length; i++) {
+      Expression<K> newChild = this.expressions[i].map(function, factory);
+
+      if (newChild != this.expressions[i]) {
+        modified = true;
+
+        if (children == null) {
+          children = new Expression[this.expressions.length];
+        }
+
+        children[i] = newChild;
+      }
+
+    }
+
+    if (!modified) {
+      return function.apply(this);
+    }
+
+    //  backfill
+    for (int i = 0; i < this.expressions.length; i++) {
+      if (children[i] == null) {
+        children[i] = this.expressions[i];
+      }
+    }
+
+    return function.apply(factory.or(children));
+  }
+
+  @Override
+  public Expression<K> sort(Comparator<Expression> comparator) {
+
+    Expression<K>[] children = new Expression[this.expressions.length];
+    for (int i = 0; i < this.expressions.length; i++) {
+      children[i] = expressions[i].sort(comparator);
+    }
+
+    return Or.of(children, comparator);
+  }
+
 
   @SafeVarargs
   public static <K> Or<K> of(Expression<K>... children) {
@@ -64,11 +146,11 @@ public class Or<K> extends NExpression<K> {
     return EXPR_TYPE;
   }
 
-  public Expression<K> replaceVars(Map<K, Expression<K>> m) {
+  public Expression<K> replaceVars(Map<K, Expression<K>> m, ExprFactory<K> factory) {
     Expression<K>[] children = new Expression[this.expressions.length];
     for (int i = 0; i < this.expressions.length; i++) {
-      children[i] = this.expressions[i].replaceVars(m);
+      children[i] = this.expressions[i].replaceVars(m, factory);
     }
-    return of(children);
+    return factory.or(children);
   }
 }

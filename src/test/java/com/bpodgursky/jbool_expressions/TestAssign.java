@@ -1,7 +1,7 @@
 package com.bpodgursky.jbool_expressions;
 
+import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import junit.framework.TestCase;
 
 import java.util.Collections;
