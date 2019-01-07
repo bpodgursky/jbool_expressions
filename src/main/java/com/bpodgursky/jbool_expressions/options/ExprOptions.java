@@ -46,6 +46,11 @@ public class ExprOptions<K> {
     return this.ruleSetCache;
   }
 
+  //  static helpers
+
+  /**
+   * No caching, no interning
+   */
   public static <K> ExprOptions<K> noCaching() {
     return new ExprOptions<>(
         new InternFunction.None<>(),
@@ -55,6 +60,9 @@ public class ExprOptions<K> {
     );
   }
 
+  /**
+   * Cache all rule results, don't intern anything
+   */
   public static <K> ExprOptions<K> onlyCaching() {
     return new ExprOptions<>(
         new InternFunction.None<>(),
@@ -64,7 +72,9 @@ public class ExprOptions<K> {
     );
   }
 
-
+  /**
+   * Cache all rule results, and also intern all expressions for maximum memory optimization
+   */
   public static <K> ExprOptions<K> allCacheIntern() {
 
     Map<Expression<K>, Expression<K>> internMap = new HashMap<>();
