@@ -5,19 +5,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import com.bpodgursky.jbool_expressions.*;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
-
-import com.bpodgursky.jbool_expressions.And;
-import com.bpodgursky.jbool_expressions.Expression;
-import com.bpodgursky.jbool_expressions.Literal;
-import com.bpodgursky.jbool_expressions.Not;
-import com.bpodgursky.jbool_expressions.Or;
-import com.bpodgursky.jbool_expressions.Variable;
 
 public class ExprParser {
 
@@ -69,6 +63,10 @@ public class ExprParser {
         }
       }
       return Or.of(children);
+    } else if (tree.getType() == BooleanExprParser.GT) {
+      return GreaterThan.of(parse(tree.getChild(0), mapper));
+    } else if (tree.getType() == BooleanExprParser.LT) {
+      return LessThan.of(parse(tree.getChild(0), mapper));
     } else if (tree.getType() == BooleanExprParser.NOT) {
       return Not.of(parse(tree.getChild(0), mapper));
     } else if (tree.getType() == BooleanExprParser.NAME) {

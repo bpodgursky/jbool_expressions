@@ -13,6 +13,8 @@ public class RulesHelper {
     rules.add(new SimplifyAnd<K>());
     rules.add(new SimplifyOr<K>());
     rules.add(new SimplifyNot<K>());
+    rules.add(new SimplifyGreaterThan<K>());
+    rules.add(new SimplifyLessThan<K>());
     rules.add(new CombineAnd<K>());
     rules.add(new CombineOr<K>());
     rules.add(new SimplifyNExpression<K>());

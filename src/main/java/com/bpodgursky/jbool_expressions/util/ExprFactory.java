@@ -1,12 +1,8 @@
 package com.bpodgursky.jbool_expressions.util;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import com.bpodgursky.jbool_expressions.And;
-import com.bpodgursky.jbool_expressions.Expression;
-import com.bpodgursky.jbool_expressions.Not;
-import com.bpodgursky.jbool_expressions.Or;
+import com.bpodgursky.jbool_expressions.*;
 
 public interface ExprFactory<K> {
 
@@ -15,6 +11,10 @@ public interface ExprFactory<K> {
   public Expression<K> and(Expression<K>[] children);
 
   public Expression<K> or(Expression<K>[] children);
+
+  public Expression<K> gt(Expression<K> child);
+
+  public Expression<K> lt(Expression<K> child);
 
   public class Default<K> implements ExprFactory<K> {
 
@@ -31,6 +31,16 @@ public interface ExprFactory<K> {
     @Override
     public Expression<K> or(Expression<K>[] children) {
       return (Or.of(children));
+    }
+
+    @Override
+    public Expression<K> gt(Expression<K> child) {
+      return (GreaterThan.of(child));
+    }
+
+    @Override
+    public Expression<K> lt(Expression<K> child) {
+      return (LessThan.of(child));
     }
   }
 
@@ -64,6 +74,16 @@ public interface ExprFactory<K> {
     @Override
     public Expression<K> or(Expression<K>[] children) {
       return intern(Or.of(children));
+    }
+
+    @Override
+    public Expression<K> gt(Expression child) {
+      return intern(GreaterThan.of(child));
+    }
+
+    @Override
+    public Expression<K> lt(Expression<K> child) {
+      return intern(LessThan.of(child));
     }
   }
 
