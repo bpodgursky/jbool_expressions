@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
@@ -37,7 +38,7 @@ public class Or<K> extends NExpression<K> {
   }
 
   @Override
-  public Expression<K> apply(List<Rule<?, K>> rules, ExprOptions<K> options) {
+  public Expression<K> apply(RuleList<K> rules, ExprOptions<K> options) {
     Expression<K>[] children = null;
 
     boolean modified = false;

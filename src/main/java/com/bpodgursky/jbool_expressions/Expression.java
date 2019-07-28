@@ -9,8 +9,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
-import com.bpodgursky.jbool_expressions.rules.Rule;
-import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
+import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public abstract class Expression<K> implements Serializable {
@@ -44,7 +43,7 @@ public abstract class Expression<K> implements Serializable {
     }
   }
 
-  public abstract Expression<K> apply(List<Rule<?, K>> rules, ExprOptions<K> cache);
+  public abstract Expression<K> apply(RuleList<K> rules, ExprOptions<K> cache);
 
   public abstract List<Expression<K>> getChildren();
 

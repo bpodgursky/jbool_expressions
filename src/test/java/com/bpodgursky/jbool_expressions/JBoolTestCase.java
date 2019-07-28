@@ -10,6 +10,7 @@ import java.util.Set;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
@@ -30,6 +31,10 @@ public abstract class JBoolTestCase extends TestCase {
     return RuleSet.toSop(expr(expr)).toString();
   }
 
+  public static String toSOPString(String expr, ExprOptions<String> options){
+    return RuleSet.toSop(expr(expr), options).toString();
+  }
+
   public static String toPOSString(String expr){
     return RuleSet.toPos(expr(expr)).toString();
   }
@@ -39,8 +44,12 @@ public abstract class JBoolTestCase extends TestCase {
     assertEquals(expected, simplifyToString(orig));
   }
 
-  public void assertApply(String expected, String orig, List<Rule<?, String>> rules){
+  public void assertApply(String expected, String orig, RuleList<String> rules){
     assertEquals(expected, applyAll(expr(orig), rules, ExprOptions.noCaching()).toString());
+  }
+
+  public void assertToSop(String expected, String orig, ExprOptions<String> options){
+    assertEquals(expected, toSOPString(orig, options));
   }
 
   public void assertToSop(String expected, String orig){

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.And;
@@ -394,7 +393,7 @@ public class QuineMcCluskey {
 
   public static <K> List<Integer> findMinterms(int pos, ArrayList<K> variables,
                                                Map<K, Boolean> assignments, Expression<K> input,
-                                               List<Rule<?, K>> simplifyRules,
+                                               RuleList<K> simplifyRules,
                                                ExprOptions<K> options) {
     List<Integer> minterms = new ArrayList<>();
     findMinterms(pos, variables, input, assignments, minterms, simplifyRules, options);
@@ -405,7 +404,7 @@ public class QuineMcCluskey {
                                       ArrayList<K> variables,
                                       Expression<K> input, Map<K, Boolean> assignments,
                                       List<Integer> collectedMinterms,
-                                      List<Rule<?, K>> simplifyRules,
+                                      RuleList<K> simplifyRules,
                                       ExprOptions<K> options) {
 
     if (pos == variables.size()) {
@@ -443,7 +442,7 @@ public class QuineMcCluskey {
   }
 
 
-  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, List<Rule<?, K>> simplifyRules, ExprOptions<K> options) {
+  public static <K> Expression<K> assign(Expression<K> root, Map<K, Boolean> values, RuleList<K> simplifyRules, ExprOptions<K> options) {
     return applyAll(RuleSet.assign(root, values, options), simplifyRules, options);
   }
 

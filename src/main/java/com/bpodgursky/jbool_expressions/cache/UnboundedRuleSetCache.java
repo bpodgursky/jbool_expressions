@@ -7,27 +7,42 @@ import java.util.function.Function;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.InternFunction;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
+import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class UnboundedRuleSetCache<K> implements RuleSetCache<K> {
 
-  private final Map<Expression<K>, Expression<K>> cache;
+  private final Map<String, Map<Expression<K>, Expression<K>>> cacheByRuleSet;
 
   private final InternFunction<K> interningFunction;
 
 
   public UnboundedRuleSetCache(InternFunction<K> interningFunction) {
-    this.cache = new HashMap<>();
+    this.cacheByRuleSet = new HashMap<>();
     this.interningFunction = interningFunction;
   }
 
   @Override
-  public Expression<K> get(Expression<K> input) {
+  public Expression<K> get(RuleList<K> rules, Expression<K> input) {
+    Map<Expression<K>, Expression<K>> cache = cacheByRuleSet.get(rules.getKey());
+
+    if(cache == null){
+      return null;
+    }
+
     return cache.get(input);
   }
 
   @Override
-  public void put(Expression<K> input, Expression<K> output, ExprOptions<K> options) {
+  public void put(RuleList<K> rules, Expression<K> input, Expression<K> output, ExprOptions<K> options) {
+
+    String ruleKey = rules.getKey();
+
+    if(!cacheByRuleSet.containsKey(ruleKey)){
+      cacheByRuleSet.put(ruleKey, new HashMap<>());
+    }
+
+    Map<Expression<K>, Expression<K>> cache = cacheByRuleSet.get(ruleKey);
 
     ExprFactory<K> factory = options.getExprFactory();
 

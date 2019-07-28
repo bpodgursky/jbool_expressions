@@ -5,8 +5,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
-import com.bpodgursky.jbool_expressions.parsers.ExprParser;
-import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
 import com.bpodgursky.jbool_expressions.rules.SimplifyNExprChildren;
 
@@ -31,9 +30,8 @@ public class TestSimplify extends JBoolTestCase {
     //  make sure it doesn't catch the opposite and/or case for whatever reason
     assertSimplify("((A & C) | (B & D & (A | C)))", "((A | C) & B & D) | (A & C)");
 
-
     // test in isolation to catch a few potential errors
-    ArrayList<Rule<?, String>> rules = new ArrayList<>(Collections.singletonList(new SimplifyNExprChildren<String>()));
+    RuleList<String> rules = new RuleList<>(new ArrayList<>(Collections.singletonList(new SimplifyNExprChildren<>())));
 
     assertApply("(A & (A & B))", "(A & B) & A", rules);
     assertApply("(A)", "A & (A | B)", rules);
