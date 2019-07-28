@@ -1,0 +1,6 @@
+language: java
+jdk:
+- openjdk10
+install: "/bin/true"
+script:
+- "./test"
