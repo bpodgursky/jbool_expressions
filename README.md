@@ -176,14 +176,37 @@ De Morgan's law:
 Downloading
 ====
 
-jbool_expressions is available via maven central:
+jbool_expressions is available via maven central (check out Maven central for the latest version — the version below may not be the most recent):
 
 ```xml
 <dependency>
     <groupId>com.bpodgursky</groupId>
     <artifactId>jbool_expressions</artifactId>
-    <version>1.13</version>
+    <version>1.23</version>
 </dependency>
+```
+
+Snapshot builds of jbool_expressions are also published to sonatype:
+
+```xml
+
+    <repository>
+      <id>oss.sonatype.org-snapshot</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+
+    <dependency>
+        <groupId>com.bpodgursky</groupId>
+        <artifactId>jbool_expressions</artifactId>
+        <version>1.24-SNAPSHOT</version>
+    </dependency>
+
 ```
 
 Building
