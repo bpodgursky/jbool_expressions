@@ -22,8 +22,11 @@ public abstract class NExpression<K> extends Expression<K> {
     }
 
     this.expressions = Arrays.copyOf(expressions, expressions.length);
-    Arrays.sort(this.expressions, sort);
-
+    
+    if (sort != null) {
+      Arrays.sort(this.expressions, sort);
+    }
+    
     //For NExpressions we compute the hash code up front and cache it.
     hashCode = Objects.hash(seed, Arrays.hashCode(this.expressions));
   }

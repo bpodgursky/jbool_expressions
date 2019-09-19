@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
@@ -32,11 +34,41 @@ public class Or<K> extends NExpression<K> {
 
   public String toString() {
     if (cachedStringRepresentation == null) {
-      cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")"));
+      cachedStringRepresentation = toString(PrintOptions.withDefaults());
     }
     return cachedStringRepresentation;
   }
+  
+  @Override
+  public String toString(PrintOptions options) {
+    BooleanOperatorOption booleanOperatorOption = options.getBooleanOperatorOption();
+    WhitespaceOption whitespaceOption = options.getWhitespaceOption();
 
+    String operator = null;
+    String whitespace = null;
+
+    if (whitespaceOption == WhitespaceOption.AS_SPACE) {
+      whitespace = " ";
+    } else if (whitespaceOption == WhitespaceOption.AS_TAB) {
+      whitespace = "\t";
+    } else {
+      throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
+    }
+    
+    if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
+      operator = whitespace + "|" + whitespace;
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
+      operator = whitespace + "or" + whitespace;
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
+      operator = whitespace + "OR" + whitespace;
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
+      operator = whitespace + "Or" + whitespace;
+    } else {
+      throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
+    }
+    return Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator, "(", ")"));
+  }
+  
   @Override
   public Expression<K> apply(RuleList<K> rules, ExprOptions<K> options) {
     Expression<K>[] children = null;
@@ -142,6 +174,10 @@ public class Or<K> extends NExpression<K> {
     return of(children.toArray(new Expression[children.size()]), HASH_COMPARATOR);
   }
 
+  public static <K> Or<K> of(List<? extends Expression<K>> children, Comparator<Expression> comparator) {
+    return of(children.toArray(new Expression[children.size()]), comparator);
+  }
+  
   @Override
   public String getExprType() {
     return EXPR_TYPE;

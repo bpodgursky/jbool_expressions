@@ -52,6 +52,8 @@ public abstract class Expression<K> implements Serializable {
   public abstract String getExprType();
 
   public abstract Expression<K> sort(Comparator<Expression> comparator);
+  
+  public abstract String toString(PrintOptions options);
 
   public String toLexicographicString() {
     return sort(LEXICOGRAPHIC_COMPARATOR).toString();
