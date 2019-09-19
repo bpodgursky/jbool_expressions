@@ -46,9 +46,11 @@ public class ExprParser {
       if (exceptionMessage == null || exceptionMessage.length() == 0) {
         if (e instanceof NoViableAltException) {
           exceptionMessage = "no viable alternative";
+        } else {
+          exceptionMessage = e.getClass().getName();
         }
       }
-    String message = "Error at line " + e.line + ":" + e.charPositionInLine + " " + exceptionMessage + (e.token != null && e.token.getText() != null ? " at input " + e.token.getText() : "");
+      String message = "Error at line " + e.line + ":" + e.charPositionInLine + " " + exceptionMessage + (e.token != null && e.token.getText() != null ? " at input " + e.token.getText() : "");
       throw new IllegalStateException(message, e);
     }
   }
