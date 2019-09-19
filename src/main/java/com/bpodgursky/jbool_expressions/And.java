@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.ExpressionLayoutOption;
 import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
@@ -54,18 +55,48 @@ public class And<K> extends NExpression<K> {
       throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
     }
     
+    ExpressionLayoutOption expressionLayoutOption = options.getExpressionLayoutOption();
+
     if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
-      operator = whitespace + "&" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\n&\n";
+      } else {
+        operator = whitespace + "&" + whitespace;
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
-      operator = whitespace + "and" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nand\n";
+      } else {
+        operator = whitespace + "and" + whitespace;
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
-      operator = whitespace + "AND" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nAND\n";
+      } else {
+        operator = whitespace + "AND" + whitespace;
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
-      operator = whitespace + "And" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nAnd\n";
+      } else {
+        operator = whitespace + "And" + whitespace;
+      }
     } else {
       throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
     }
-    return Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator, "(", ")"));
+    
+    
+    if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+      final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+      String result = Arrays.stream(expressions).map(expression -> indentation + expression.toString(options).replace("\n", "\n" + indentation)).collect(Collectors.joining(operator));
+      result = indentation + result.replace("\n", "\n" + indentation);
+      result = "(\n" + result + "\n)";
+      return result;
+    } else {
+      String result = Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator));
+      result = "(" + result + ")";
+      return result;
+    }
   }
 
   @Override

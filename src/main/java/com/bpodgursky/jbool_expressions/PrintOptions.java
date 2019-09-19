@@ -1,6 +1,13 @@
 package com.bpodgursky.jbool_expressions;
 
 public class PrintOptions {
+  public static final int MIN_INDENTATION_COUNT = 1;
+  public static final int MAX_INDENTATION_COUNT = 10;
+  
+  public enum ExpressionLayoutOption {
+    DEFAULT, PRETTY_PRINT
+  }
+  
   public enum BooleanOperatorOption {
     AS_SYMBOL, AS_ENGLISH_TEXT_UPPERCASE, AS_ENGLISH_TEXT_LOWERCASE, AS_ENGLISH_TEXT_CAPITALIZE;
   }
@@ -25,6 +32,7 @@ public class PrintOptions {
     AS_SPACE, AS_TAB;
   }
 
+  private ExpressionLayoutOption expressionLayoutOption = ExpressionLayoutOption.DEFAULT;
   private BooleanOperatorOption booleanOperatorOption = BooleanOperatorOption.AS_SYMBOL;
   private BooleanLiteralOption booleanLiteralOption = BooleanLiteralOption.AS_ENGLISH_TEXT_LOWERCASE;
 
@@ -34,10 +42,20 @@ public class PrintOptions {
 
   private WhitespaceOption whitespaceOption = WhitespaceOption.AS_SPACE;
 
+  private int indentationCount = 2;
+
   public static PrintOptions withDefaults() {
     return new PrintOptions();
   }
 
+  public ExpressionLayoutOption getExpressionLayoutOption() {
+    return expressionLayoutOption;
+  }
+  
+  public void setExpressionLayoutOption(ExpressionLayoutOption expressionLayoutOption) {
+    this.expressionLayoutOption = expressionLayoutOption;
+  }
+  
   public BooleanOperatorOption getBooleanOperatorOption() {
     return booleanOperatorOption;
   }
@@ -86,6 +104,25 @@ public class PrintOptions {
     this.whitespaceOption = whitespaceOption;
   }
 
+  public int getIndentationCount() {
+    return indentationCount;
+  }
+  
+  public void setIndentationCount(int indentationCount) {
+    if (indentationCount < MIN_INDENTATION_COUNT) {
+      indentationCount = MIN_INDENTATION_COUNT;
+    }
+    if (indentationCount > MAX_INDENTATION_COUNT) {
+      indentationCount = MAX_INDENTATION_COUNT;
+    }
+    this.indentationCount = indentationCount;
+  }
+  
+  public PrintOptions withExpressionLayoutOption(ExpressionLayoutOption expressionLayoutOption) {
+    this.expressionLayoutOption = expressionLayoutOption;
+    return this;
+  }
+  
   public PrintOptions withBooleanOperatorOption(BooleanOperatorOption booleanOperatorOption) {
     this.booleanOperatorOption = booleanOperatorOption;
     return this;
@@ -113,6 +150,11 @@ public class PrintOptions {
 
   public PrintOptions withWhitespaceOptionOption(WhitespaceOption whitespaceOption) {
     this.whitespaceOption = whitespaceOption;
+    return this;
+  }
+  
+  public PrintOptions withIndentationCount(int indentationCount) {
+    this.setIndentationCount(indentationCount);
     return this;
   }
 }

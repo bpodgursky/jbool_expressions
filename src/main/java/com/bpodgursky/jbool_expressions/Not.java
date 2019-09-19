@@ -11,6 +11,7 @@ import java.util.function.Function;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.ExpressionLayoutOption;
 import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
@@ -53,14 +54,44 @@ public class Not<K> extends Expression<K> {
       throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
     }
     
+    ExpressionLayoutOption expressionLayoutOption = options.getExpressionLayoutOption();
+
     if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
-      return "!" + e.toString(options);
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "!\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+          return "!" + e.toString(options);
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
-        return "not" + whitespace + e.toString(options);
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "not\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+          return "not" + whitespace + e.toString(options);
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "NOT\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
         return "NOT" + whitespace + e.toString(options);
+      } else {
+        throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
-        return "Not" + whitespace + e.toString(options);
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "Not\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+          return "Not" + whitespace + e.toString(options);
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else {
       throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
     }

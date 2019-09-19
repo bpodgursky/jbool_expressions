@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.ExpressionLayoutOption;
 import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
@@ -55,18 +56,57 @@ public class Or<K> extends NExpression<K> {
       throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
     }
     
+    ExpressionLayoutOption expressionLayoutOption = options.getExpressionLayoutOption();
+
     if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
-      operator = whitespace + "|" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\n|\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "|" + whitespace;
+      } else {
+        throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
-      operator = whitespace + "or" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nor\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "or" + whitespace;
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
-      operator = whitespace + "OR" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nOR\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "OR" + whitespace;
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
-      operator = whitespace + "Or" + whitespace;
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nOr\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "Or" + whitespace;
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
     } else {
       throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
     }
-    return Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator, "(", ")"));
+    
+    if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+      final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+      String result = Arrays.stream(expressions).map(expression -> indentation + expression.toString(options).replace("\n", "\n" + indentation)).collect(Collectors.joining(operator));
+      result = indentation + result.replace("\n", "\n" + indentation);
+      result = "(\n" + result + "\n)";
+      return result;
+    } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+      String result = Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator));
+      result = "(" + result + ")";
+      return result;
+    } else {
+        throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+    }
   }
   
   @Override
