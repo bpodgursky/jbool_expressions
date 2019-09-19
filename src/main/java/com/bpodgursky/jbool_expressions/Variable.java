@@ -100,9 +100,9 @@ public class Variable<K> extends Expression<K> {
       }
       
       if (variableEscape != null) {
-        variableName = variableEscape + ExprParser.escapeVariableName(variableName) + variableEscape;
+        variableName = variableEscape + ExprParser.escapeVariableName(variableName).replace(variableEscape, "\\" + variableEscape) + variableEscape;
       } else {
-        variableName = (ExprParser.isValidVariableName(variableName) ? ExprParser.escapeVariableName(variableName) : ("'" + ExprParser.escapeVariableName(variableName) + "'"));
+        variableName = (ExprParser.isValidVariableName(variableName) ? ExprParser.escapeVariableName(variableName) : ("'" + ExprParser.escapeVariableName(variableName).replace("'", "\\'") + "'"));
       }
       
       return variableName;
@@ -121,7 +121,7 @@ public class Variable<K> extends Expression<K> {
          throw new UnsupportedOperationException("Unsupported VariableNameOption: " + variableNameOption);
       }
         
-      variableName = (ExprParser.isValidVariableName(variableName) ? ExprParser.escapeVariableName(variableName) : (variableEscape + ExprParser.escapeVariableName(variableName) + variableEscape));
+      variableName = (ExprParser.isValidVariableName(variableName) ? ExprParser.escapeVariableName(variableName) : (variableEscape + ExprParser.escapeVariableName(variableName).replace(variableEscape, "\\" + variableEscape) + variableEscape));
       
       return variableName;
     } else if (variableEscapeApplyOption == VariableEscapeApplyOption.ALWAYS) {
@@ -143,7 +143,7 @@ public class Variable<K> extends Expression<K> {
         variableEscape = "'";
       }
       
-      variableName = variableEscape + ExprParser.escapeVariableName(variableName) + variableEscape;
+      variableName = variableEscape + ExprParser.escapeVariableName(variableName).replace(variableEscape, "\\" + variableEscape) + variableEscape;
       
       return variableName;
     } else {
