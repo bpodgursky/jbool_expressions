@@ -56,6 +56,10 @@ public class Variable<K> extends Expression<K> {
     this.name = name;
   }
   
+  public String getName() {
+    return name;
+  }
+  
   public K getValue() {
     return value;
   }
