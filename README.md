@@ -29,7 +29,7 @@ Of course, this expression contains a useless term (either C or (! C) is always 
 
 ```java
     Expression<String> simplified = RuleSet.simplify(expr);
-    System.out.println(expr);
+    System.out.println(simplified);
 ```
 outputs:
 ```bash
