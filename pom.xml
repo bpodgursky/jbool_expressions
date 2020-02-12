@@ -57,6 +57,35 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr3-maven-plugin</artifactId>
+                    <versionRange>[3.1.1,)</versionRange>
+                    <goals>
+                      <goal>antlr</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  
     <plugins>
 
       <plugin>
@@ -65,7 +94,7 @@
         <version>3.5.2</version>
         <executions>
           <execution>
-            <id>run antlr</id>
+            <id>antlr</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>antlr</goal>

@@ -1,5 +1,6 @@
 package com.bpodgursky.jbool_expressions;
 
+import com.bpodgursky.jbool_expressions.PrintOptions.BooleanLiteralOption;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
@@ -42,9 +43,25 @@ public class Literal<K> extends Expression<K> {
   }
 
   public String toString() {
-    return Boolean.valueOf(value).toString();
+    return toString(PrintOptions.withDefaults());
   }
 
+  @Override
+  public String toString(PrintOptions options) {
+    BooleanLiteralOption booleanLiteralOption = options.getBooleanLiteralOption();
+    if (booleanLiteralOption == BooleanLiteralOption.AS_BINARY) {
+      return Boolean.valueOf(value) ? "1" : "0";
+    } else if (booleanLiteralOption == BooleanLiteralOption.AS_ENGLISH_TEXT_LOWERCASE) {
+      return Boolean.valueOf(value) ? "true" : "false";
+    } else if (booleanLiteralOption == BooleanLiteralOption.AS_ENGLISH_TEXT_UPPERCASE) {
+      return Boolean.valueOf(value) ? "TRUE" : "FALSE";
+    } else if (booleanLiteralOption == BooleanLiteralOption.AS_ENGLISH_TEXT_CAPITALIZE) {
+      return Boolean.valueOf(value) ? "True" : "False";
+    } else {
+      throw new UnsupportedOperationException("Unsupported BooleanLiteralOption: " + booleanLiteralOption);
+    }
+  }
+  
   public boolean getValue() {
     return value;
   }

@@ -12,6 +12,7 @@ import com.bpodgursky.jbool_expressions.parsers.ExprParser;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
+import com.bpodgursky.jbool_expressions.Expression.HashComparator;
 import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 import junit.framework.TestCase;
@@ -20,7 +21,7 @@ import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applyAll;
 
 public abstract class JBoolTestCase extends TestCase {
   public static Expression<String> expr(String expr){
-    return ExprParser.parse(expr);
+    return ExprParser.parse(expr).sort(new HashComparator());
   }
 
   public static String simplifyToString(String expr){
