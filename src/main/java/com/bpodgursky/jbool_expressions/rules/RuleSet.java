@@ -48,7 +48,9 @@ public class RuleSet {
     Set<K> variables = new HashSet<>();
     root.collectK(variables, QMC_CARDINALITY_CUTOFF + 1);
 
-    if (variables.size() <= QMC_CARDINALITY_CUTOFF) {
+    int varCount = variables.size();
+
+    if (varCount <= QMC_CARDINALITY_CUTOFF && varCount > 0) {
       return QuineMcCluskey.toDNF(root, options);
     } else {
       return toSop(root);
