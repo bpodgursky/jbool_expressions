@@ -175,6 +175,14 @@ De Morgan's law:
 (! ( A | B)) => ( (! A) & (! B))
 ```
 
+Distribute law:
+
+It applies [Distributive property](https://en.wikipedia.org/wiki/Distributive_property)
+```bash
+(A & B | A & C) => (A & (B | C))
+((A | B) && (A | C)) => (A | (B & C))
+```
+
 Downloading
 ====
 
