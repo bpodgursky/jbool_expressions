@@ -7,14 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import com.bpodgursky.jbool_expressions.And;
 import com.bpodgursky.jbool_expressions.Expression;
 import com.bpodgursky.jbool_expressions.JBoolTestCase;
+import com.bpodgursky.jbool_expressions.Literal;
 import com.bpodgursky.jbool_expressions.Or;
 import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.util.ExprFactory;
 
 public class TestQuineMcCluskey extends JBoolTestCase {
+
+  public void testEmpty() {
+    RuleSet.toDNFViaQMC(And.of(Literal.getTrue(), Literal.getTrue()), ExprOptions.noCaching());
+  }
 
   public void testFindMinterms() {
 
