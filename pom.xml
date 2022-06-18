@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.bpodgursky</groupId>
   <artifactId>jbool_expressions</artifactId>
-  <version>1.24-SNAPSHOT</version>
+  <version>1.24</version>
   <packaging>jar</packaging>
 
   <name>jbool_expressions</name>
@@ -26,7 +25,7 @@
     <connection>scm:git:git@github.com:bpodgursky/jbool_expressions.git</connection>
     <developerConnection>scm:git:git@github.com:bpodgursky/jbool_expressions.git</developerConnection>
     <url>https://github.com/bpodgursky/jbool_expressions</url>
-    <tag>HEAD</tag>
+    <tag>jbool_expressions-1.24</tag>
   </scm>
 
   <developers>
