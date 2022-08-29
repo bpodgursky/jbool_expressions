@@ -31,6 +31,8 @@ jobs:
 
           echo $GPG_KEY | base64 -d > gpg.key
 
+          ls -la gpg.key
+
           gpg --import gpg.key
 
           ./deploy
