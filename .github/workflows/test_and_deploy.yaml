@@ -31,4 +31,4 @@ jobs:
           gpg --fast-import gpg.asc
 
           ./deploy
-        if: github.ref == 'refs/heads/master'
+        if: startsWith(github.ref, 'refs/tags/jbool_expressions')
