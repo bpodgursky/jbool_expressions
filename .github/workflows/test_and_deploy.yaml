@@ -29,9 +29,8 @@ jobs:
       - name: Deploy
         run:
 
-          echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.key
+          echo $GPG_KEY | base64 -d > gpg.key
 
-          export GPG_TTY=$(tty)
           gpg --import gpg.key
 
           ./deploy
