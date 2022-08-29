@@ -19,6 +19,7 @@ jobs:
       OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
       GPG_TTY: 'tty'
+      GPG_KEY: ${{ secrets.GPG_KEY }}
     steps:
       - uses: actions/checkout@v2
         with:
