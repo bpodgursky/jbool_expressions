@@ -28,9 +28,9 @@ jobs:
       - name: Deploy
         run:
 
-          echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.asc
+          echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.key
 
-          gpg --fast-import gpg.asc
+          gpg --import gpg.key
 
           ./deploy
         if: startsWith(github.ref, 'refs/tags/jbool_expressions')
