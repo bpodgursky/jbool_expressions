@@ -1,0 +1,34 @@
+---
+name: test_and_deploy
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  jbool_expressions_build:
+    runs-on: ubuntu-latest
+    env:
+      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Test
+        run: |
+          ./test
+      - name: Deploy
+        run:
+
+          echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.asc
+
+          gpg --fast-import gpg.asc
+
+          ./deploy
+        if: github.ref == 'refs/heads/master'
