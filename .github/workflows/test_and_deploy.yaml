@@ -18,6 +18,7 @@ jobs:
       OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
       OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
+      GPG_TTY: ${{tty}}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,6 +31,7 @@ jobs:
 
           echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.key
 
+          export GPG_TTY=$(tty)
           gpg --import gpg.key
 
           ./deploy
