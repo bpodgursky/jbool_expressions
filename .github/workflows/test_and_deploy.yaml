@@ -26,9 +26,9 @@ jobs:
       - name: Deploy
         run:
 
-          echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.key
+          echo ${{ secrets.GPG_KEY }} | base64 -d > gpg.asc
 
-          gpg --fast-import gpg.key
+          gpg --fast-import gpg.asc
 
           ./deploy
         if: github.ref == 'refs/heads/master'
