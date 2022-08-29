@@ -28,14 +28,11 @@ jobs:
         run: |
           ./test
       - name: Deploy
-        run:
+        run: |
 
           echo $GPG_KEY | base64 -d > gpg.key
 
           ls -la gpg.key
-          #
-          #          mkdir -p ~/.gnupg/private-keys-v1.d
-          #          chmod 700 ~/.gnupg/private-keys-v1.d
 
           gpg
           gpg --import gpg.key
