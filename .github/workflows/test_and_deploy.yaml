@@ -33,10 +33,11 @@ jobs:
           echo $GPG_KEY | base64 -d > gpg.key
 
           ls -la gpg.key
+#
+#          mkdir -p ~/.gnupg/private-keys-v1.d
+#          chmod 700 ~/.gnupg/private-keys-v1.d
 
-          mkdir -p ~/.gnupg/private-keys-v1.d
-          chmod 700 ~/.gnupg/private-keys-v1.d
-
+          gpg
           gpg --import gpg.key
 
           ./deploy
