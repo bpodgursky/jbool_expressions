@@ -18,8 +18,7 @@ jobs:
       OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
       OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
-      GPG_TTY: 'tty'
-      GPG_KEY: ${{ secrets.GPG_KEY }}
+      OSSRH_GPG_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -27,16 +26,12 @@ jobs:
       - name: Test
         run: |
           ./test
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
       - name: Deploy
         run: |
-
-          echo $GPG_KEY | base64 -d > gpg.key
-
-          ls -la gpg.key
-
-          gpg --list-keys
-          gpgconf --kill gpg-agent
-          gpg --import gpg.key
-
           ./deploy
         if: startsWith(github.ref, 'refs/tags/jbool_expressions')
