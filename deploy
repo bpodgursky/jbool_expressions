@@ -23,10 +23,14 @@ fi
 if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
 
     echo "on a tag -> set pom.xml <version> to $GITHUB_REF_NAME"
+    which mvn
+
     mvn --settings ".github/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$GITHUB_REF_NAME 1>/dev/null 2>/dev/null
 else
     echo "not on a tag -> keep snapshot version in pom.xml"
 fi
+
+echo "running deploy with modified pom"
 
 # Run the maven deploy steps
 mvn deploy -P publish -DskipTests=true --settings ".github/mvn-settings.xml"
