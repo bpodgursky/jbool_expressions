@@ -20,8 +20,7 @@ if [ -z "$OSSRH_PASSWORD" ]; then
   exit 1
 fi
 
-if [ "$GITHUB_REF_TYPE" == "tag" ]; then
-then
+if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
 
     echo "on a tag -> set pom.xml <version> to $GITHUB_REF_NAME"
     mvn --settings "${TRAVIS_BUILD_DIR}/.travis/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$GITHUB_REF_NAME 1>/dev/null 2>/dev/null
