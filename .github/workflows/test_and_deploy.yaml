@@ -34,7 +34,7 @@ jobs:
 
           ls -la gpg.key
 
-          gpg
+          gpg --list-keys
           gpg --import gpg.key
 
           ./deploy
