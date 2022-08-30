@@ -35,6 +35,7 @@ jobs:
           ls -la gpg.key
 
           gpg --list-keys
+          gpgconf --kill gpg-agent
           gpg --import gpg.key
 
           ./deploy
