@@ -1,6 +1,7 @@
 Project jbool_expressions
 ========
-[![Build Status](https://api.travis-ci.com/bpodgursky/jbool_expressions.svg?branch=master)](https://travis-ci.com/bpodgursky/jbool_expressions)
+![Build Status](https://github.com/bpodgursky/jbool_expressions/actions/workflows/test_and_deploy.yaml/badge.svg?branch=master)
+
 
 jbool_expressions is a simple open-source library for creating and manipulating boolean expressions in java.
 
