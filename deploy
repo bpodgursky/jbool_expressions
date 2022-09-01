@@ -45,4 +45,4 @@ fi
 echo "running deploy with modified pom"
 
 # Run the maven deploy steps
-mvn deploy -P publish -DskipTests=true --settings ".github/mvn-settings.xml"
+mvn deploy -P publish -DskipTests=true --settings ".build/mvn-settings.xml"
