@@ -1,13 +1,5 @@
 #!/bin/bash
-# expects variables to be set:
-# - OSSRH_USERNAME
-# - OSSRH_PASSWORD
-# - GPG_KEY_NAME
-# - GPG_PASSPHRASE
-# expects file to exist:
-# - .travis/gpg.asc
-
-set -e
+set -eo pipefail
 
 # Check the variables are set
 if [ -z "$OSSRH_USERNAME" ]; then
@@ -20,12 +12,32 @@ if [ -z "$OSSRH_PASSWORD" ]; then
   exit 1
 fi
 
+if [ -z "$GPG_KEY_NAME" ]; then
+  echo "missing environment value: GPG_KEY_NAME" >&2
+  exit 1
+fi
+
+if [ -z "$OSSRH_GPG_SECRET_KEY_PASSWORD" ]; then
+  echo "missing environment value: OSSRH_GPG_SECRET_KEY_PASSWORD" >&2
+  exit 1
+fi
+
+if [ -z "$GITHUB_REF_TYPE" ]; then
+  echo "missing environment value: GITHUB_REF_TYPE" >&2
+  exit 1
+fi
+
+if [ -z "$GITHUB_REF_NAME" ]; then
+  echo "missing environment value: GITHUB_REF_NAME" >&2
+  exit 1
+fi
+
 if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
 
     echo "on a tag -> set pom.xml <version> to $GITHUB_REF_NAME"
     which mvn
 
-    mvn --settings ".github/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$GITHUB_REF_NAME 1>/dev/null 2>/dev/null
+    mvn --settings ".build/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$GITHUB_REF_NAME 1>/dev/null 2>/dev/null
 else
     echo "not on a tag -> keep snapshot version in pom.xml"
 fi
