@@ -44,5 +44,7 @@ fi
 
 echo "running deploy with modified pom"
 
+export GPG_TTY=$(tty)
+
 # Run the maven deploy steps
 mvn deploy -P publish -DskipTests=true --settings ".build/mvn-settings.xml"
