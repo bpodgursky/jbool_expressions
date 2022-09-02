@@ -34,10 +34,12 @@ fi
 
 if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
 
-    echo "on a tag -> set pom.xml <version> to $GITHUB_REF_NAME"
-    which mvn
+    echo "Setting pom.xml <version> to $GITHUB_REF_NAME"
+    tag_parts=("${GITHUB_REF_NAME//-/ }")
+    release_tag=${tag_parts[1]}
+    echo "Publishing tag: ${release_tag}"
 
-    mvn --settings ".build/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$GITHUB_REF_NAME 1>/dev/null 2>/dev/null
+    mvn --settings ".build/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion="$release_tag" 1>/dev/null 2>/dev/null
 else
     echo "not on a tag -> keep snapshot version in pom.xml"
 fi
