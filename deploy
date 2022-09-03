@@ -35,8 +35,7 @@ fi
 if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
 
     echo "Setting pom.xml <version> to $GITHUB_REF_NAME"
-    tag_parts=("${GITHUB_REF_NAME//-/ }")
-    release_tag=${tag_parts[1]}
+    release_tag="${GITHUB_REF_NAME##*-}"
     echo "Publishing tag: ${release_tag}"
 
     mvn --settings ".build/mvn-settings.xml" org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion="$release_tag" 1>/dev/null 2>/dev/null
