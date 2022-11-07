@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
+import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.ExpressionLayoutOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
@@ -31,10 +33,70 @@ public class And<K> extends NExpression<K> {
 
   public String toString() {
     if (cachedStringRepresentation == null) {
-      cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" & ", "(", ")"));
+      cachedStringRepresentation = toString(PrintOptions.withDefaults());
 
     }
     return cachedStringRepresentation;
+  }
+  
+  @Override
+  public String toString(PrintOptions options) {
+    BooleanOperatorOption booleanOperatorOption = options.getBooleanOperatorOption();
+    WhitespaceOption whitespaceOption = options.getWhitespaceOption();
+
+    String operator = null;
+    String whitespace = null;
+
+    if (whitespaceOption == WhitespaceOption.AS_SPACE) {
+      whitespace = " ";
+    } else if (whitespaceOption == WhitespaceOption.AS_TAB) {
+      whitespace = "\t";
+    } else {
+      throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
+    }
+    
+    ExpressionLayoutOption expressionLayoutOption = options.getExpressionLayoutOption();
+
+    if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\n&\n";
+      } else {
+        operator = whitespace + "&" + whitespace;
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nand\n";
+      } else {
+        operator = whitespace + "and" + whitespace;
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nAND\n";
+      } else {
+        operator = whitespace + "AND" + whitespace;
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nAnd\n";
+      } else {
+        operator = whitespace + "And" + whitespace;
+      }
+    } else {
+      throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
+    }
+    
+    
+    if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+      final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+      String result = Arrays.stream(expressions).map(expression -> indentation + expression.toString(options).replace("\n", "\n" + indentation)).collect(Collectors.joining(operator));
+      result = indentation + result.replace("\n", "\n" + indentation);
+      result = "(\n" + result + "\n)";
+      return result;
+    } else {
+      String result = Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator));
+      result = "(" + result + ")";
+      return result;
+    }
   }
 
   @Override
@@ -140,6 +202,10 @@ public class And<K> extends NExpression<K> {
     return new And<K>(children.toArray(new Expression[children.size()]), HASH_COMPARATOR);
   }
 
+  public static <K> And<K> of(List<? extends Expression<K>> children, Comparator<Expression> comparator) {
+    return new And<K>(children.toArray(new Expression[children.size()]), comparator);
+  }  
+  
   @Override
   public String getExprType() {
     return EXPR_TYPE;

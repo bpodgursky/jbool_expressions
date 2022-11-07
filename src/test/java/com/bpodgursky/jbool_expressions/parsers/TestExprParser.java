@@ -1,6 +1,8 @@
 package com.bpodgursky.jbool_expressions.parsers;
 
 import com.bpodgursky.jbool_expressions.*;
+import com.bpodgursky.jbool_expressions.Expression.HashComparator;
+
 import org.junit.Assert;
 
 public class TestExprParser extends JBoolTestCase {
@@ -101,7 +103,7 @@ public class TestExprParser extends JBoolTestCase {
   }
 
   private void assertLexEquals(Expression expected, Expression actual) {
-    Assert.assertEquals(expected, actual);
-    Assert.assertEquals(expected.toLexicographicString(), actual.toLexicographicString());
+    Assert.assertEquals(expected.sort(new HashComparator()), actual.sort(new HashComparator()));
+    Assert.assertEquals(expected.sort(new HashComparator()).toLexicographicString(), actual.sort(new HashComparator()).toLexicographicString());
   }
 }

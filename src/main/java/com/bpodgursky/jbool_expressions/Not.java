@@ -10,6 +10,9 @@ import java.util.function.Function;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.ExpressionLayoutOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
@@ -31,11 +34,69 @@ public class Not<K> extends Expression<K> {
 
   public String toString() {
     if (cachedStringRepresentation == null) {
-      cachedStringRepresentation = "!" + e;
+      cachedStringRepresentation = toString(PrintOptions.withDefaults());
     }
     return cachedStringRepresentation;
   }
 
+  @Override
+  public String toString(PrintOptions options) {
+    BooleanOperatorOption booleanOperatorOption = options.getBooleanOperatorOption();
+    WhitespaceOption whitespaceOption = options.getWhitespaceOption();
+  
+    String whitespace = null;
+
+    if (whitespaceOption == WhitespaceOption.AS_SPACE) {
+      whitespace = " ";
+    } else if (whitespaceOption == WhitespaceOption.AS_TAB) {
+      whitespace = "\t";
+    } else {
+      throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
+    }
+    
+    ExpressionLayoutOption expressionLayoutOption = options.getExpressionLayoutOption();
+
+    if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "!\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+          return "!" + e.toString(options);
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "not\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+          return "not" + whitespace + e.toString(options);
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "NOT\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        return "NOT" + whitespace + e.toString(options);
+      } else {
+        throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+        return "Not\n" + indentation + e.toString(options).replace("\n", "\n" + indentation);
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+          return "Not" + whitespace + e.toString(options);
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else {
+      throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
+    }
+  }
+  
   @Override
   public Expression<K> apply(RuleList<K> rules, ExprOptions<K> options) {
     Expression<K> e = RulesHelper.applyAll(this.e, rules, options);

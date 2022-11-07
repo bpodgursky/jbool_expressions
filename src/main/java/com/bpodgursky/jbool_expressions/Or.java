@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.Rule;
+import com.bpodgursky.jbool_expressions.PrintOptions.BooleanOperatorOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.ExpressionLayoutOption;
+import com.bpodgursky.jbool_expressions.PrintOptions.WhitespaceOption;
 import com.bpodgursky.jbool_expressions.cache.RuleSetCache;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RulesHelper;
@@ -32,11 +35,80 @@ public class Or<K> extends NExpression<K> {
 
   public String toString() {
     if (cachedStringRepresentation == null) {
-      cachedStringRepresentation = Arrays.stream(expressions).map(Object::toString).collect(Collectors.joining(" | ", "(", ")"));
+      cachedStringRepresentation = toString(PrintOptions.withDefaults());
     }
     return cachedStringRepresentation;
   }
+  
+  @Override
+  public String toString(PrintOptions options) {
+    BooleanOperatorOption booleanOperatorOption = options.getBooleanOperatorOption();
+    WhitespaceOption whitespaceOption = options.getWhitespaceOption();
 
+    String operator = null;
+    String whitespace = null;
+
+    if (whitespaceOption == WhitespaceOption.AS_SPACE) {
+      whitespace = " ";
+    } else if (whitespaceOption == WhitespaceOption.AS_TAB) {
+      whitespace = "\t";
+    } else {
+      throw new UnsupportedOperationException("Unsupported WhitespaceOption: " + whitespaceOption);
+    }
+    
+    ExpressionLayoutOption expressionLayoutOption = options.getExpressionLayoutOption();
+
+    if (booleanOperatorOption == BooleanOperatorOption.AS_SYMBOL) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\n|\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "|" + whitespace;
+      } else {
+        throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_LOWERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nor\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "or" + whitespace;
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_UPPERCASE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nOR\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "OR" + whitespace;
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else if (booleanOperatorOption == BooleanOperatorOption.AS_ENGLISH_TEXT_CAPITALIZE) {
+      if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+        operator = "\nOr\n";
+      } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+        operator = whitespace + "Or" + whitespace;
+      } else {
+          throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+      }
+    } else {
+      throw new UnsupportedOperationException("Unsupported BooleanOperatorOption: " + booleanOperatorOption);
+    }
+    
+    if (expressionLayoutOption == ExpressionLayoutOption.PRETTY_PRINT) {
+      final String indentation = new String(new char[options.getIndentationCount()]).replace("\0", whitespace);
+      String result = Arrays.stream(expressions).map(expression -> indentation + expression.toString(options).replace("\n", "\n" + indentation)).collect(Collectors.joining(operator));
+      result = indentation + result.replace("\n", "\n" + indentation);
+      result = "(\n" + result + "\n)";
+      return result;
+    } else if (expressionLayoutOption == ExpressionLayoutOption.DEFAULT) {
+      String result = Arrays.stream(expressions).map(expression -> expression.toString(options)).collect(Collectors.joining(operator));
+      result = "(" + result + ")";
+      return result;
+    } else {
+        throw new UnsupportedOperationException("Unsupported ExpressionLayoutOption: " + expressionLayoutOption);
+    }
+  }
+  
   @Override
   public Expression<K> apply(RuleList<K> rules, ExprOptions<K> options) {
     Expression<K>[] children = null;
@@ -142,6 +214,10 @@ public class Or<K> extends NExpression<K> {
     return of(children.toArray(new Expression[children.size()]), HASH_COMPARATOR);
   }
 
+  public static <K> Or<K> of(List<? extends Expression<K>> children, Comparator<Expression> comparator) {
+    return of(children.toArray(new Expression[children.size()]), comparator);
+  }
+  
   @Override
   public String getExprType() {
     return EXPR_TYPE;
