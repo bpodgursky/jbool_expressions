@@ -1,10 +1,11 @@
 package com.bpodgursky.jbool_expressions.parsers;
 
 import com.bpodgursky.jbool_expressions.*;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 
 public class TestExprParser extends JBoolTestCase {
 
+  @Test
   public void testIt() {
     assertLexEquals(Variable.of("A"), ExprParser.parse("A"));
     assertLexEquals(Variable.of("AA"), ExprParser.parse("AA"));
@@ -24,11 +25,11 @@ public class TestExprParser extends JBoolTestCase {
     assertLexEquals(Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C"), And.of(Variable.of("D"), Variable.of("E"))),
             ExprParser.parse("A | B | C | D & E"));
 
-    assertLexEquals(Literal.<String>getFalse(), ExprParser.parse("false"));
-    assertLexEquals(Literal.<String>getTrue(), ExprParser.parse("true"));
-    assertLexEquals(Literal.<String>getTrue(), ExprParser.parse("(true)"));
+    assertLexEquals(Literal.getFalse(), ExprParser.parse("false"));
+    assertLexEquals(Literal.getTrue(), ExprParser.parse("true"));
+    assertLexEquals(Literal.getTrue(), ExprParser.parse("(true)"));
 
-    assertLexEquals(Not.of(Literal.<String>getTrue()), ExprParser.parse("!(true)"));
+    assertLexEquals(Not.of(Literal.getTrue()), ExprParser.parse("!(true)"));
 
     assertLexEquals(And.of(Not.of(Variable.of("' A:aa+)(*&^%$#@!_123'")), Variable.of("A")), ExprParser.parse("!' A:aa+)(*&^%$#@!_123' & A"));
 
@@ -49,11 +50,10 @@ public class TestExprParser extends JBoolTestCase {
 
     assertLexEquals(Or.of(Variable.of("A"), Or.of(Variable.of("B"), Variable.of("C"))), ExprParser.parse("(A|(B|C))"));
     assertLexEquals(Or.of(Variable.of("A"), Variable.of("B"), Variable.of("C")  ), ExprParser.parse("(A|B|C)"));
-
   }
 
+  @Test
   public void testQuotedMapper() {
-
     QuotedMapper<Integer> intMapper = new QuotedMapper<Integer>() {
       @Override
       public Integer getValue(String name) {
@@ -65,31 +65,27 @@ public class TestExprParser extends JBoolTestCase {
     assertEquals(Not.of(Variable.of(1)), ExprParser.parse("!'1'", intMapper));
   }
 
+  @Test
   public void testSingleQuotes(){
-
     assertEquals(Or.of(Variable.of("'test@gmail.com'"), Variable.of("'test2@gmail.com'")),
         ExprParser.parse("( 'test@gmail.com' | 'test2@gmail.com' )"));
 
-
     assertEquals(Or.of(Variable.of("'test & gmail.com'"), Variable.of("'test2 & gmail.com'")),
         ExprParser.parse("( 'test & gmail.com' | 'test2 & gmail.com' )"));
-
   }
 
-
+  @Test
   public void testDoubleQuotes(){
-
     assertEquals(Or.of(Variable.of("\"test@gmail.com\""), Variable.of("\"test2@gmail.com\"")),
         ExprParser.parse("( \"test@gmail.com\" | \"test2@gmail.com\" )"));
 
     //  defend against the indefensible
     assertEquals(Or.of(Variable.of("\"test & gmail.com\""), Variable.of("\"test2 & gmail.com\"")),
         ExprParser.parse("( \"test & gmail.com\" | \"test2 & gmail.com\" )"));
-
   }
 
+  @Test
   public void testLexSort() {
-
     assertEquals("(A & B & !C)", And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C")))
         .toString()
     );
@@ -97,11 +93,5 @@ public class TestExprParser extends JBoolTestCase {
     assertEquals("(!C & A & B)", And.of(Variable.of("A"), Variable.of("B"), Not.of(Variable.of("C")))
         .toLexicographicString()
     );
-
-  }
-
-  private void assertLexEquals(Expression expected, Expression actual) {
-    Assert.assertEquals(expected, actual);
-    Assert.assertEquals(expected.toLexicographicString(), actual.toLexicographicString());
   }
 }
