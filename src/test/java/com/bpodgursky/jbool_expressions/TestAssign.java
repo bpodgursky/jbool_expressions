@@ -1,15 +1,14 @@
 package com.bpodgursky.jbool_expressions;
 
-import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-public class TestAssign extends TestCase {
+public class TestAssign extends JBoolTestCase {
 
+  @Test
   public void testAssign(){
-
     And<String> expr3 = And.of(
         Or.of(Variable.of("A"), Variable.of("B")),
         Or.of(Variable.of("C"), Variable.of("D")

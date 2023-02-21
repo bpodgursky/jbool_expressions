@@ -1,11 +1,13 @@
 package com.bpodgursky.jbool_expressions.rules;
 
 import com.bpodgursky.jbool_expressions.JBoolTestCase;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 public class TestDistributiveLaw extends JBoolTestCase {
 
+    @Test
     public void testSimplify() {
         RuleList<String> rules = new RuleList<>(Collections.singletonList(new DistributiveLaw<>()));
 

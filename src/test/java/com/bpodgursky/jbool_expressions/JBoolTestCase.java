@@ -1,24 +1,17 @@
 package com.bpodgursky.jbool_expressions;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
 import com.bpodgursky.jbool_expressions.options.ExprOptions;
 import com.bpodgursky.jbool_expressions.parsers.ExprParser;
-import com.bpodgursky.jbool_expressions.rules.Rule;
 import com.bpodgursky.jbool_expressions.rules.RuleList;
 import com.bpodgursky.jbool_expressions.rules.RuleSet;
-import com.bpodgursky.jbool_expressions.cache.UnboundedRuleSetCache;
-import com.bpodgursky.jbool_expressions.util.ExprFactory;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Assertions;
+
+import java.util.*;
 
 import static com.bpodgursky.jbool_expressions.rules.RulesHelper.applyAll;
 
-public abstract class JBoolTestCase extends TestCase {
+public abstract class JBoolTestCase extends Assertions {
+
   public static Expression<String> expr(String expr){
     return ExprParser.parse(expr);
   }
@@ -38,7 +31,6 @@ public abstract class JBoolTestCase extends TestCase {
   public static String toPOSString(String expr){
     return RuleSet.toPos(expr(expr)).toString();
   }
-
 
   public void assertSimplify(String expected, String orig){
     assertEquals(expected, simplifyToString(orig));
@@ -60,14 +52,16 @@ public abstract class JBoolTestCase extends TestCase {
     assertEquals(expected, toPOSString(orig));
   }
 
-
   public <K> void assertEvaluateSame(Expression<K> s1, Expression<K> s2){
-
     Set<K> variables = ExprUtil.getVariables(s1);
     variables.addAll(ExprUtil.getVariables(s2));
 
     evaluate(new LinkedList<>(variables), new HashMap<>(), s1, s2);
+  }
 
+  public <K> void assertLexEquals(Expression<K> expected, Expression<K> actual) {
+    assertEquals(expected, actual);
+    assertEquals(expected.toLexicographicString(), actual.toLexicographicString());
   }
 
   public <K> void evaluate(Queue<K> variables, Map<K, Boolean> assignments, Expression<K> s1, Expression<K> s2){
@@ -88,7 +82,6 @@ public abstract class JBoolTestCase extends TestCase {
 
       assignmentCopy.put(assign, false);
       evaluate(variableCopy, assignmentCopy, s1, s2);
-
     }
   }
 }
