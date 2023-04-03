@@ -193,7 +193,7 @@ jbool_expressions is available via maven central (check out Maven central for th
 <dependency>
     <groupId>com.bpodgursky</groupId>
     <artifactId>jbool_expressions</artifactId>
-    <version>1.23</version>
+    <version>1.24</version>
 </dependency>
 ```
 
@@ -229,7 +229,7 @@ jbool_expressions is built with Maven.  To build from source,
 > mvn package
 ```
 
-generates a snapshot jar target/jbool_expressions-1.0-SNAPSHOT.jar.
+generates a snapshot jar target/jbool_expressions-1.25-SNAPSHOT.jar.
 
 To run the test suite locally,
 
